@@ -12,6 +12,7 @@
 body {
   margin: 0;
   background-color: var(--background-color);
+  overflow: hidden;
 }
 
 .paddle {
@@ -44,8 +45,8 @@ body {
   position: absolute;
   border-radius: 100%;
   background-color: var(--paddle-color);
-  width: 2vh;
-  height: 2vh;
+  width: 2.5vh;
+  height: 2.5vh;
 }
 
 .score {
@@ -53,4 +54,22 @@ body {
   justify-content: center;
   font-weight: bold;
   font-size: 7vh;
+  color: var(--paddle-color);
+}
+
+.score > * {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0 2vh;
+  margin: 1vh 0;
+  opacity: 0.5;
+}
+
+.score > :first-child {
+  text-align: right;
+  border-right: 0.8vh solid;
+}
+
+.score > :last-child {
+  text-align: left;
 }
