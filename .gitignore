@@ -1,0 +1,30 @@
+# compiled output
+ping-pong-game/dist
+ping-pong-game/node_modules
+ping-pong-game/# Logs
+ping-pong-game/logs
+ping-pong-game/*.log
+ping-pong-game/npm-debug.log*
+ping-pong-game/pnpm-debug.log*
+ping-pong-game/yarn-debug.log*
+ping-pong-game/yarn-error.log*
+ping-pong-game/lerna-debug.log*
+ping-pong-game/# OS
+ping-pong-game/.DS_Store
+ping-pong-game/# Tests
+ping-pong-game/coverage
+ping-pong-game/.nyc_output
+ping-pong-game/# IDEs and editors
+ping-pong-game/.idea
+ping-pong-game/.project
+ping-pong-game/.classpath
+ping-pong-game/.c9/
+ping-pong-game/*.launch
+ping-pong-game/.settings/
+ping-pong-game/*.sublime-workspace
+ping-pong-game/# IDE - VSCode
+ping-pong-game/.vscode/*
+ping-pong-game/!.vscode/settings.json
+ping-pong-game/!.vscode/tasks.json
+ping-pong-game/!.vscode/launch.json
+ping-pong-game/!.vscode/extensions.json
