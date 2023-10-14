@@ -3,7 +3,7 @@ import Paddle from "./Paddle.js";
 
 const ball = new Ball(document.getElementById("ball"));
 const playerPaddle = new Paddle(document.getElementById("player-paddle"));
-const botPaddle = new Paddle(document.getElementById("bot-paddle"));
+const botPaddle = new Paddle(document.getElementById("bot-paddle"));z
 const playerScoreElem = document.getElementById("player-score");
 const botScoreElem = document.getElementById("bot-score");
 
