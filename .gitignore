@@ -1,4 +1,4 @@
-# compiled output
+# Backend
 ping-pong-game/dist
 ping-pong-game/node_modules
 ping-pong-game/# Logs
@@ -28,3 +28,26 @@ ping-pong-game/!.vscode/settings.json
 ping-pong-game/!.vscode/tasks.json
 ping-pong-game/!.vscode/launch.json
 ping-pong-game/!.vscode/extensions.json
+
+
+#frontend
+ping-pong-frontend/node_modules
+ping-pong-frontend/.pnp
+ping-pong-frontend/.pnp.js
+ping-pong-frontend/
+ping-pong-frontend/# testing
+ping-pong-frontend/coverage
+ping-pong-frontend/
+ping-pong-frontend/# production
+ping-pong-frontend/build
+ping-pong-frontend/
+ping-pong-frontend/# misc
+ping-pong-frontend/.DS_Store
+ping-pong-frontend/.env.local
+ping-pong-frontend/.env.development.local
+ping-pong-frontend/.env.test.local
+ping-pong-frontend/.env.production.local
+ping-pong-frontend/
+ping-pong-frontend/npm-debug.log*
+ping-pong-frontend/yarn-debug.log*
+ping-pong-frontend/yarn-error.log*
