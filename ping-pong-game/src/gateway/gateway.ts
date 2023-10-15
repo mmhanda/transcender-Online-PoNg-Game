@@ -7,7 +7,11 @@ import {
 import { OnModuleInit } from '@nestjs/common';
 import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: ['http://localhost:3000'], // table for the allowed domain names to connect
+  },
+})
 export class MyGateWay implements OnModuleInit {
   @WebSocketServer()
   server: Server;
@@ -22,7 +26,7 @@ export class MyGateWay implements OnModuleInit {
   }
   @SubscribeMessage('newMessage')
   onMessage(@MessageBody() body: any) {
-    this.server.emit('onMessage', { msg: 'You are Connected', body });
+    this.server.emit('onMessage', { content: 'You are Connected', msg: body });
     this.server.emit('specialEvent', { event: 'specialEvent' });
     console.log(body);
   }
