@@ -1,33 +1,34 @@
 # Backend
-ping-pong-game/dist
-ping-pong-game/node_modules
-ping-pong-game/# Logs
-ping-pong-game/logs
-ping-pong-game/*.log
-ping-pong-game/npm-debug.log*
-ping-pong-game/pnpm-debug.log*
-ping-pong-game/yarn-debug.log*
-ping-pong-game/yarn-error.log*
-ping-pong-game/lerna-debug.log*
-ping-pong-game/# OS
-ping-pong-game/.DS_Store
-ping-pong-game/# Tests
-ping-pong-game/coverage
-ping-pong-game/.nyc_output
-ping-pong-game/# IDEs and editors
-ping-pong-game/.idea
-ping-pong-game/.project
-ping-pong-game/.classpath
-ping-pong-game/.c9/
-ping-pong-game/*.launch
-ping-pong-game/.settings/
-ping-pong-game/*.sublime-workspace
-ping-pong-game/# IDE - VSCode
-ping-pong-game/.vscode/*
-ping-pong-game/!.vscode/settings.json
-ping-pong-game/!.vscode/tasks.json
-ping-pong-game/!.vscode/launch.json
-ping-pong-game/!.vscode/extensions.json
+
+ping-pong-backend/node_modules
+ping-pong-backend/dist
+ping-pong-backend/# Logs
+ping-pong-backend/logs
+ping-pong-backend/*.log
+ping-pong-backend/npm-debug.log*
+ping-pong-backend/pnpm-debug.log*
+ping-pong-backend/yarn-debug.log*
+ping-pong-backend/yarn-error.log*
+ping-pong-backend/lerna-debug.log*
+ping-pong-backend/# OS
+ping-pong-backend/.DS_Store
+ping-pong-backend/# Tests
+ping-pong-backend/coverage
+ping-pong-backend/.nyc_output
+ping-pong-backend/# IDEs and editors
+ping-pong-backend/.idea
+ping-pong-backend/.project
+ping-pong-backend/.classpath
+ping-pong-backend/.c9/
+ping-pong-backend/*.launch
+ping-pong-backend/.settings/
+ping-pong-backend/*.sublime-workspace
+ping-pong-backend/# IDE - VSCode
+ping-pong-backend/.vscode/*
+ping-pong-backend/!.vscode/settings.json
+ping-pong-backend/!.vscode/tasks.json
+ping-pong-backend/!.vscode/launch.json
+ping-pong-backend/!.vscode/extensions.json
 
 
 #frontend React
