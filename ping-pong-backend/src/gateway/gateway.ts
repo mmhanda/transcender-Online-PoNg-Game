@@ -67,22 +67,20 @@ export class MyGateWay implements OnModuleInit {
     const senderIsAdmin = Rooms.find((room) => room.AdminId === socket.id);
     const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
 
-    // if (senderIsAdmin) { // NOTE : IF there is a MEET senderIsMeet
-    // console.log('coordinates_Admin ' + body.playerY);
-    // console.log('Rect_Admin ' + JSON.stringify(body.rect));
-    // this.server.emit('Player-2-Meet', { playerY: body.playerY });
     if (body.playerY) {
       this.server.emit('Player-2-Meet', { playerY: body.playerY });
     }
     if (body.rect) {
       this.server.emit('Player-2-Meet', { rect: body.rect });
     }
-    if (body.ballX && body.ballY) {
+    if (body.ballX && body.ballY && body.ballRect) {
       this.server.emit('Player-2-Meet', {
         ballX: body.ballX,
-        ballY: body.ballX,
+        ballY: body.ballY,
+        ballRect: body.ballRect,
       });
-      console.error('ballX ' + body.ballX + ' ballY ' + body.ballY);
+      console.error('ballRect ' + body.ballRect);
+      // console.error('ballX ' + body.ballX + ' ballY ' + body.ballY);
     }
     // }
   }
