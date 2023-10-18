@@ -68,8 +68,15 @@ export class MyGateWay implements OnModuleInit {
     const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
 
     // if (senderIsAdmin) { // NOTE : IF there is a MEET senderIsMeet
-    console.log('coordinates_Admin ' + body.playerY);
-    this.server.emit('Player-2-Meet', { playerY: body.playerY });
+    // console.log('coordinates_Admin ' + body.playerY);
+    // console.log('Rect_Admin ' + JSON.stringify(body.rect));
+    // this.server.emit('Player-2-Meet', { playerY: body.playerY });
+    if (body.playerY) {
+      this.server.emit('Player-2-Meet', { playerY: body.playerY });
+    }
+    if (body.rect) {
+      this.server.emit('Player-2-Meet', { rect: body.rect });
+    }
     // }
   }
   @SubscribeMessage('coordinates_Meet')
@@ -78,8 +85,14 @@ export class MyGateWay implements OnModuleInit {
     const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
 
     // if (senderIsMeet) {
-    console.log('coordinates_Meet ' + body.playerY);
-    this.server.emit('Player-2-Admin', { playerY: body.playerY });
+    // console.log('coordinates_Meet ' + body.playerY);
+    // console.log('Rect_Meet ' + JSON.stringify(body.rect));
+    if (body.playerY) {
+      this.server.emit('Player-2-Admin', { playerY: body.playerY });
+    }
+    if (body.rect) {
+      this.server.emit('Player-2-Admin', { rect: body.rect });
+    }
     // }
   }
 }
