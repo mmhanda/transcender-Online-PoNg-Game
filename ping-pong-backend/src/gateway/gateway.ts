@@ -77,6 +77,13 @@ export class MyGateWay implements OnModuleInit {
     if (body.rect) {
       this.server.emit('Player-2-Meet', { rect: body.rect });
     }
+    if (body.ballX && body.ballY) {
+      this.server.emit('Player-2-Meet', {
+        ballX: body.ballX,
+        ballY: body.ballX,
+      });
+      console.error('ballX ' + body.ballX + ' ballY ' + body.ballY);
+    }
     // }
   }
   @SubscribeMessage('coordinates_Meet')
