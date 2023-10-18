@@ -46,10 +46,14 @@ export class MyGateWay implements OnModuleInit {
       const initRoom = new room(Date.now().toString(), true, socket.id);
       socket.join(initRoom.name);
       Rooms.push(initRoom);
+      this.server.emit('isAdmin', { isAdmin: 'true' });
+      console.error('ADMIN CONNECTED');
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.name);
+      this.server.emit('isAdmin', { isAdmin: 'false' });
+      console.error('MEET CONNECTED');
     }
     console.log(Rooms.length);
 
@@ -58,15 +62,24 @@ export class MyGateWay implements OnModuleInit {
     this.server.emit('specialEvent', { event: 'specialEvent' });
     console.log(body);
   }
-  @SubscribeMessage('coordinates')
-  onReceiving(@MessageBody() body: any, @ConnectedSocket() socket: any) {
+  @SubscribeMessage('coordinates_Admin')
+  onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     const senderIsAdmin = Rooms.find((room) => room.AdminId === socket.id);
-    const senderIsMeet = Rooms.find((room) => room.AdminId === socket.id);
+    const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
 
-    console.error(body);
-    if (senderIsAdmin || senderIsMeet) {
-      this.server.to(senderIsAdmin.name).emit('Player-2-Paddle', body);
-      console.log('coordinates');
-    }
+    // if (senderIsAdmin) { // NOTE : IF there is a MEET senderIsMeet
+    console.log('coordinates_Admin ' + body.playerY);
+    this.server.emit('Player-2-Meet', { playerY: body.playerY });
+    // }
+  }
+  @SubscribeMessage('coordinates_Meet')
+  onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() socket: any) {
+    const senderIsAdmin = Rooms.find((room) => room.AdminId === socket.id);
+    const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
+
+    // if (senderIsMeet) {
+    console.log('coordinates_Meet ' + body.playerY);
+    this.server.emit('Player-2-Admin', { playerY: body.playerY });
+    // }
   }
 }
