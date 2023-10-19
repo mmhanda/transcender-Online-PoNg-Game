@@ -1,4 +1,4 @@
-const SPEED = 0.2;
+const SPEED = 0.5;
 
 let resist = 0;
 let decide = 1;
@@ -18,17 +18,14 @@ export default class Paddle {
     this.paddleElem.style.setProperty("--position", value);
   }
 
-  update(delta, Player2Height) {
-    this.position = Player2Height;
-    // console.log(
-    //   "position " + this.position + " Player2Height " + Player2Height
-    // );
+  update(delta, ballHeight) {
+    this.position += SPEED * delta * (ballHeight - this.position + resist);
 
-    // if (decide >= 0) {
-    //   resist += 0.001;
-    // } else {
-    //   resist -= 0.001;
-    // }
+    if (decide >= 0) {
+      resist += 0.001;
+    } else {
+      resist -= 0.001;
+    }
   }
 
   reset() {

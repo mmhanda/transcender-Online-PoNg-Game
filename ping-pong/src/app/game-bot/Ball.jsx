@@ -38,41 +38,24 @@ export default class Ball {
     return this.ballElem.getBoundingClientRect();
   }
 
-  update(delta, paddleRects, isAdmin, AdminX, AdminY) {
+  update(delta, paddleRects) {
     // console.log(paddleRects);
-    if (isAdmin) {
-      this.x += this.direction.x * this.velocity * delta;
-      this.y += this.direction.y * this.velocity * delta;
-      this.velocity += VELOCITY_INCREASE * delta;
+    this.x += this.direction.x * this.velocity * delta;
+    this.y += this.direction.y * this.velocity * delta;
+    this.velocity += VELOCITY_INCREASE * delta;
 
-      const rect = this.rect();
+    const rect = this.rect();
 
-      if (rect.bottom >= window.innerHeight || rect.top <= 0) {
-        this.direction.y *= -1;
-      }
-      if (paddleRects.some((r) => isCollision(r, rect))) {
-        this.direction.x *= -1;
-      }
-    } else {
-      // this.direction.y *= -1;
-      // this.direction.x *= -1;
-      // console.log("before " + this.x);
-      // console.log("before " + this.y);
-      // console.log(" AdminX " + AdminX);
-      // console.log(" AdminY " + AdminY);
-      // let x = window.innerWidth / 6 - AdminX; //// right side
-      let x = 100 - AdminX;
-      // let y =  window.innerHeight - AdminY;
-      this.x = x;
-      this.y = AdminY;
-      console.log("after " + this.x);
-      console.log("after " + this.y);
+    if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+      this.direction.y *= -1;
+    }
+    if (paddleRects.some((r) => isCollision(r, rect))) {
+      this.direction.x *= -1;
     }
   }
 }
 
 function isCollision(rect1, rect2) {
-  // console.log("IS COLLISION " + rect1.left)
   return (
     rect1.left + 1 < rect2.right - 1 &&
     rect1.right + 1 > rect2.left - 1 &&

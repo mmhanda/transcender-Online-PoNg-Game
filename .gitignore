@@ -31,29 +31,6 @@ ping-pong-backend/!.vscode/launch.json
 ping-pong-backend/!.vscode/extensions.json
 
 
-#frontend React
-ping-pong-frontend/node_modules
-ping-pong-frontend/.pnp
-ping-pong-frontend/.pnp.js
-
-ping-pong-frontend/# testing
-ping-pong-frontend/coverage
-
-ping-pong-frontend/# production
-ping-pong-frontend/build
-
-ping-pong-frontend/# misc
-ping-pong-frontend/.DS_Store
-ping-pong-frontend/.env.local
-ping-pong-frontend/.env.development.local
-ping-pong-frontend/.env.test.local
-ping-pong-frontend/.env.production.local
-
-ping-pong-frontend/npm-debug.log*
-ping-pong-frontend/yarn-debug.log*
-ping-pong-frontend/yarn-error.log*
-
-
 #frontend nextjs
 
 # dependencies

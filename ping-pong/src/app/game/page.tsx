@@ -1,7 +1,10 @@
 "use client";
 
+import { createContext } from "react";
+import { io, Socket } from "socket.io-client";
+
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext } from "./WebsocketContext";
+// import { WebsocketContext } from "./WebsocketContext";
 import Ball from "./Ball";
 import Paddle from "./Paddle";
 import "./styles.css";
@@ -13,49 +16,131 @@ type MessagePayload = {
 
 export default function Pong() {
   let runGame: boolean = false;
+
+  const [value, setValue] = useState("");
+  const [messages, setMessages] = useState<MessagePayload[]>([]);
+  // const WebsocketContext = createContext<Socket>(InitSocket);
   // const socket = useContext(WebsocketContext);
 
-  // const [value, setValue] = useState("");
-
-  // const [messages, setMessages] = useState<MessagePayload[]>([]);
   useEffect(() => {
-    // socket.on("connect", () => {
-    //   console.log("Connected !");
-    // });
-
-    // socket.on("onMessage", (newMessage: MessagePayload) => {
-    //   console.log("onMessage Event Recived!");
-    //   console.log("newMessage.content: " + newMessage.content);
-    //   setMessages((prev) => [...prev, newMessage]);
-    // });
-
-    // socket.on("specialEvent", (data) => {
-    //   console.log(data);
-    // });
-
-    // return () => {
-    //   /// in this cleanup function we turn off the socket to prevent it from desconection when getting out of the compenent and the need of reconecting again
-    //   console.log("Unregistering Events...");
-    //   socket.off("onMessage");
-    //   socket.off("connect");
-    //   socket.off("specialEvent");
-    // };
-
     if (runGame) {
+      const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
-      const botPaddle = new Paddle(document.getElementById("bot-paddle"));
+      const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
       const playerScoreElem = document.getElementById("player-score");
       const botScoreElem = document.getElementById("bot-score");
+      let Player2Height: any;
+      let Player2Rect: any;
+      let ISadmin: any = undefined;
+      let ballY: any, ballX: any, ballRect: any;
+      socket.on("connect", () => {
+        console.log("Connected !");
+      });
+
+      // socket.on("onMessage", (newMessage: MessagePayload) => {
+      //   console.log("onMessage Event Recived!");
+      //   console.log("newMessage.content: " + newMessage.content);
+      //   setMessages((prev) => [...prev, newMessage]);
+      // });
+
+      // socket.on("specialEvent", (data) => {
+      //   console.log(data);
+      // });
+
+      socket.emit("join-room");
+
+      socket.once("isAdmin", (Admin) => {
+        if (Admin.isAdmin === "true") {
+          ISadmin = true;
+        } else {
+          ISadmin = false;
+        }
+      });
+
+      socket.on("Player-2-Admin", (Player2) => {
+        if (ISadmin) {
+          if (Player2.playerY) {
+            Player2Height = Player2.playerY;
+          }
+          if (Player2.rect) {
+            Player2Rect = Player2.rect;
+          }
+        }
+      });
+      socket.on("Player-2-Meet", (Player2) => {
+        if (!ISadmin) {
+          if (Player2.playerY) {
+            Player2Height = Player2.playerY;
+          }
+          if (Player2.rect) {
+            Player2Rect = Player2.rect;
+          }
+          if (Player2.ballX && Player2.ballY) {
+            ballX = Player2.ballX;
+            ballY = Player2.ballY;
+            // console.log(Player2.ballX + "  " + Player2.ballY);
+          }
+          if (Player2.ballRect) {
+            ballRect = Player2.ballRect;
+          }
+        }
+      });
 
       let LastTime: any = null;
 
       function update(time: any) {
         if (LastTime != null) {
           const delta: number = time - LastTime;
-          ball.update(delta, [playerPaddle.rect(), botPaddle.rect()]);
-          botPaddle.update(delta, ball.y);
-          // console.log(delta);
+
+          let playerPaddleRect = playerPaddle.rect();
+
+          if (Player2Rect) {
+            // console.log("logger")
+            const paddleLeft = window.innerWidth - 10;
+            Player2Rect.left = paddleLeft;
+            Player2Rect.right = paddleLeft - 10;
+            ball.update(
+              delta,
+              [playerPaddle.rect(), Player2Rect],
+              ISadmin,
+              ballX,
+              ballY
+            );
+
+            if (ISadmin) {
+              socket.emit("coordinates_Admin", {
+                ballX: ball.x,
+                ballY: ball.y,
+                ballRect: ball.rect(),
+              });
+            }
+          } else {
+            // ball.update(delta, [playerPaddleRect], ISadmin, ballX, ballY);
+            // if (ISadmin) {
+            //   socket.emit("coordinates_Admin", {
+            //     ballX: ball.x,
+            //     ballY: ball.y,
+            //     ballRect: ball.rect(),
+            //   });
+            // }
+            // ball.update(
+            //   delta,
+            //   [playerPaddle.rect()],
+            //   // Player2Rect,
+            //   ISadmin,
+            //   ballX,
+            //   ballY,
+            // );
+          }
+
+          if (ISadmin) {
+            socket.emit("coordinates_Admin", { rect: playerPaddleRect });
+          } else {
+            socket.emit("coordinates_Meet", { rect: playerPaddleRect });
+          }
+
+          Player2Paddle.update(delta, Player2Height); // this var need to be recived
           if (isLose()) {
             handleLose();
           }
@@ -86,7 +171,7 @@ export default function Pong() {
           botScoreElem.textContent = typeChanger.toString();
         }
         ball.reset();
-        botPaddle.reset();
+        Player2Paddle.reset();
       }
 
       function isLose() {
@@ -96,8 +181,21 @@ export default function Pong() {
 
       document.addEventListener("mousemove", (e) => {
         playerPaddle.position = (e.y / window.innerHeight) * 100; //for getting to percentenge of the window of where the mouse is and the paddle should go
+        if (ISadmin) {
+          socket.emit("coordinates_Admin", { playerY: playerPaddle.position });
+        } else {
+          socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
+        }
       });
       window.requestAnimationFrame(update);
+
+      return () => {
+        /// in this cleanup function we turn off the socket to prevent it from desconection when getting out of the compenent and the need of reconecting again
+        console.log("Unregistering Events...");
+        socket.off("onMessage");
+        socket.off("connect");
+        socket.off("specialEvent");
+      };
     }
     runGame = true;
   }, []);
