@@ -5,7 +5,7 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { OnModuleInit } from '@nestjs/common';
+import { Body, OnModuleInit } from '@nestjs/common';
 import { Server } from 'socket.io';
 const Rooms = [];
 
@@ -77,5 +77,13 @@ export class MyGateWay implements OnModuleInit {
       playerY: body.playerY,
       rect: body.rect,
     });
+  }
+  @SubscribeMessage('pause-game')
+  onDisconnect(@MessageBody() body: any) {
+    console.error(body.state);
+    this.server.emit('game-paused', {
+      state: body.state,
+    });
+    console.error('vvvvvvvvv');
   }
 }
