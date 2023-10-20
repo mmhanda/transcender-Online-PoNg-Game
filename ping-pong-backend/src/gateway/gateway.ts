@@ -6,7 +6,7 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Body, OnModuleInit } from '@nestjs/common';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 const Rooms = [];
 
 class room {
@@ -26,18 +26,28 @@ class room {
     origin: ['http://localhost:3000'], // table for the allowed domain names to connect
   },
 })
-export class MyGateWay implements OnModuleInit {
+export class MyGateWay {
   @WebSocketServer()
   server: Server;
 
-  onModuleInit() {
-    //we used this interface
-    // to wait for the model to fully init so websocket not null/empty
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('connected');
-    });
+  // onModuleInit() {
+  //   //we used this interface
+  //   // to wait for the model to fully init so websocket not null/empty
+  //   this.server.on('connection', (socket) => {
+  //     console.log('connected ', socket.id);
+  //   });
+  //   this.server.on('disconnect', (socket) => {
+  //     console.log('connected ', socket.id);
+  //   });
+  // }
+
+  handleConnection(client: Socket) {
+    console.log(`Client connected with ID: ${client.id}`);
   }
+  handleDisconnect(client: any) {
+    console.error('DISCONNECT ', client.id);
+  }
+
   @SubscribeMessage('join-room')
   onMessage(@MessageBody() body: any, @ConnectedSocket() socket) {
     const availableRoom = Rooms.find((room) => room.Player2 === true);
@@ -47,13 +57,13 @@ export class MyGateWay implements OnModuleInit {
       socket.join(initRoom.name);
       Rooms.push(initRoom);
       this.server.emit('isAdmin', { isAdmin: 'true' });
-      console.error('ADMIN CONNECTED');
+      // console.error('ADMIN CONNECTED');
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.name);
       this.server.emit('isAdmin', { isAdmin: 'false' });
-      console.error('MEET CONNECTED');
+      // console.error('MEET CONNECTED');
     }
     console.log(Rooms.length);
 

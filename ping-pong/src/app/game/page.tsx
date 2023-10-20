@@ -39,38 +39,11 @@ export default function Pong() {
       let ballY: any, ballX: any, ballRect: any;
       let hueColorChangeSet: string = "";
 
-      socket.on("connect", () => {
-        console.log("Connected !");
-      });
-
-      addEventListener("beforeunload", (event) => {
-        console.log("event " + event.returnValue);
-      });
-      onbeforeunload = (event) => {
-        console.log("event " + event.returnValue);
-
-      };
-
-      // window.onbeforeunload = function () {
-      //   keepUpdating = true;
-      //   socket.emit("pause-game", { state: true });
-      //   var r = confirm("Are you sure you want to leave this page?");
-      //   if (r == true) {
-      //   } else {
-      //     socket.emit("pause-game", { state: false });
-      //     keepUpdating = false;
-      //     return false;
-      //   }
-      // };
-
-      // window.onbeforeunload = () => {
-      //   const ret = confirm("Are You Sure!");
-      //   if (ret) {
-      //     socket.emit("pause-game", { state: false });
-      //     keepUpdating = false;
-      //   }
-      //   return "Unload !";
-      // };
+      // socket.on("connect", () => {
+      //   console.log("Connected !");
+      // });
+      
+      socket.connect()
 
       socket.on("game-paused", (state) => {
         if (state.state) {
@@ -95,15 +68,6 @@ export default function Pong() {
           }
         }
       });
-
-      // if (
-      //   performance.navigation.type == performance.navigation.TYPE_RELOAD ||
-      //   performance.navigation.type == performance.navigation.TYPE_BACK_FORWARD
-      // ) {
-      //   console.info("Game exited");
-      // } else {
-      //   console.info("On game");
-      // }
 
       socket.on("Player-2-Meet", (Player2) => {
         if (!ISadmin) {
@@ -133,7 +97,7 @@ export default function Pong() {
 
       function update(time: any) {
         if (keepUpdating) return;
-        console.log("is UPditing");
+        // console.log("is UPditing");
         if (LastTime != null) {
           const delta: number = time - LastTime;
           let player2PaddleRect = playerPaddle.rect();
