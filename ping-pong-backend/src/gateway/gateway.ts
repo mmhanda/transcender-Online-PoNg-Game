@@ -57,47 +57,23 @@ export class MyGateWay implements OnModuleInit {
     }
     console.log(Rooms.length);
 
-    console.log('join-game');
-    this.server.emit('onMessage', { content: 'You are Connected', msg: body });
-    this.server.emit('specialEvent', { event: 'specialEvent' });
-    console.log(body);
+    console.log('join-room');
   }
   @SubscribeMessage('coordinates_Admin')
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-    const senderIsAdmin = Rooms.find((room) => room.AdminId === socket.id);
-    const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
-
-    if (body.playerY) {
-      this.server.emit('Player-2-Meet', { playerY: body.playerY });
-    }
-    if (body.rect) {
-      this.server.emit('Player-2-Meet', { rect: body.rect });
-    }
-    if (body.ballX && body.ballY && body.ballRect) {
-      this.server.emit('Player-2-Meet', {
-        ballX: body.ballX,
-        ballY: body.ballY,
-        ballRect: body.ballRect,
-      });
-      console.error('ballRect ' + body.ballRect);
-      // console.error('ballX ' + body.ballX + ' ballY ' + body.ballY);
-    }
-    // }
+    this.server.emit('Player-2-Meet', {
+      ballX: body.ballX,
+      ballY: body.ballY,
+      ballRect: body.ballRect,
+      playerY: body.playerY,
+      rect: body.rect,
+    });
   }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-    const senderIsAdmin = Rooms.find((room) => room.AdminId === socket.id);
-    const senderIsMeet = Rooms.find((room) => room.MeetId === socket.id);
-
-    // if (senderIsMeet) {
-    // console.log('coordinates_Meet ' + body.playerY);
-    // console.log('Rect_Meet ' + JSON.stringify(body.rect));
-    if (body.playerY) {
-      this.server.emit('Player-2-Admin', { playerY: body.playerY });
-    }
-    if (body.rect) {
-      this.server.emit('Player-2-Admin', { rect: body.rect });
-    }
-    // }
+    this.server.emit('Player-2-Admin', {
+      playerY: body.playerY,
+      rect: body.rect,
+    });
   }
 }
