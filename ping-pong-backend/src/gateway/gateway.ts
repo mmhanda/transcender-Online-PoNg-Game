@@ -64,7 +64,6 @@ export class MyGateWay implements OnModuleInit {
     this.server.emit('Player-2-Meet', {
       ballX: body.ballX,
       ballY: body.ballY,
-      ballRect: body.ballRect,
       playerY: body.playerY,
       rect: body.rect,
       hue: body.hue,

@@ -68,16 +68,12 @@ export default function Pong() {
             ballX = Player2.ballX;
             ballY = Player2.ballY;
           }
-          // if (Player2.ballRect) {
-          //   ballRect = Player2.ballRect;
-          // }
           if (Player2.hue) {
             hueColorChangeSet = Player2.hue;
           }
           if (Player2.adminScore || Player2.player2Score) {
             adminScore = Player2.adminScore;
             player2Score = Player2.player2Score;
-            // console.log(player2Score);
           }
         }
       });
@@ -120,7 +116,6 @@ export default function Pong() {
               socket.emit("coordinates_Admin", {
                 ballX: ball.x,
                 ballY: ball.y,
-                ballRect: ball.rect(),
                 hue: hueColorChangeSet,
                 rect: playerPaddleRect,
                 adminScore: adminScore,
@@ -167,7 +162,7 @@ export default function Pong() {
       }
 
       document.addEventListener("mousemove", (e) => {
-        playerPaddle.position = (e.y / window.innerHeight) * 100; //for getting to percentenge of the window of where the mouse is and the paddle should go
+        playerPaddle.position = (e.y / window.innerHeight) * 100;
         if (ISadmin) {
           socket.emit("coordinates_Admin", { playerY: playerPaddle.position });
         } else {
@@ -175,14 +170,6 @@ export default function Pong() {
         }
       });
       window.requestAnimationFrame(update);
-
-      // return () => {
-      //   /// in this cleanup function we turn off the socket to prevent it from desconection when getting out of the compenent and the need of reconecting again
-      //   console.log("Unregistering Events...");
-      //   socket.off("onMessage");
-      //   socket.off("connect");
-      //   socket.off("specialEvent");
-      // };
     }
     runGame = true;
   }, []);
