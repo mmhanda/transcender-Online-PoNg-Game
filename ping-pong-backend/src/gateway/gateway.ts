@@ -67,6 +67,7 @@ export class MyGateWay implements OnModuleInit {
       ballRect: body.ballRect,
       playerY: body.playerY,
       rect: body.rect,
+      hue: body.hue,
     });
   }
   @SubscribeMessage('coordinates_Meet')

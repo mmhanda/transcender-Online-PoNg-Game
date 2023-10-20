@@ -54,19 +54,8 @@ export default class Ball {
         this.direction.x *= -1;
       }
     } else {
-      // this.direction.y *= -1;
-      // this.direction.x *= -1;
-      // console.log("before " + this.x);
-      // console.log("before " + this.y);
-      // console.log(" AdminX " + AdminX);
-      // console.log(" AdminY " + AdminY);
-      // let x = window.innerWidth / 6 - AdminX; //// right side
-      let x = 100 - AdminX;
-      // let y =  window.innerHeight - AdminY;
-      this.x = x;
+      this.x = 100 - AdminX;
       this.y = AdminY;
-      console.log("after " + this.x);
-      console.log("after " + this.y);
     }
   }
 }

@@ -34,6 +34,7 @@ export default function Pong() {
       let Player2Rect: any;
       let ISadmin: any = undefined;
       let ballY: any, ballX: any, ballRect: any;
+      let hueColorChangeSet: string = "";
       socket.on("connect", () => {
         console.log("Connected !");
       });
@@ -79,10 +80,12 @@ export default function Pong() {
           if (Player2.ballX && Player2.ballY) {
             ballX = Player2.ballX;
             ballY = Player2.ballY;
-            // console.log(Player2.ballX + "  " + Player2.ballY);
           }
           if (Player2.ballRect) {
             ballRect = Player2.ballRect;
+          }
+          if (Player2.hue) {
+            hueColorChangeSet = Player2.hue;
           }
         }
       });
@@ -96,7 +99,6 @@ export default function Pong() {
           let playerPaddleRect = playerPaddle.rect();
 
           if (Player2Rect) {
-            // console.log("logger")
             const paddleLeft = window.innerWidth - 10;
             Player2Rect.left = paddleLeft;
             Player2Rect.right = paddleLeft - 10;
@@ -109,34 +111,34 @@ export default function Pong() {
             );
 
             if (ISadmin) {
+              const hue: number = parseFloat(
+                getComputedStyle(document.documentElement).getPropertyValue(
+                  "--hue"
+                )
+              );
+              const hueColorChange: number = hue + delta * 0.04;
+              hueColorChangeSet = hueColorChange.toString();
+              document.documentElement.style.setProperty(
+                "--hue",
+                hueColorChangeSet
+              );
               socket.emit("coordinates_Admin", {
                 ballX: ball.x,
                 ballY: ball.y,
                 ballRect: ball.rect(),
+                hue: hueColorChangeSet,
+                rect: playerPaddleRect,
               });
+            } else {
+              console.log(hueColorChangeSet);
+              document.documentElement.style.setProperty(
+                "--hue",
+                hueColorChangeSet
+              );
             }
-          } else {
-            // ball.update(delta, [playerPaddleRect], ISadmin, ballX, ballY);
-            // if (ISadmin) {
-            //   socket.emit("coordinates_Admin", {
-            //     ballX: ball.x,
-            //     ballY: ball.y,
-            //     ballRect: ball.rect(),
-            //   });
-            // }
-            // ball.update(
-            //   delta,
-            //   [playerPaddle.rect()],
-            //   // Player2Rect,
-            //   ISadmin,
-            //   ballX,
-            //   ballY,
-            // );
           }
 
-          if (ISadmin) {
-            socket.emit("coordinates_Admin", { rect: playerPaddleRect });
-          } else {
+          if (!ISadmin) {
             socket.emit("coordinates_Meet", { rect: playerPaddleRect });
           }
 
@@ -144,16 +146,6 @@ export default function Pong() {
           if (isLose()) {
             handleLose();
           }
-
-          const hue: number = parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue("--hue")
-          );
-          const hueColorChange: number = hue + delta * 0.04;
-          const hueColorChangeSet: string = hueColorChange.toString();
-          document.documentElement.style.setProperty(
-            "--hue",
-            hueColorChangeSet
-          );
         }
         LastTime = time;
         window.requestAnimationFrame(update);
