@@ -60,7 +60,7 @@ export class MyGateWay implements OnModuleInit {
     console.log('join-room');
   }
   @SubscribeMessage('coordinates_Admin')
-  onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() socket: any) {
+  onReceivingAdmin(@MessageBody() body: any) {
     this.server.emit('Player-2-Meet', {
       ballX: body.ballX,
       ballY: body.ballY,
@@ -68,10 +68,12 @@ export class MyGateWay implements OnModuleInit {
       playerY: body.playerY,
       rect: body.rect,
       hue: body.hue,
+      adminScore: body.adminScore,
+      player2Score: body.player2Score,
     });
   }
   @SubscribeMessage('coordinates_Meet')
-  onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() socket: any) {
+  onReceivingMeet(@MessageBody() body: any) {
     this.server.emit('Player-2-Admin', {
       playerY: body.playerY,
       rect: body.rect,

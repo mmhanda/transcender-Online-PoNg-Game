@@ -39,7 +39,6 @@ export default class Ball {
   }
 
   update(delta, paddleRects, isAdmin, AdminX, AdminY) {
-    // console.log(paddleRects);
     if (isAdmin) {
       this.x += this.direction.x * this.velocity * delta;
       this.y += this.direction.y * this.velocity * delta;
@@ -61,7 +60,6 @@ export default class Ball {
 }
 
 function isCollision(rect1, rect2) {
-  // console.log("IS COLLISION " + rect1.left)
   return (
     rect1.left + 1 < rect2.right - 1 &&
     rect1.right + 1 > rect2.left - 1 &&

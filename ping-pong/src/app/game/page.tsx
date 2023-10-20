@@ -28,35 +28,21 @@ export default function Pong() {
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
-      const playerScoreElem = document.getElementById("player-score");
-      const botScoreElem = document.getElementById("bot-score");
+      const playerScoreElem: any = document.getElementById("player-score");
+      const player2ScoreElem: any = document.getElementById("bot-score");
       let Player2Height: any;
       let Player2Rect: any;
-      let ISadmin: any = undefined;
+      let ISadmin: boolean = false;
+      let adminScore: number = 0;
+      let player2Score: number = 0;
       let ballY: any, ballX: any, ballRect: any;
       let hueColorChangeSet: string = "";
       socket.on("connect", () => {
         console.log("Connected !");
       });
 
-      // socket.on("onMessage", (newMessage: MessagePayload) => {
-      //   console.log("onMessage Event Recived!");
-      //   console.log("newMessage.content: " + newMessage.content);
-      //   setMessages((prev) => [...prev, newMessage]);
-      // });
-
-      // socket.on("specialEvent", (data) => {
-      //   console.log(data);
-      // });
-
-      socket.emit("join-room");
-
       socket.once("isAdmin", (Admin) => {
-        if (Admin.isAdmin === "true") {
-          ISadmin = true;
-        } else {
-          ISadmin = false;
-        }
+        if (Admin.isAdmin === "true") ISadmin = true;
       });
 
       socket.on("Player-2-Admin", (Player2) => {
@@ -69,6 +55,7 @@ export default function Pong() {
           }
         }
       });
+
       socket.on("Player-2-Meet", (Player2) => {
         if (!ISadmin) {
           if (Player2.playerY) {
@@ -81,22 +68,30 @@ export default function Pong() {
             ballX = Player2.ballX;
             ballY = Player2.ballY;
           }
-          if (Player2.ballRect) {
-            ballRect = Player2.ballRect;
-          }
+          // if (Player2.ballRect) {
+          //   ballRect = Player2.ballRect;
+          // }
           if (Player2.hue) {
             hueColorChangeSet = Player2.hue;
           }
+          if (Player2.adminScore || Player2.player2Score) {
+            adminScore = Player2.adminScore;
+            player2Score = Player2.player2Score;
+            // console.log(player2Score);
+          }
         }
       });
+
+      socket.emit("join-room");
 
       let LastTime: any = null;
 
       function update(time: any) {
         if (LastTime != null) {
           const delta: number = time - LastTime;
-
           let playerPaddleRect = playerPaddle.rect();
+
+          Player2Paddle.update(delta, Player2Height);
 
           if (Player2Rect) {
             const paddleLeft = window.innerWidth - 10;
@@ -128,23 +123,23 @@ export default function Pong() {
                 ballRect: ball.rect(),
                 hue: hueColorChangeSet,
                 rect: playerPaddleRect,
+                adminScore: adminScore,
+                player2Score: player2Score,
               });
             } else {
-              console.log(hueColorChangeSet);
               document.documentElement.style.setProperty(
                 "--hue",
                 hueColorChangeSet
               );
+              player2ScoreElem.textContent = adminScore.toString();
+              playerScoreElem.textContent = player2Score.toString();
             }
           }
 
           if (!ISadmin) {
             socket.emit("coordinates_Meet", { rect: playerPaddleRect });
-          }
-
-          Player2Paddle.update(delta, Player2Height); // this var need to be recived
-          if (isLose()) {
-            handleLose();
+          } else {
+            if (isLose()) handleLose();
           }
         }
         LastTime = time;
@@ -154,13 +149,13 @@ export default function Pong() {
       function handleLose() {
         const rect = ball.rect();
 
-        if (!playerScoreElem | !botScoreElem) return;
+        if (!playerScoreElem || !player2ScoreElem) return;
         if (rect.right >= window.innerWidth) {
-          const typeChanger: number = parseInt(playerScoreElem.textContent) + 1;
-          playerScoreElem.textContent = typeChanger.toString();
+          adminScore = parseInt(playerScoreElem.textContent) + 1;
+          playerScoreElem.textContent = adminScore.toString();
         } else {
-          const typeChanger: number = parseInt(botScoreElem.textContent) + 1;
-          botScoreElem.textContent = typeChanger.toString();
+          player2Score = parseInt(player2ScoreElem.textContent) + 1;
+          player2ScoreElem.textContent = player2Score.toString();
         }
         ball.reset();
         Player2Paddle.reset();
@@ -181,21 +176,16 @@ export default function Pong() {
       });
       window.requestAnimationFrame(update);
 
-      return () => {
-        /// in this cleanup function we turn off the socket to prevent it from desconection when getting out of the compenent and the need of reconecting again
-        console.log("Unregistering Events...");
-        socket.off("onMessage");
-        socket.off("connect");
-        socket.off("specialEvent");
-      };
+      // return () => {
+      //   /// in this cleanup function we turn off the socket to prevent it from desconection when getting out of the compenent and the need of reconecting again
+      //   console.log("Unregistering Events...");
+      //   socket.off("onMessage");
+      //   socket.off("connect");
+      //   socket.off("specialEvent");
+      // };
     }
     runGame = true;
   }, []);
-
-  // const submitHandler = () => {
-  //   socket.emit("newMessage", value);
-  //   setValue("");
-  // };
 
   return (
     <div>
