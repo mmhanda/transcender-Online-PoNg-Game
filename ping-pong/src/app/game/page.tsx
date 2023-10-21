@@ -36,14 +36,10 @@ export default function Pong() {
       let ISadmin: boolean = false;
       let adminScore: number = 0;
       let player2Score: number = 0;
-      let ballY: any, ballX: any, ballRect: any;
+      let ballY: any, ballX: any;
       let hueColorChangeSet: string = "";
 
-      // socket.on("connect", () => {
-      //   console.log("Connected !");
-      // });
-      
-      socket.connect()
+      socket.connect();
 
       socket.on("game-paused", (state) => {
         if (state.state) {

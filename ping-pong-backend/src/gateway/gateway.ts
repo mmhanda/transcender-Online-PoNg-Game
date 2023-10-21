@@ -5,7 +5,7 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { Body, OnModuleInit } from '@nestjs/common';
+// import { Body, OnModuleInit } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 const Rooms = [];
 
@@ -30,18 +30,10 @@ export class MyGateWay {
   @WebSocketServer()
   server: Server;
 
-  // onModuleInit() {
-  //   //we used this interface
-  //   // to wait for the model to fully init so websocket not null/empty
-  //   this.server.on('connection', (socket) => {
-  //     console.log('connected ', socket.id);
-  //   });
-  //   this.server.on('disconnect', (socket) => {
-  //     console.log('connected ', socket.id);
-  //   });
-  // }
-
   handleConnection(client: Socket) {
+    if (Rooms) {
+      
+    }
     console.log(`Client connected with ID: ${client.id}`);
   }
   handleDisconnect(client: any) {
