@@ -3,6 +3,7 @@
 import { createContext } from "react";
 import { io, Socket } from "socket.io-client";
 
+import Modal from "react-modal";
 import { useContext, useEffect, useState } from "react";
 // import { WebsocketContext } from "./WebsocketContext";
 import Ball from "./Ball";
@@ -19,9 +20,15 @@ export default function Pong() {
   let keepUpdating: boolean = false;
 
   const [value, setValue] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<MessagePayload[]>([]);
   // const WebsocketContext = createContext<Socket>(InitSocket);
   // const socket = useContext(WebsocketContext);
+
+  // window.onbeforeunload = alert;
+  // function alert() {
+  //   return "You Will LOSE The Game!";
+  // }
 
   useEffect(() => {
     if (runGame) {
@@ -31,27 +38,27 @@ export default function Pong() {
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
       const playerScoreElem: any = document.getElementById("player-score");
       const player2ScoreElem: any = document.getElementById("bot-score");
-      let Player2Height: any;
-      let Player2Rect: any;
-      let ISadmin: boolean = false;
-      let adminScore: number = 0;
-      let player2Score: number = 0;
-      let ballY: any, ballX: any;
+      let Player2Height: any, Player2Rect: any, ballY: any, ballX: any;
+      let adminScore: number = 0,
+        player2Score: number = 0;
       let hueColorChangeSet: string = "";
+      let ISadmin: boolean = false;
 
       socket.connect();
 
-      socket.on("game-paused", (state) => {
-        if (state.state) {
-          keepUpdating = true;
-        } else keepUpdating = false;
-      });
+      socket.emit("join-room");
 
       socket.once("isAdmin", (Admin) => {
         if (Admin.isAdmin === "true") {
           console.log("ADMIN");
           ISadmin = true;
         }
+      });
+
+      document.addEventListener("visibilitychange", function () {
+        socket.disconnect();
+        keepUpdating = true;
+        setIsOpen(true);
       });
 
       socket.on("Player-2-Admin", (Player2) => {
@@ -87,13 +94,28 @@ export default function Pong() {
         }
       });
 
-      socket.emit("join-room");
+      socket.on("admin-disconnect", () => {
+        if (ISadmin) {
+          keepUpdating = true;
+          setIsOpen(true);
+        }
+      });
+
+      socket.on("meet-disconnect", () => {
+        if (!ISadmin) {
+          keepUpdating = true;
+          setIsOpen(true);
+        }
+      });
 
       let LastTime: any = null;
 
       function update(time: any) {
-        if (keepUpdating) return;
-        // console.log("is UPditing");
+        if (keepUpdating) {
+          handleLose();
+          return;
+        }
+        console.log("is UPditing");
         if (LastTime != null) {
           const delta: number = time - LastTime;
           let player2PaddleRect = playerPaddle.rect();
@@ -199,6 +221,7 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
+      <Modal></Modal>
     </div>
   );
 }

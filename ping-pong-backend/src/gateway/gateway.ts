@@ -31,12 +31,26 @@ export class MyGateWay {
   server: Server;
 
   handleConnection(client: Socket) {
-    if (Rooms) {
-      
-    }
     console.log(`Client connected with ID: ${client.id}`);
   }
   handleDisconnect(client: any) {
+    if (Rooms) {
+      const room = Rooms.find(
+        (room) => room.AdminId === client.id || room.MeetId === client.id,
+      );
+      // const meet = Rooms.find((room) => room.MeetId === client.id);
+
+      // console.error('room.name  ' + room.name);
+      // Rooms.
+      // this.server.emit('player-disconnect');
+      //  else this.server.emit('player-disconnect', { user: 'meet' });
+      if (room) {
+        this.server.to(room.AdminId).emit('admin-disconnect');
+      }
+      if (room) {
+        this.server.to(room.MeetId).emit('meet-disconnect');
+      }
+    }
     console.error('DISCONNECT ', client.id);
   }
 
