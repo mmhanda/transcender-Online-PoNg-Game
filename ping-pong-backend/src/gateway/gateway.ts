@@ -68,6 +68,7 @@ export class MyGateWay {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.name);
+      this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
       // console.error('MEET CONNECTED');
     }

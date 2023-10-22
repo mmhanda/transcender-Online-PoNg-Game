@@ -16,8 +16,9 @@ type MessagePayload = {
 };
 
 export default function Pong() {
-  let runGame: boolean = false;
-  let keepUpdating: boolean = false;
+  let runGame: boolean = false,
+    keepUpdating: boolean = false,
+    Score: boolean = false;
 
   const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -51,8 +52,32 @@ export default function Pong() {
       socket.once("isAdmin", (Admin) => {
         if (Admin.isAdmin === "true") {
           console.log("ADMIN");
+          keepUpdating = true;
+          player2ScoreElem.textContent = String(0);
+          playerScoreElem.textContent = String(0);
+          ball.x = 50;
+          ball.y = 50;
           ISadmin = true;
+          Player2Paddle.position = 50;
         }
+      });
+
+      socket.once("meet-joined", (Admin) => {
+        console.log("meet-joined");
+        if (ISadmin) {
+          player2ScoreElem.textContent = String(0);
+          playerScoreElem.textContent = String(0);
+          ball.x = 50;
+          ball.y = 50;
+          Player2Paddle.position = 50;
+          Score = true;
+          keepUpdating = false;
+          window.requestAnimationFrame(update);
+        }
+        // if (Admin.isAdmin === "true") {
+        //   console.log("ADMIN");
+        //   ISadmin = true;
+        // }
       });
 
       document.addEventListener("visibilitychange", function () {
@@ -96,14 +121,18 @@ export default function Pong() {
 
       socket.on("admin-disconnect", () => {
         if (ISadmin) {
+          ////send the score and disconnect NOTE
           keepUpdating = true;
+          socket.disconnect();
           setIsOpen(true);
         }
       });
 
       socket.on("meet-disconnect", () => {
         if (!ISadmin) {
+          ////send the score and disconnect NOTE
           keepUpdating = true;
+          socket.disconnect();
           setIsOpen(true);
         }
       });
@@ -178,16 +207,17 @@ export default function Pong() {
       function handleLose() {
         const rect = ball.rect();
 
-        if (!playerScoreElem || !player2ScoreElem) return;
-        if (rect.right >= window.innerWidth) {
+        if (!playerScoreElem || !player2ScoreElem || !Score || keepUpdating)
+          return;
+        if (rect.right >= window.innerWidth && !keepUpdating) {
           adminScore = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = adminScore.toString();
         } else {
           player2Score = parseInt(player2ScoreElem.textContent) + 1;
           player2ScoreElem.textContent = player2Score.toString();
         }
-        ball.reset();
         Player2Paddle.reset();
+        ball.reset();
       }
 
       function isLose() {
