@@ -28,7 +28,8 @@ export default class Ball {
       Math.abs(this.direction.x) <= 0.2 ||
       Math.abs(this.direction.x) >= 0.9
     ) {
-      const heading = randomNumberBetween(0, 2 * Math.PI);
+      const heading = randomNumberBetween(0, 2 * Math.PI) - 1;
+      console.log(heading);
       this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
       this.velocity = INITIAL_VELOCITY;
     }
@@ -61,10 +62,10 @@ export default class Ball {
 
 function isCollision(rect1, rect2) {
   return (
-    rect1.left + 1 < rect2.right - 1 &&
+    rect1.left - 1 < rect2.right + 1 &&
     rect1.right + 1 > rect2.left - 1 &&
-    rect1.top + 1 < rect2.bottom - 1 &&
-    rect1.bottom + 1 > rect2.top - 1
+    rect1.top < rect2.bottom &&
+    rect1.bottom > rect2.top
   );
 }
 

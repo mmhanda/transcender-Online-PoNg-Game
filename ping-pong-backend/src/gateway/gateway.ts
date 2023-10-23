@@ -31,27 +31,24 @@ export class MyGateWay {
   server: Server;
 
   handleConnection(client: Socket) {
-    console.log(`Client connected with ID: ${client.id}`);
+    // console.log(`Client connected with ID: ${client.id}`);
   }
   handleDisconnect(client: any) {
+    let index = -1;
     if (Rooms) {
       const room = Rooms.find(
         (room) => room.AdminId === client.id || room.MeetId === client.id,
       );
-      // const meet = Rooms.find((room) => room.MeetId === client.id);
 
-      // console.error('room.name  ' + room.name);
-      // Rooms.
-      // this.server.emit('player-disconnect');
-      //  else this.server.emit('player-disconnect', { user: 'meet' });
       if (room) {
+        index = Rooms.map((index) => index.name).indexOf(room.name);
         this.server.to(room.AdminId).emit('admin-disconnect');
-      }
-      if (room) {
         this.server.to(room.MeetId).emit('meet-disconnect');
       }
+      // console.error('Rooms.length before  ' + Rooms.length);
+      if (index >= 0) Rooms.splice(index, 1);
+      // console.error('Rooms.length after ' + Rooms.length);
     }
-    console.error('DISCONNECT ', client.id);
   }
 
   @SubscribeMessage('join-room')
@@ -70,37 +67,40 @@ export class MyGateWay {
       socket.join(availableRoom.name);
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
-      // console.error('MEET CONNECTED');
     }
-    console.log(Rooms.length);
+    // console.log(Rooms.length);
 
-    console.log('join-room');
+    // console.log('join-room');
   }
   @SubscribeMessage('coordinates_Admin')
-  onReceivingAdmin(@MessageBody() body: any) {
-    this.server.emit('Player-2-Meet', {
-      ballX: body.ballX,
-      ballY: body.ballY,
-      playerY: body.playerY,
-      rect: body.rect,
-      hue: body.hue,
-      adminScore: body.adminScore,
-      player2Score: body.player2Score,
-    });
+  onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
+    const room = Rooms.find((room) => room.AdminId === client.id);
+
+    if (room) {
+      this.server.to(room.MeetId).emit('Player-2-Meet', {
+        ballX: body.ballX,
+        ballY: body.ballY,
+        playerY: body.playerY,
+        rect: body.rect,
+        hue: body.hue,
+        adminScore: body.adminScore,
+        player2Score: body.player2Score,
+      });
+    }
   }
   @SubscribeMessage('coordinates_Meet')
-  onReceivingMeet(@MessageBody() body: any) {
-    this.server.emit('Player-2-Admin', {
-      playerY: body.playerY,
-      rect: body.rect,
-    });
+  onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
+    const room = Rooms.find((room) => room.MeetId === client.id);
+
+    if (room) {
+      this.server.to(room.AdminId).emit('Player-2-Admin', {
+        playerY: body.playerY,
+        rect: body.rect,
+      });
+    }
   }
-  @SubscribeMessage('pause-game')
+  @SubscribeMessage('room-score')
   onDisconnect(@MessageBody() body: any) {
-    console.error(body.state);
-    this.server.emit('game-paused', {
-      state: body.state,
-    });
-    console.error('vvvvvvvvv');
+    console.error(body);
   }
 }

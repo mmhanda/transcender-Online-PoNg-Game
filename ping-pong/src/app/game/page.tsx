@@ -21,7 +21,7 @@ export default function Pong() {
     isMeet: boolean = false,
     Score: boolean = false;
 
-  const [value, setValue] = useState("");
+  const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<MessagePayload[]>([]);
   // const WebsocketContext = createContext<Socket>(InitSocket);
@@ -60,7 +60,7 @@ export default function Pong() {
       });
 
       socket.once("meet-joined", (Admin) => {
-        console.log("meet-joined");
+        // console.log("meet-joined");
         if (ISadmin) {
           Score = true;
           keepUpdating = false;
@@ -73,6 +73,7 @@ export default function Pong() {
       });
 
       document.addEventListener("visibilitychange", function () {
+        EndGame("End Game!");
         socket.disconnect();
         keepUpdating = true;
         setIsOpen(true);
@@ -113,28 +114,39 @@ export default function Pong() {
 
       socket.on("admin-disconnect", () => {
         if (ISadmin) {
-          ////send the score and disconnect NOTE
-          keepUpdating = true;
-          socket.disconnect();
-          setIsOpen(true);
+          EndGame("End Game!");
         }
       });
 
       socket.on("meet-disconnect", () => {
         if (!ISadmin) {
-          ////send the score and disconnect NOTE
-          keepUpdating = true;
-          socket.disconnect();
-          setIsOpen(true);
+          EndGame("End Game!");
         }
       });
+
+      function EndGame(msg) {
+        keepUpdating = true;
+        setMessage(msg);
+        setIsOpen(true);
+        socket.emit("room-score", {
+          admin: playerScoreElem.textContent,
+          meet: player2ScoreElem.textContent,
+        });
+        socket.disconnect();
+      }
 
       let LastTime: any = null;
 
       function update(time: any) {
         if (!isMeet || keepUpdating) return;
 
-        console.log("is UPditing");
+        // console.log("is UPditing");
+        if (
+          playerScoreElem.textContent === "8" ||
+          player2ScoreElem.textContent === "8"
+        )
+          EndGame("End Game!");
+
         if (LastTime != null) {
           const delta: number = time - LastTime;
           let player2PaddleRect = playerPaddle.rect();
@@ -228,6 +240,20 @@ export default function Pong() {
     runGame = true;
   }, []);
 
+  const customStyles = {
+    overlay: {
+      backgroundColor: "rgba(3, 3, 3, 0.6)",
+    },
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
+
   return (
     <div className="game-wrapper">
       <div className="score">
@@ -241,7 +267,13 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
-      <Modal></Modal>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={customStyles}
+      >
+        {`${message}`}
+      </Modal>
     </div>
   );
 }
