@@ -18,6 +18,7 @@ type MessagePayload = {
 export default function Pong() {
   let runGame: boolean = false,
     keepUpdating: boolean = false,
+    isMeet: boolean = false,
     Score: boolean = false;
 
   const [value, setValue] = useState("");
@@ -53,31 +54,22 @@ export default function Pong() {
         if (Admin.isAdmin === "true") {
           console.log("ADMIN");
           keepUpdating = true;
-          player2ScoreElem.textContent = String(0);
-          playerScoreElem.textContent = String(0);
-          ball.x = 50;
-          ball.y = 50;
           ISadmin = true;
-          Player2Paddle.position = 50;
+          handleLose();
         }
       });
 
       socket.once("meet-joined", (Admin) => {
         console.log("meet-joined");
         if (ISadmin) {
-          player2ScoreElem.textContent = String(0);
-          playerScoreElem.textContent = String(0);
-          ball.x = 50;
-          ball.y = 50;
-          Player2Paddle.position = 50;
           Score = true;
           keepUpdating = false;
+          isMeet = true;
+          window.requestAnimationFrame(update);
+        } else {
+          isMeet = true;
           window.requestAnimationFrame(update);
         }
-        // if (Admin.isAdmin === "true") {
-        //   console.log("ADMIN");
-        //   ISadmin = true;
-        // }
       });
 
       document.addEventListener("visibilitychange", function () {
@@ -140,10 +132,8 @@ export default function Pong() {
       let LastTime: any = null;
 
       function update(time: any) {
-        if (keepUpdating) {
-          handleLose();
-          return;
-        }
+        if (!isMeet || keepUpdating) return;
+
         console.log("is UPditing");
         if (LastTime != null) {
           const delta: number = time - LastTime;
@@ -206,6 +196,8 @@ export default function Pong() {
 
       function handleLose() {
         const rect = ball.rect();
+        Player2Paddle.reset();
+        ball.reset();
 
         if (!playerScoreElem || !player2ScoreElem || !Score || keepUpdating)
           return;
@@ -216,8 +208,6 @@ export default function Pong() {
           player2Score = parseInt(player2ScoreElem.textContent) + 1;
           player2ScoreElem.textContent = player2Score.toString();
         }
-        Player2Paddle.reset();
-        ball.reset();
       }
 
       function isLose() {

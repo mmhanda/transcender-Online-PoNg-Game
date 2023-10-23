@@ -23,7 +23,7 @@ export default function Pong() {
     // socket.on("connect", () => {
     //     console.log("Connected !");
     //   });
-      
+
     //   socket.on("onMessage", (newMessage: MessagePayload) => {
     //       console.log("onMessage Event Recived!");
     //       console.log("newMessage.content: " + newMessage.content);
@@ -34,7 +34,6 @@ export default function Pong() {
     //   console.log(data);
     // });
 
-    
     if (runGame) {
       console.log(runGame);
       const ball = new Ball(document.getElementById("ball"));
@@ -62,20 +61,20 @@ export default function Pong() {
 
           const hue: number = parseFloat(
             getComputedStyle(document.documentElement).getPropertyValue("--hue")
-            );
+          );
           const hueColorChange: number = hue + delta * 0.04;
           const hueColorChangeSet: string = hueColorChange.toString();
           document.documentElement.style.setProperty(
             "--hue",
             hueColorChangeSet
-            );
-          }
-          LastTime = time;
-          window.requestAnimationFrame(update);
+          );
         }
-        
-        function handleLose() {
-          const rect = ball.rect();
+        LastTime = time;
+        window.requestAnimationFrame(update);
+      }
+
+      function handleLose() {
+        const rect = ball.rect();
 
         if (!playerScoreElem | !botScoreElem) return;
         if (rect.right >= window.innerWidth) {
@@ -109,7 +108,6 @@ export default function Pong() {
     //   socket.off("connect");
     //   socket.off("specialEvent");
     // };
-
   }, []);
 
   // const submitHandler = () => {

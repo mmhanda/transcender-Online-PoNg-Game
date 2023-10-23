@@ -1,4 +1,4 @@
-const SPEED = 0.5;
+const SPEED = 0.1;
 
 let resist = 0;
 let decide = 1;
