@@ -37,7 +37,6 @@ export default function Pong() {
 
       socket.once("isAdmin", (Admin) => {
         if (Admin.isAdmin === "true") {
-          console.log("ADMIN");
           keepUpdating = true;
           ISadmin = true;
           handleLose();
