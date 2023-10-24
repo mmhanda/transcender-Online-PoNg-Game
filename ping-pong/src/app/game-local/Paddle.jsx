@@ -13,10 +13,6 @@ export default class Paddle {
     this.paddleElem.style.setProperty("--position", value);
   }
 
-  update(Player2Height) {
-    this.position = Player2Height;
-  }
-
   reset() {
     this.position = 50;
   }

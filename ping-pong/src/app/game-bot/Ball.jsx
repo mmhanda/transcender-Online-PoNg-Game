@@ -1,5 +1,5 @@
 const INITIAL_VELOCITY = 0.025;
-const VELOCITY_INCREASE = 0.000002;
+const VELOCITY_INCREASE = 0.000001;
 
 export default class Ball {
   constructor(ballElem) {
@@ -39,7 +39,6 @@ export default class Ball {
   }
 
   update(delta, paddleRects) {
-    // console.log(paddleRects);
     this.x += this.direction.x * this.velocity * delta;
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
@@ -57,10 +56,10 @@ export default class Ball {
 
 function isCollision(rect1, rect2) {
   return (
-    rect1.left + 1 < rect2.right - 1 &&
+    rect1.left - 1 < rect2.right + 1 &&
     rect1.right + 1 > rect2.left - 1 &&
-    rect1.top + 1 < rect2.bottom - 1 &&
-    rect1.bottom + 1 > rect2.top - 1
+    rect1.top < rect2.bottom &&
+    rect1.bottom > rect2.top
   );
 }
 

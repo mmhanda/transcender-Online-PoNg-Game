@@ -32,12 +32,11 @@ export default function Pong() {
       function update(time: any) {
         if (keepUpdating) return;
 
-        if (playerScoreElem?.textContent === "3") EndGame("You Won!");
-        if (botScoreElem?.textContent === "3") EndGame("You Lost!");
+        if (playerScoreElem.textContent === "3") EndGame("Left Player Won!");
+        if (botScoreElem.textContent === "3") EndGame("Right Player Won!");
         if (LastTime != null) {
           const delta: number = time - LastTime;
           ball.update(delta, [playerPaddle.rect(), botPaddle.rect()]);
-          botPaddle.update(delta, ball.y);
           if (isLose()) {
             handleLose();
           }
@@ -69,6 +68,7 @@ export default function Pong() {
         }
         ball.reset();
         botPaddle.reset();
+        playerPaddle.position = 50;
       }
 
       function isLose() {
@@ -76,9 +76,28 @@ export default function Pong() {
         return rect.left <= 0 || rect.right >= window.innerWidth;
       }
 
-      document.addEventListener("mousemove", (e) => {
-        playerPaddle.position = (e.y / window.innerHeight) * 100;
+      document.addEventListener("keydown", (event) => {
+        let name = event.key;
+        if (name === "w" && playerPaddle.position >= 0) {
+          playerPaddle.position -= 6;
+        } else if (name === "s" && playerPaddle.position <= 100) {
+          playerPaddle.position += 6;
+        }
       });
+
+      document.addEventListener("keydown", (event) => {
+        let name = event.key;
+        if (name === "ArrowUp" && botPaddle.position >= 0) {
+          botPaddle.position -= 6;
+        } else if (name === "ArrowDown" && botPaddle.position <= 100) {
+          botPaddle.position += 6;
+        }
+      });
+
+      // document.addEventListener("mousemove", (e) => {
+      //   botPaddle.position = (e.y / window.innerHeight) * 100;
+      // });
+
       window.requestAnimationFrame(update);
     }
 
