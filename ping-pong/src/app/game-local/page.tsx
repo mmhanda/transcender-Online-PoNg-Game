@@ -9,7 +9,8 @@ import { customStyles } from "../game/Paddle";
 export default function Pong() {
   let runGame: boolean = false,
     keepUpdating: boolean = false;
-
+  let playerPaddle_position: number = 50;
+  let botPaddle_position: number = 50;
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,6 +52,8 @@ export default function Pong() {
             hueColorChangeSet
           );
         }
+        playerPaddle.position = playerPaddle_position;
+        botPaddle.position = botPaddle_position;
         LastTime = time;
         window.requestAnimationFrame(update);
       }
@@ -75,34 +78,29 @@ export default function Pong() {
         const rect = ball.rect();
         return rect.left <= 0 || rect.right >= window.innerWidth;
       }
-
-      document.addEventListener("keydown", (event) => {
-        let name = event.key;
-        if (name === "w" && playerPaddle.position >= 0) {
-          playerPaddle.position -= 6;
-        } else if (name === "s" && playerPaddle.position <= 100) {
-          playerPaddle.position += 6;
-        }
-      });
-
-      document.addEventListener("keydown", (event) => {
-        let name = event.key;
-        if (name === "ArrowUp" && botPaddle.position >= 0) {
-          botPaddle.position -= 6;
-        } else if (name === "ArrowDown" && botPaddle.position <= 100) {
-          botPaddle.position += 6;
-        }
-      });
-
-      // document.addEventListener("mousemove", (e) => {
-      //   botPaddle.position = (e.y / window.innerHeight) * 100;
-      // });
-
       window.requestAnimationFrame(update);
     }
 
     runGame = true;
   }, []);
+
+  document.addEventListener("keydown", (event) => {
+    let name = event.key;
+    if (name === "w" && playerPaddle_position > 0) {
+      console.log("w");
+      playerPaddle_position -= 3.5;
+    } else if (name === "s" && playerPaddle_position < 100)
+      playerPaddle_position += 3.5;
+  });
+
+  document.addEventListener("keydown", (event) => {
+    let name = event.key;
+    if (name === "ArrowUp" && botPaddle_position > 0) {
+      console.log("flesh " + botPaddle_position);
+      botPaddle_position -= 3.5;
+    } else if (name === "ArrowDown" && botPaddle_position < 100)
+      botPaddle_position += 3.5;
+  });
 
   return (
     <div>

@@ -22,9 +22,9 @@ export default class Paddle {
     this.position += SPEED * delta * (ballHeight - this.position + resist);
 
     if (decide >= 0) {
-      resist += 0.002;
+      resist += 0.001;
     } else {
-      resist -= 0.002;
+      resist -= 0.001;
     }
   }
 

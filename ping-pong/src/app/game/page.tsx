@@ -39,17 +39,18 @@ export default function Pong() {
         if (Admin.isAdmin === "true") {
           keepUpdating = true;
           ISadmin = true;
-          handleLose();
         }
       });
 
       socket.once("meet-joined", (Admin) => {
         if (ISadmin) {
+          socket.emit("coordinates_Admin", { playerY: playerPaddle.position });
           Score = true;
           keepUpdating = false;
           isMeet = true;
           window.requestAnimationFrame(update);
         } else {
+          socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
           isMeet = true;
           window.requestAnimationFrame(update);
         }
