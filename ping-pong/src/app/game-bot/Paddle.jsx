@@ -29,7 +29,7 @@ export default class Paddle {
   }
 
   reset() {
-    this.position = 50;
+    this.position = 10;
     resist = 0;
     decide = decide * -1;
   }

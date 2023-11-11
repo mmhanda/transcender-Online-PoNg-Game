@@ -86,7 +86,7 @@ export default function Pong() {
   }, []);
 
   return (
-    <div>
+    <div className="gameContainer">
       <div className="score">
         <div className="player-score" id="player-score">
           0
