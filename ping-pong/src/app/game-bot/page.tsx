@@ -33,11 +33,15 @@ export default function Pong() {
         if (keepUpdating) return;
 
         if (playerScoreElem?.textContent === "3") EndGame("You Won!");
-        if (botScoreElem?.textContent === "3") EndGame("You Lost!");
+        if (botScoreElem?.textContent === "3") EndGame("You Won!");
         if (LastTime != null) {
           const delta: number = time - LastTime;
           ball.update(delta, [playerPaddle.rect(), botPaddle.rect()]);
-          botPaddle.update(delta, ball.y);
+          if (
+            ball.y > window.innerHeight / 200 &&
+            ball.y < window.innerHeight / 12.5
+          )
+            botPaddle.update(delta, ball.y);
           if (isLose()) {
             handleLose();
           }
@@ -76,9 +80,17 @@ export default function Pong() {
         return rect.left <= 0 || rect.right >= window.innerWidth;
       }
 
+      // if (window.innerHeight / 2 > window.innerHeight) {
       document.addEventListener("mousemove", (e) => {
-        playerPaddle.position = (e.y / window.innerHeight) * 100;
+        const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
+        // console.log("e.y " + e.y);
+        // console.log("pos " + pos);
+        // console.log("window.innerHeight " + window.innerHeight);
+        // console.log("calc " + window.innerHeight / 12.5);
+        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.5)
+          playerPaddle.position = pos;
       });
+      // }
       window.requestAnimationFrame(update);
     }
 
@@ -86,7 +98,10 @@ export default function Pong() {
   }, []);
 
   return (
-    <div className="gameContainer">
+    <div
+      className="gameContainer z-10"
+      style={{ height: `${window?.innerHeight / 1.3}px` }}
+    >
       <div className="score">
         <div className="player-score" id="player-score">
           0
@@ -96,8 +111,8 @@ export default function Pong() {
         </div>
       </div>
       <div className="ball" id="ball"></div>
-      <div className="paddle left" id="player-paddle"></div>
-      <div className="paddle right" id="bot-paddle"></div>
+      <div className="paddle left z-0" id="player-paddle"></div>
+      <div className="paddle right z-0" id="bot-paddle"></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

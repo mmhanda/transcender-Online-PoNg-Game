@@ -15,12 +15,6 @@ body {
   height: 100vh;
 }
 
-.gameContainer {
-  position: relative;
-  width: 45vw;
-  height: 100vh;
-}
-
 .paddle {
   --position: 50;
   transform: translateY(-50%);
@@ -75,4 +69,12 @@ body {
 
 .score > :last-child {
   text-align: left;
+}
+
+.gameContainer {
+  position: relative;
+  width: 45vw;
+  height: 100vh;
+  border: 10px solid #000000;
+  box-sizing: border-box;
 }

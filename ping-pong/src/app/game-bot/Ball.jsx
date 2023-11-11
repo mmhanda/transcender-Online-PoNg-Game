@@ -1,5 +1,5 @@
 const INITIAL_VELOCITY = 0.025;
-const VELOCITY_INCREASE = 0.000001;
+const VELOCITY_INCREASE = 0.0;
 
 export default class Ball {
   constructor(ballElem) {
@@ -21,8 +21,8 @@ export default class Ball {
   }
 
   reset() {
-    this.x = 23;
-    this.y = 50;
+    this.x = 22;
+    this.y = 40;
     this.direction = { x: 0 };
     while (
       Math.abs(this.direction.x) <= 0.2 ||
