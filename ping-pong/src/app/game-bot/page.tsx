@@ -65,7 +65,7 @@ export default function Pong() {
         const rect = ball.rect();
 
         if (!playerScoreElem || !botScoreElem) return;
-        if (rect.right >= window.innerWidth) {
+        if (rect.right >= window.innerWidth - window.innerWidth / 4) {
           const typeChanger: number = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = typeChanger.toString();
         } else {
@@ -78,7 +78,10 @@ export default function Pong() {
 
       function isLose() {
         const rect = ball.rect();
-        return rect.left <= 0 || rect.right >= window.innerWidth;
+        return (
+          rect.left <= window.innerWidth / 4 ||
+          rect.right >= window.innerWidth - window.innerWidth / 4
+        );
       }
 
       document.addEventListener("mousemove", (e) => {

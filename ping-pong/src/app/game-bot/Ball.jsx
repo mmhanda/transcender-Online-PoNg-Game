@@ -68,10 +68,10 @@ export default class Ball {
 
 function isCollision(rect1, rect2) {
   return (
-    rect1.left < rect2.right + 4 &&
-    rect1.right > rect2.left + 4 &&
-    rect1.top < rect2.bottom + 4 &&
-    rect1.bottom > rect2.top + 4
+    rect1.left + 4 < rect2.right + 4 &&
+    rect1.right + 4 > rect2.left + 4 &&
+    rect1.top + 4 < rect2.bottom + 4 &&
+    rect1.bottom + 4 > rect2.top + 4
   );
 }
 
