@@ -141,9 +141,9 @@ export default function Pong() {
           Player2Paddle.update(Player2Height);
 
           if (Player2Rect) {
-              const paddleLeft = window.innerWidth - window.innerWidth / 3.5;
-              Player2Rect.left = paddleLeft;
-              Player2Rect.right = paddleLeft - 10; // also top and bottom
+            const paddleLeft = window.innerWidth - window.innerWidth / 3.5;
+            Player2Rect.left = paddleLeft;
+            Player2Rect.right = paddleLeft - 10; // also top and bottom
 
             ball.update(
               delta,
@@ -202,7 +202,10 @@ export default function Pong() {
 
         if (!playerScoreElem || !player2ScoreElem || !Score || keepUpdating)
           return;
-        if (rect.right >= window.innerWidth && !keepUpdating) {
+        if (
+          rect.right >= window.innerWidth - window.innerWidth / 4 &&
+          !keepUpdating
+        ) {
           adminScore = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = adminScore.toString();
         } else {
@@ -211,9 +214,13 @@ export default function Pong() {
         }
       }
 
+      console.log(window.innerWidth);
       function isLose() {
         const rect = ball.rect();
-        return rect.left <= 0 || rect.right >= window.innerWidth;
+        return (
+          rect.left <= window.innerWidth / 4 ||
+          rect.right >= window.innerWidth - window.innerWidth / 4
+        );
       }
 
       document.addEventListener("mousemove", (e) => {
