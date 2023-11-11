@@ -141,18 +141,10 @@ export default function Pong() {
           Player2Paddle.update(Player2Height);
 
           if (Player2Rect) {
-            if (ISadmin) {
               const paddleLeft = window.innerWidth - window.innerWidth / 3.5;
               Player2Rect.left = paddleLeft;
               Player2Rect.right = paddleLeft - 10; // also top and bottom
-            }
-            // if (
-            //   ball.y > window.innerHeight / 200 &&
-            //   ball.y < window.innerHeight / 12
-            // ) {
-            // console.log("window.innerWidth " + window.innerWidth);
-            // // console.log("HERE " + paddleLeft);
-            // }
+
             ball.update(
               delta,
               [playerPaddle.rect(), Player2Rect],
@@ -160,7 +152,6 @@ export default function Pong() {
               ballX,
               ballY
             );
-            // }
 
             if (ISadmin) {
               // const hue: number = parseFloat(
@@ -229,7 +220,6 @@ export default function Pong() {
         const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
         if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.1) {
           playerPaddle.position = pos;
-          // playerPaddle.position = (e.y / window.innerHeight) * 100;
           if (ISadmin) {
             socket.emit("coordinates_Admin", {
               playerY: playerPaddle.position,

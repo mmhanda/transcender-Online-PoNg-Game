@@ -46,7 +46,6 @@ export default class Ball {
 
       const rect = this.rect();
 
-      console.log(window.innerHeight / 200);
       if (
         rect.bottom >= window.innerHeight ||
         rect.top <= 0 ||
@@ -59,20 +58,11 @@ export default class Ball {
         this.direction.x *= -1;
       }
     } else {
-      this.x = 40 - AdminX;
+      this.x = 45 - AdminX;
       this.y = AdminY;
     }
   }
 }
-
-// function isCollision(rect1, rect2) {
-//   return (
-//     rect1.left - 1 < rect2.right + 1 &&
-//     rect1.right + 1 > rect2.left - 1 &&
-//     rect1.top < rect2.bottom &&
-//     rect1.bottom > rect2.top
-//   );
-// }
 
 function isCollision(rect1, rect2) {
   return (
