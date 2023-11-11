@@ -1,7 +1,3 @@
-*, *::after, *::before {
-  box-sizing: border-box;
-}
-
 :root {
   --hue: 300;
   --saturation: 50%;
@@ -11,12 +7,19 @@
 
 body {
   margin: 0;
-  background-color: var(--background-color);
+  /* background-color: var(--background-color);
+  overflow: hidden; */
+  background-color: #603c0daa;
+  /* background-color: var(--background-color); */
   overflow: hidden;
+  /* overflow: hidden; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .paddle {
-
   --position: 50;
 
   transform: translateY(-50%);
@@ -41,7 +44,7 @@ body {
 
   transform: translate(-50%, -50%);
   top: calc(var(--y) * 1vh);
-  left: calc(var(--x) *1vw);
+  left: calc(var(--x) * 1vw);
   position: absolute;
   border-radius: 100%;
   background-color: var(--paddle-color);
@@ -73,3 +76,90 @@ body {
 .score > :last-child {
   text-align: left;
 }
+
+.gameContainer {
+  position: relative;
+  width: 45vw;
+  height: 100vh;
+  background-color: rgb(44, 36, 36);
+}
+
+/* :root {
+  --hue: 300;
+  --saturation: 50%;
+  --background-color: hsl(var(--hue), var(--saturation), 20%);
+  --paddle-color: hsl(var(--hue), var(--saturation), 75%);
+}
+
+body {
+  margin: 0;
+  background-color: #603c0daa;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.paddle {
+  --position: 50;
+  transform: translateY(-50%);
+  top: calc(var(--position) * 1vh);
+  position: absolute;
+  background-color: var(--paddle-color);
+  width: 1vh;
+  height: 12vh;
+}
+
+.paddle.left {
+  left: 1vw;
+}
+
+.paddle.right {
+  right: 1vw;
+}
+
+.ball {
+  --y: 50;
+  --x: 50;
+  transform: translate(-50%, -50%);
+  top: calc(var(--y) * 1vh);
+  left: calc(var(--x) * 1vw);
+  position: absolute;
+  border-radius: 100%;
+  background-color: var(--paddle-color);
+  width: 2.5vh;
+  height: 2.5vh;
+}
+
+.score {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 7vh;
+  color: var(--paddle-color);
+}
+
+.score > * {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0 2vh;
+  margin: 1vh 0;
+  opacity: 0.5;
+}
+
+.score > :first-child {
+  text-align: right;
+  border-right: 0.8vh solid;
+}
+
+.score > :last-child {
+  text-align: left;
+}
+
+.gameContainer {
+  position: relative;
+  width: 45vw;
+  height: 100vh;
+  background-color: rgb(44, 36, 36);
+} */

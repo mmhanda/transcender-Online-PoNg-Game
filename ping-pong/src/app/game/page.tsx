@@ -141,9 +141,18 @@ export default function Pong() {
           Player2Paddle.update(Player2Height);
 
           if (Player2Rect) {
-            const paddleLeft = window.innerWidth - 10;
-            Player2Rect.left = paddleLeft;
-            Player2Rect.right = paddleLeft - 10;
+            if (ISadmin) {
+              const paddleLeft = window.innerWidth - window.innerWidth / 3.5;
+              Player2Rect.left = paddleLeft;
+              Player2Rect.right = paddleLeft - 10; // also top and bottom
+            }
+            // if (
+            //   ball.y > window.innerHeight / 200 &&
+            //   ball.y < window.innerHeight / 12
+            // ) {
+            // console.log("window.innerWidth " + window.innerWidth);
+            // // console.log("HERE " + paddleLeft);
+            // }
             ball.update(
               delta,
               [playerPaddle.rect(), Player2Rect],
@@ -151,14 +160,16 @@ export default function Pong() {
               ballX,
               ballY
             );
+            // }
 
             if (ISadmin) {
-              const hue: number = parseFloat(
-                getComputedStyle(document.documentElement).getPropertyValue(
-                  "--hue"
-                )
-              );
-              const hueColorChange: number = hue + delta * 0.04;
+              // const hue: number = parseFloat(
+              //   getComputedStyle(document.documentElement).getPropertyValue(
+              //     "--hue"
+              //   )
+              // );
+              const hueColorChange: number = 400;
+              // const hueColorChange: number = hue + delta * 0.04;
               hueColorChangeSet = hueColorChange.toString();
               document.documentElement.style.setProperty(
                 "--hue",
@@ -215,11 +226,17 @@ export default function Pong() {
       }
 
       document.addEventListener("mousemove", (e) => {
-        playerPaddle.position = (e.y / window.innerHeight) * 100;
-        if (ISadmin) {
-          socket.emit("coordinates_Admin", { playerY: playerPaddle.position });
-        } else {
-          socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
+        const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
+        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.1) {
+          playerPaddle.position = pos;
+          // playerPaddle.position = (e.y / window.innerHeight) * 100;
+          if (ISadmin) {
+            socket.emit("coordinates_Admin", {
+              playerY: playerPaddle.position,
+            });
+          } else {
+            socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
+          }
         }
       });
       window.requestAnimationFrame(update);
@@ -228,7 +245,10 @@ export default function Pong() {
   }, []);
 
   return (
-    <div className="game-wrapper">
+    <div
+      className="gameContainer"
+      style={{ height: `${window?.innerHeight / 1.3}px` }}
+    >
       <div className="score">
         <div className="player-score" id="player-score">
           0

@@ -94,7 +94,7 @@ export default function Pong() {
 
   return (
     <div
-      className="gameContainer z-10"
+      className="gameContainer"
       style={{ height: `${window?.innerHeight / 1.3}px` }}
     >
       <div className="score">
@@ -106,8 +106,8 @@ export default function Pong() {
         </div>
       </div>
       <div className="ball" id="ball"></div>
-      <div className="paddle left z-0" id="player-paddle"></div>
-      <div className="paddle right z-0" id="bot-paddle"></div>
+      <div className="paddle left" id="player-paddle"></div>
+      <div className="paddle right" id="bot-paddle"></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

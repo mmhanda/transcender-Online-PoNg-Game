@@ -21,8 +21,8 @@ export default class Ball {
   }
 
   reset() {
-    this.x = 50;
-    this.y = 50;
+    this.x = 22;
+    this.y = 40;
     this.direction = { x: 0 };
     while (
       Math.abs(this.direction.x) <= 0.2 ||
@@ -46,14 +46,20 @@ export default class Ball {
 
       const rect = this.rect();
 
-      if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+      console.log(window.innerHeight / 200);
+      if (
+        rect.bottom >= window.innerHeight ||
+        rect.top <= 0 ||
+        this.y > window.innerHeight / 11.3 ||
+        this.y < window.innerHeight / 490
+      ) {
         this.direction.y *= -1;
       }
       if (paddleRects.some((r) => isCollision(r, rect))) {
         this.direction.x *= -1;
       }
     } else {
-      this.x = 100 - AdminX;
+      this.x = 40 - AdminX;
       this.y = AdminY;
     }
   }
