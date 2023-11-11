@@ -1,5 +1,5 @@
 const INITIAL_VELOCITY = 0.025;
-const VELOCITY_INCREASE = 0.0;
+const VELOCITY_INCREASE = 0.000001;
 
 export default class Ball {
   constructor(ballElem) {
@@ -57,12 +57,21 @@ export default class Ball {
   }
 }
 
+// function isCollision(rect1, rect2) {
+//   return (
+//     rect1.left - 1 < rect2.right + 1 &&
+//     rect1.right + 1 > rect2.left - 1 &&
+//     rect1.top < rect2.bottom &&
+//     rect1.bottom > rect2.top
+//   );
+// }
+
 function isCollision(rect1, rect2) {
   return (
-    rect1.left - 1 < rect2.right + 1 &&
-    rect1.right + 1 > rect2.left - 1 &&
-    rect1.top < rect2.bottom &&
-    rect1.bottom > rect2.top
+    rect1.left < rect2.right + 4 &&
+    rect1.right > rect2.left + 4 &&
+    rect1.top < rect2.bottom + 4 &&
+    rect1.bottom > rect2.top + 4
   );
 }
 

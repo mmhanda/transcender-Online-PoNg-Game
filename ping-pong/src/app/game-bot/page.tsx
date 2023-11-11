@@ -49,7 +49,8 @@ export default function Pong() {
           const hue: number = parseFloat(
             getComputedStyle(document.documentElement).getPropertyValue("--hue")
           );
-          const hueColorChange: number = hue + delta * 0.04;
+          // const hueColorChange: number = hue + delta * 0.04;
+          const hueColorChange: number = 400;
           const hueColorChangeSet: string = hueColorChange.toString();
           document.documentElement.style.setProperty(
             "--hue",
@@ -80,17 +81,11 @@ export default function Pong() {
         return rect.left <= 0 || rect.right >= window.innerWidth;
       }
 
-      // if (window.innerHeight / 2 > window.innerHeight) {
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
-        // console.log("e.y " + e.y);
-        // console.log("pos " + pos);
-        // console.log("window.innerHeight " + window.innerHeight);
-        // console.log("calc " + window.innerHeight / 12.5);
-        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.5)
+        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.1)
           playerPaddle.position = pos;
       });
-      // }
       window.requestAnimationFrame(update);
     }
 

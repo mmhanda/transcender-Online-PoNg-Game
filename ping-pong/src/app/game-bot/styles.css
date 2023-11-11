@@ -7,7 +7,7 @@
 
 body {
   margin: 0;
-  background-color: var(--background-color);
+  background-color: #603c0daa;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -75,6 +75,5 @@ body {
   position: relative;
   width: 45vw;
   height: 100vh;
-  border: 10px solid #000000;
-  box-sizing: border-box;
+  background-color: rgb(44, 36, 36);
 }
