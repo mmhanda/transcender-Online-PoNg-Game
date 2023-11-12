@@ -77,7 +77,6 @@ export class MyGateWay {
         ballX: body.ballX,
         ballY: body.ballY,
         playerY: body.playerY,
-        rect: body.rect,
         adminScore: body.adminScore,
         player2Score: body.player2Score,
       });

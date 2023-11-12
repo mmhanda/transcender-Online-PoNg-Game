@@ -1,5 +1,5 @@
 :root {
-  --hue: 300;
+  --hue: 400;
   --saturation: 50%;
   --background-color: hsl(var(--hue), var(--saturation), 20%);
   --paddle-color: hsl(var(--hue), var(--saturation), 75%);

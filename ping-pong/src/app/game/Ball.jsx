@@ -48,8 +48,7 @@ export default class Ball {
 
       if (rect.bottom >= window.innerHeight || rect.top <= 0) {
         this.direction.y *= -1;
-      }
-      if (paddleRects.some((r) => isCollision(r, rect))) {
+      } else if (paddleRects.some((r) => isCollision(r, rect))) {
         this.direction.x *= -1;
       }
     } else {
@@ -59,12 +58,12 @@ export default class Ball {
   }
 }
 
-function isCollision(rect1, rect2) {
+function isCollision(rect, BallRect) {
   return (
-    rect1.left + 4 < rect2.right + 4 &&
-    rect1.right + 4 > rect2.left + 4 &&
-    rect1.top - 4 < rect2.bottom + 4 &&
-    rect1.bottom + 4 > rect2.top - 4
+    rect?.left + 1 < BallRect.right + 1 &&
+    rect?.right + 1 > BallRect.left + 1 &&
+    rect?.top < BallRect.bottom &&
+    rect?.bottom > BallRect.top
   );
 }
 
