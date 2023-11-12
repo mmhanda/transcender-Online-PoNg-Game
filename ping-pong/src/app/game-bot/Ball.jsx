@@ -22,7 +22,7 @@ export default class Ball {
 
   reset() {
     this.x = 22;
-    this.y = 40;
+    this.y = 50;
     this.direction = { x: 0 };
     while (
       Math.abs(this.direction.x) <= 0.2 ||
@@ -45,10 +45,7 @@ export default class Ball {
 
     const rect = this.rect();
 
-    if (
-      rect.bottom >= window.innerHeight - window.innerHeight / 8 ||
-      rect.top <= window.innerHeight / 8
-    ) {
+    if (rect.bottom >= window.innerHeight || rect.top <= 0) {
       this.direction.y *= -1;
     }
     if (paddleRects.some((r) => isCollision(r, rect))) {
@@ -56,15 +53,6 @@ export default class Ball {
     }
   }
 }
-
-// function isCollision(rect1, rect2) {
-//   return (
-//     rect1.left - 1 < rect2.right + 1 &&
-//     rect1.right + 1 > rect2.left - 1 &&
-//     rect1.top < rect2.bottom &&
-//     rect1.bottom > rect2.top
-//   );
-// }
 
 function isCollision(rect1, rect2) {
   return (

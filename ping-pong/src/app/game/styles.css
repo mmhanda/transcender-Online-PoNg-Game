@@ -23,7 +23,8 @@ body {
   position: absolute;
   background-color: var(--paddle-color);
   width: 1vh;
-  height: 22vh;
+  height: 15vh;
+  border-radius: 2vh;
 }
 
 .paddle.left {

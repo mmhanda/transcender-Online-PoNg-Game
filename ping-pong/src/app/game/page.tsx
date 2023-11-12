@@ -1,6 +1,5 @@
 "use client";
 import { io } from "socket.io-client";
-
 import Modal from "react-modal";
 import { useEffect, useState } from "react";
 import Ball from "./Ball";
@@ -201,8 +200,7 @@ export default function Pong() {
       }
 
       document.addEventListener("mousemove", (e) => {
-        const pos = (e.y / window.innerHeight) * 100;
-        playerPaddle.position = pos;
+        playerPaddle.position = (e.y / window.innerHeight) * 100;
         if (ISadmin && Score) {
           socket.emit("coordinates_Admin", {
             playerY: playerPaddle.position,

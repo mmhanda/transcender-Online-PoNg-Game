@@ -8,10 +8,16 @@ import { customStyles } from "../game/Paddle";
 
 export default function Pong() {
   let runGame: boolean = false,
-    keepUpdating: boolean = false;
+    keepUpdating: boolean = true;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  function sleep(ms: any) {
+    runGame = false;
+    console.log("sleep");
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   useEffect(() => {
     if (runGame) {
@@ -20,38 +26,28 @@ export default function Pong() {
       const botPaddle = new Paddle(document.getElementById("bot-paddle"));
       const playerScoreElem = document.getElementById("player-score");
       const botScoreElem = document.getElementById("bot-score");
+      const hueColorChangeSet: string = "400";
 
       let LastTime: any = null;
 
       function EndGame(msg: string) {
-        keepUpdating = true;
+        keepUpdating = false;
         setMessage(msg);
         setIsOpen(true);
       }
 
-      function update(time: any) {
-        if (keepUpdating) return;
-
+      async function update(time: any) {
+        if (!keepUpdating) return;
         if (playerScoreElem?.textContent === "3") EndGame("You Won!");
         if (botScoreElem?.textContent === "3") EndGame("You Won!");
         if (LastTime != null) {
           const delta: number = time - LastTime;
           ball.update(delta, [playerPaddle.rect(), botPaddle.rect()]);
-          if (
-            ball.y > window.innerHeight / 200 &&
-            ball.y < window.innerHeight / 12.5
-          )
-            botPaddle.update(delta, ball.y);
+          botPaddle.update(delta, ball.y);
+
           if (isLose()) {
             handleLose();
           }
-
-          const hue: number = parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue("--hue")
-          );
-          // const hueColorChange: number = hue + delta * 0.04;
-          const hueColorChange: number = 400;
-          const hueColorChangeSet: string = hueColorChange.toString();
           document.documentElement.style.setProperty(
             "--hue",
             hueColorChangeSet
@@ -65,7 +61,7 @@ export default function Pong() {
         const rect = ball.rect();
 
         if (!playerScoreElem || !botScoreElem) return;
-        if (rect.right >= window.innerWidth - window.innerWidth / 4) {
+        if (rect.right >= window.innerWidth - window.innerWidth / 3.6) {
           const typeChanger: number = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = typeChanger.toString();
         } else {
@@ -79,17 +75,22 @@ export default function Pong() {
       function isLose() {
         const rect = ball.rect();
         return (
-          rect.left <= window.innerWidth / 4 ||
-          rect.right >= window.innerWidth - window.innerWidth / 4
+          rect.left <= window.innerWidth / 3.6 ||
+          rect.right >= window.innerWidth - window.innerWidth / 3.6
         );
       }
 
       document.addEventListener("mousemove", (e) => {
-        const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
-        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.1)
-          playerPaddle.position = pos;
+        playerPaddle.position = (e.y / window.innerHeight) * 100;
       });
-      window.requestAnimationFrame(update);
+      if (runGame) {
+        setTimeout(()=>{}, 1000)
+        // async function slep() {
+          // await sleep(5000);
+        // }
+        // slep();
+        window.requestAnimationFrame(update);
+      }
     }
 
     runGame = true;
@@ -98,7 +99,7 @@ export default function Pong() {
   return (
     <div
       className="gameContainer"
-      style={{ height: `${window?.innerHeight / 1.3}px` }}
+      style={{ height: `${window?.innerHeight}px` }}
     >
       <div className="score">
         <div className="player-score" id="player-score">
