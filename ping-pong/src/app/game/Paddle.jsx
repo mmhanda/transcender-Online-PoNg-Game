@@ -18,7 +18,7 @@ export default class Paddle {
   }
 
   reset() {
-    this.position = 40;
+    this.position = 50;
   }
 
   rect() {

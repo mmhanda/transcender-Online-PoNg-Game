@@ -203,7 +203,7 @@ export default function Pong() {
         if (!playerScoreElem || !player2ScoreElem || !Score || keepUpdating)
           return;
         if (
-          rect.right >= window.innerWidth - window.innerWidth / 4 &&
+          rect.right >= window.innerWidth - window.innerWidth / 3.6 &&
           !keepUpdating
         ) {
           adminScore = parseInt(playerScoreElem.textContent) + 1;
@@ -218,22 +218,20 @@ export default function Pong() {
       function isLose() {
         const rect = ball.rect();
         return (
-          rect.left <= window.innerWidth / 4 ||
-          rect.right >= window.innerWidth - window.innerWidth / 4
+          rect.left <= window.innerWidth / 3.6 ||
+          rect.right >= window.innerWidth - window.innerWidth / 3.6
         );
       }
 
       document.addEventListener("mousemove", (e) => {
-        const pos = (e.y / window.innerHeight) * 100 - window.innerHeight / 70;
-        if (pos > window.innerHeight / 150 && pos < window.innerHeight / 12.1) {
-          playerPaddle.position = pos;
-          if (ISadmin) {
-            socket.emit("coordinates_Admin", {
-              playerY: playerPaddle.position,
-            });
-          } else {
-            socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
-          }
+        const pos = (e.y / window.innerHeight) * 100;
+        playerPaddle.position = pos;
+        if (ISadmin) {
+          socket.emit("coordinates_Admin", {
+            playerY: playerPaddle.position,
+          });
+        } else {
+          socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
         }
       });
       window.requestAnimationFrame(update);
@@ -244,7 +242,7 @@ export default function Pong() {
   return (
     <div
       className="gameContainer"
-      style={{ height: `${window?.innerHeight / 1.3}px` }}
+      style={{ height: `${window?.innerHeight}px` }}
     >
       <div className="score">
         <div className="player-score" id="player-score">
