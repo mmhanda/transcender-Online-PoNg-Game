@@ -17,6 +17,10 @@ export default function Pong() {
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  function sleep(ms: any) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   useEffect(() => {
     if (runGame) {
       const socket = io("http://10.30.177.35:3001");
@@ -25,16 +29,17 @@ export default function Pong() {
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
       const playerScoreElem: any = document.getElementById("player-score");
       const player2ScoreElem: any = document.getElementById("bot-score");
-      let Player2Height: any, Player2Rect: any, ballY: any, ballX: any;
+      let Player2Height: number = 50,
+        Player2Rect: any,
+        ballY: number,
+        ballX: number;
       let adminScore: number = 0,
         player2Score: number = 0;
-      let hueColorChangeSet: string = "";
+      const hueColorChangeSet: string = "400";
       let ISadmin: boolean = false;
 
       socket.connect();
-
       socket.emit("join-room");
-
       socket.once("isAdmin", (Admin) => {
         if (Admin.isAdmin === "true") {
           keepUpdating = true;
@@ -42,24 +47,18 @@ export default function Pong() {
         }
       });
 
-      socket.once("meet-joined", (Admin) => {
+      socket.once("meet-joined", async () => {
         if (ISadmin) {
-          socket.emit("coordinates_Admin", { playerY: playerPaddle.position });
+          await sleep(2000);
           Score = true;
           keepUpdating = false;
           isMeet = true;
           window.requestAnimationFrame(update);
         } else {
-          socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
           isMeet = true;
-          window.requestAnimationFrame(update);
+          update("");
         }
       });
-
-      // window.onbeforeunload = alert;
-      // function alert() {
-      //   return "You Will LOSE The Game!";
-      // }
 
       document.addEventListener("visibilitychange", function () {
         EndGame("End Game!");
@@ -90,9 +89,6 @@ export default function Pong() {
           if (Player2.ballX && Player2.ballY) {
             ballX = Player2.ballX;
             ballY = Player2.ballY;
-          }
-          if (Player2.hue) {
-            hueColorChangeSet = Player2.hue;
           }
           if (Player2.adminScore || Player2.player2Score) {
             adminScore = Player2.adminScore;
@@ -126,7 +122,7 @@ export default function Pong() {
 
       let LastTime: any = null;
 
-      async function update(time: any) {
+      function update(time: any) {
         if (!isMeet || keepUpdating) return;
 
         if (
@@ -141,9 +137,8 @@ export default function Pong() {
           Player2Paddle.update(Player2Height);
 
           if (Player2Rect) {
-            const paddleLeft = window.innerWidth - window.innerWidth / 3.5;
-            Player2Rect.left = paddleLeft;
-            Player2Rect.right = paddleLeft - 10; // also top and bottom
+            const paddleLeft = window.innerWidth - window.innerWidth / 3.4;
+            Player2Rect.right = Player2Rect.left = paddleLeft;
 
             ball.update(
               delta,
@@ -154,14 +149,6 @@ export default function Pong() {
             );
 
             if (ISadmin) {
-              // const hue: number = parseFloat(
-              //   getComputedStyle(document.documentElement).getPropertyValue(
-              //     "--hue"
-              //   )
-              // );
-              const hueColorChange: number = 400;
-              // const hueColorChange: number = hue + delta * 0.04;
-              hueColorChangeSet = hueColorChange.toString();
               document.documentElement.style.setProperty(
                 "--hue",
                 hueColorChangeSet
@@ -169,7 +156,6 @@ export default function Pong() {
               socket.emit("coordinates_Admin", {
                 ballX: ball.x,
                 ballY: ball.y,
-                hue: hueColorChangeSet,
                 rect: player2PaddleRect,
                 adminScore: adminScore,
                 player2Score: player2Score,
@@ -189,7 +175,6 @@ export default function Pong() {
           } else {
             if (isLose()) handleLose();
           }
-          onbeforeunload;
         }
         LastTime = time;
         window.requestAnimationFrame(update);
@@ -197,24 +182,17 @@ export default function Pong() {
 
       function handleLose() {
         const rect = ball.rect();
-        Player2Paddle.reset();
-        ball.reset();
-
-        if (!playerScoreElem || !player2ScoreElem || !Score || keepUpdating)
-          return;
-        if (
-          rect.right >= window.innerWidth - window.innerWidth / 3.6 &&
-          !keepUpdating
-        ) {
+        if (rect.right >= window.innerWidth - window.innerWidth / 3.6) {
           adminScore = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = adminScore.toString();
         } else {
           player2Score = parseInt(player2ScoreElem.textContent) + 1;
           player2ScoreElem.textContent = player2Score.toString();
         }
+        Player2Paddle.reset();
+        ball.reset();
       }
 
-      // console.log(window.innerWidth);
       function isLose() {
         const rect = ball.rect();
         return (
@@ -226,7 +204,7 @@ export default function Pong() {
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100;
         playerPaddle.position = pos;
-        if (ISadmin) {
+        if (ISadmin && Score) {
           socket.emit("coordinates_Admin", {
             playerY: playerPaddle.position,
           });
@@ -234,7 +212,6 @@ export default function Pong() {
           socket.emit("coordinates_Meet", { playerY: playerPaddle.position });
         }
       });
-      window.requestAnimationFrame(update);
     }
     runGame = true;
   }, []);

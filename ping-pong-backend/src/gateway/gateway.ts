@@ -60,7 +60,6 @@ export class MyGateWay {
       socket.join(initRoom.name);
       Rooms.push(initRoom);
       this.server.emit('isAdmin', { isAdmin: 'true' });
-      // console.error('ADMIN CONNECTED');
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
@@ -68,9 +67,6 @@ export class MyGateWay {
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
     }
-    // console.log(Rooms.length);
-
-    // console.log('join-room');
   }
   @SubscribeMessage('coordinates_Admin')
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
@@ -82,7 +78,6 @@ export class MyGateWay {
         ballY: body.ballY,
         playerY: body.playerY,
         rect: body.rect,
-        hue: body.hue,
         adminScore: body.adminScore,
         player2Score: body.player2Score,
       });
