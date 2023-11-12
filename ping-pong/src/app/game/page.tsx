@@ -46,7 +46,6 @@ export default function Pong() {
           ISadmin = true;
         }
       });
-
       socket.once("meet-joined", async () => {
         if (ISadmin) {
           await sleep(2000);
@@ -97,6 +96,17 @@ export default function Pong() {
         }
       });
 
+      function EndGame(msg: string) {
+        keepUpdating = true;
+        setMessage(msg);
+        setIsOpen(true);
+        socket.emit("room-score", {
+          admin: playerScoreElem.textContent,
+          meet: player2ScoreElem.textContent,
+        });
+        socket.disconnect();
+      }
+
       socket.on("admin-disconnect", () => {
         if (ISadmin) {
           EndGame("End Game!");
@@ -108,17 +118,6 @@ export default function Pong() {
           EndGame("End Game!");
         }
       });
-
-      function EndGame(msg: string) {
-        keepUpdating = true;
-        setMessage(msg);
-        setIsOpen(true);
-        socket.emit("room-score", {
-          admin: playerScoreElem.textContent,
-          meet: player2ScoreElem.textContent,
-        });
-        socket.disconnect();
-      }
 
       let LastTime: any = null;
 
