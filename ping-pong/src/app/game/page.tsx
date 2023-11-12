@@ -19,7 +19,7 @@ export default function Pong() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://localhost:3001");
+      const socket = io("http://10.30.177.35:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
@@ -126,7 +126,7 @@ export default function Pong() {
 
       let LastTime: any = null;
 
-      function update(time: any) {
+      async function update(time: any) {
         if (!isMeet || keepUpdating) return;
 
         if (
@@ -214,7 +214,7 @@ export default function Pong() {
         }
       }
 
-      console.log(window.innerWidth);
+      // console.log(window.innerWidth);
       function isLose() {
         const rect = ball.rect();
         return (
