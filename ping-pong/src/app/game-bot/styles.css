@@ -7,7 +7,7 @@
 
 body {
   margin: 0;
-  background-color: #603c0daa;
+  /* background-color: var(--background-color); */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -76,5 +76,6 @@ body {
 .gameContainer {
   position: relative;
   width: 45vw;
-  background-color: rgb(44, 36, 36);
+  background-color: var(--background-color);
+  /* background-color: rgb(44, 36, 36); */
 }

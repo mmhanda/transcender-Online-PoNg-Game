@@ -1,25 +1,35 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import Modal from "react-modal";
 
 const Page = () => {
   const [backgroundColor, setBackgroundColor] = useState("bg-gray-700");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
 
-  useEffect(() => {
-    setBackgroundColor("bg-gray-700");
-    return () => setBackgroundColor("bg-gray-700");
-  }, []);
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = (color) => {
+    setModalIsOpen(false);
+    setSelectedColor(color);
+  };
+
+  const handleLinkClick = () => {
+    if (selectedColor) {
+      setBackgroundColor(selectedColor);
+    }
+  };
 
   return (
     <div
       className={`flex justify-around items-center h-screen ${backgroundColor}`}
     >
-      <Link href="/game-bot" passHref>
-        <div
-          className="text-center cursor-pointer mx-4 transform transition-transform hover:scale-105"
-          onClick={() => setBackgroundColor("bg-gray-700")}
-        >
+      <div
+        className="text-center cursor-pointer mx-4 transform transition-transform hover:scale-105"
+        onClick={openModal}
+      >
+        <div onClick={handleLinkClick}>
           <Image
             src="/choose-game-assets/ai.jpg"
             alt="AI"
@@ -28,37 +38,43 @@ const Page = () => {
           />
           <p className="mt-2 text-lg font-bold">Play against AI</p>
         </div>
-      </Link>
+      </div>
 
-      <Link href="/game" passHref>
-        <div
-          className="text-center cursor-pointer mx-4 transform transition-transform hover:scale-105"
-          onClick={() => setBackgroundColor("bg-gray-700")}
-        >
-          <Image
-            src="/choose-game-assets/online.jpg"
-            alt="Online"
-            width={500}
-            height={500}
-          />
-          <p className="mt-2 text-lg font-bold">Play online</p>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          content: {
+            backgroundColor: "black",
+            borderRadius: "10px",
+            padding: "20px",
+            maxWidth: "300px",
+            margin: "auto",
+          },
+        }}
+      >
+        <p>Select a map texture:</p>
+        <div className="flex justify-around mt-4">
+          <Link href={{ pathname: "/game-bot", query: "color=400" }}>
+            <button
+              onClick={() => closeModal("bg-amber-900")}
+              className="bg-amber-900 w-8 h-8 rounded-full"
+            />
+          </Link>
+          <Link href={{ pathname: "/game-bot", query: "color=300" }}>
+            <button
+              onClick={() => closeModal("bg-red-500")}
+              className="bg-violet-700 w-8 h-8 rounded-full"
+            />
+          </Link>
+          <Link href={{ pathname: "/game-bot", query: "color=100" }}>
+            <button
+              onClick={() => closeModal("bg-red-500")}
+              className="bg-red-500 w-8 h-8 rounded-full"
+            />
+          </Link>
         </div>
-      </Link>
-
-      <Link href="/game-local" passHref>
-        <div
-          className="text-center cursor-pointer mx-4 transform transition-transform hover:scale-105"
-          onClick={() => setBackgroundColor("bg-gray-700")}
-        >
-          <Image
-            src="/choose-game-assets/offline.jpg"
-            alt="Offline"
-            width={500}
-            height={500}
-          />
-          <p className="mt-2 text-lg font-bold">Play locally</p>
-        </div>
-      </Link>
+      </Modal>
     </div>
   );
 };

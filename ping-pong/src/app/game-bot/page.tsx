@@ -5,6 +5,7 @@ import Paddle from "./Paddle";
 import "./styles.css";
 import Modal from "react-modal";
 import { customStyles } from "../game/Paddle";
+import { useSearchParams } from "next/navigation";
 
 export default function Pong() {
   let runGame: boolean = false,
@@ -13,6 +14,10 @@ export default function Pong() {
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useSearchParams();
+  const color: string = router.get("color");
+  // console.log(data);
 
   function sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,7 +30,7 @@ export default function Pong() {
       const botPaddle = new Paddle(document.getElementById("bot-paddle"));
       const playerScoreElem = document.getElementById("player-score");
       const botScoreElem = document.getElementById("bot-score");
-      const hueColorChangeSet: string = "400";
+      let hueColorChangeSet: string = color;
 
       let LastTime: any = null;
 
@@ -95,9 +100,7 @@ export default function Pong() {
 
   return (
     <div
-      className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
-                    bg-gradient-to-tr from-transparent via-neutral-500
-                      to-transparent opacity-20 dark:opacity-100"
+      className="gameContainer"
       style={{ height: `${window?.innerHeight}px` }}
     >
       <div className="score">

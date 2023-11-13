@@ -6,6 +6,7 @@ import Ball from "./Ball";
 import Paddle from "./Paddle";
 import { customStyles } from "./Paddle";
 import "./styles.css";
+import { useRouter } from "next/navigation";
 
 export default function Pong() {
   let runGame: boolean = false,
@@ -15,6 +16,9 @@ export default function Pong() {
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
+  const data = router.query;
 
   function sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
