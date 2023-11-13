@@ -2,7 +2,7 @@ const INITIAL_VELOCITY = 0.025;
 const VELOCITY_INCREASE = 0.000001;
 
 export default class Ball {
-  constructor(ballElem) {
+  constructor(ballElem: HTMLElement) {
     this.ballElem = ballElem;
     this.reset();
   }
@@ -10,10 +10,10 @@ export default class Ball {
   get x() {
     return parseFloat(getComputedStyle(this.ballElem).getPropertyValue("--x"));
   }
-  set x(value) {
+  set x(value: number) {
     this.ballElem.style.setProperty("--x", value);
   }
-  set y(value) {
+  set y(value: number) {
     this.ballElem.style.setProperty("--y", value);
   }
   get y() {
@@ -36,7 +36,7 @@ export default class Ball {
     return this.ballElem.getBoundingClientRect();
   }
 
-  update(delta, paddleRects, isAdmin, AdminX, AdminY) {
+  update(delta: number, paddleRects: object, isAdmin: boolean, AdminX: number, AdminY: number) {
     if (isAdmin) {
       this.x += this.direction.x * this.velocity * delta;
       this.y += this.direction.y * this.velocity * delta;
@@ -46,7 +46,7 @@ export default class Ball {
 
       if (rect.bottom >= window.innerHeight || rect.top <= 0) {
         this.direction.y *= -1;
-      } else if (paddleRects.some((r) => isCollision(r, rect))) {
+      } else if (paddleRects.some((r: any) => isCollision(r, rect))) {
         this.direction.x *= -1;
       }
     } else {
@@ -56,11 +56,11 @@ export default class Ball {
   }
 }
 
-function isCollision(rect, BallRect) {
+function isCollision(rect: object, BallRect: object) {
   return (
-    rect?.left < BallRect.right &&
-    rect?.right > BallRect.left &&
-    rect?.top < BallRect.bottom &&
-    rect?.bottom > BallRect.top
+    rect.left < BallRect.right &&
+    rect.right > BallRect.left &&
+    rect.top < BallRect.bottom &&
+    rect.bottom > BallRect.top
   );
 }

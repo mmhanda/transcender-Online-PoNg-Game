@@ -1,5 +1,5 @@
 export default class Paddle {
-  constructor(paddleElem) {
+  constructor(paddleElem: HTMLElement) {
     this.paddleElem = paddleElem;
     this.reset();
   }
@@ -9,11 +9,11 @@ export default class Paddle {
       getComputedStyle(this.paddleElem).getPropertyValue("--position")
     );
   }
-  set position(value) {
+  set position(value: number) {
     this.paddleElem.style.setProperty("--position", value);
   }
 
-  update(Player2Height) {
+  update(Player2Height: number) {
     this.position = Player2Height;
   }
 

@@ -26,7 +26,7 @@ export default function Pong() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.30.177.35:3001");
+      const socket = io("http://10.12.10.11:3001");
       // const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));

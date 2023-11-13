@@ -2,7 +2,7 @@ const INITIAL_VELOCITY = 0.025;
 const VELOCITY_INCREASE = 0.000001;
 
 export default class Ball {
-  constructor(ballElem) {
+  constructor(ballElem: HTMLElement) {
     this.ballElem = ballElem;
     this.reset();
   }
@@ -10,10 +10,10 @@ export default class Ball {
   get x() {
     return parseFloat(getComputedStyle(this.ballElem).getPropertyValue("--x"));
   }
-  set x(value) {
+  set x(value: number) {
     this.ballElem.style.setProperty("--x", value);
   }
-  set y(value) {
+  set y(value: number) {
     this.ballElem.style.setProperty("--y", value);
   }
   get y() {
@@ -36,7 +36,7 @@ export default class Ball {
     return this.ballElem.getBoundingClientRect();
   }
 
-  update(delta, paddleRects) {
+  update(delta: number, paddleRects: object) {
     this.x += this.direction.x * this.velocity * delta;
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
@@ -46,21 +46,17 @@ export default class Ball {
     if (rect.bottom >= window.innerHeight || rect.top <= 0) {
       this.direction.y *= -1;
     }
-    if (paddleRects.some((r) => isCollision(r, rect))) {
+    if (paddleRects.some((r: any) => isCollision(r, rect))) {
       this.direction.x *= -1;
     }
   }
 }
 
-function isCollision(rect1, rect2) {
+function isCollision(rect1: object, rect2: object) {
   return (
     rect1.left + 4 < rect2.right + 4 &&
     rect1.right + 4 > rect2.left + 4 &&
     rect1.top + 4 < rect2.bottom + 4 &&
     rect1.bottom + 4 > rect2.top + 4
   );
-}
-
-function randomNumberBetween(min, max) {
-  return Math.random() * (max - min) + min;
 }

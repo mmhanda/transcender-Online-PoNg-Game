@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function Pong() {
   let runGame: boolean = false,
-    keepUpdating: boolean = true,
+    keepUpdating: boolean = false,
     timeout: boolean = true;
 
   const [message, setMessage] = useState("");
@@ -17,7 +17,6 @@ export default function Pong() {
 
   const router = useSearchParams();
   const color: any = router.get("color");
-  // console.log(data);
 
   function sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -55,13 +54,18 @@ export default function Pong() {
             handleLose();
           }
         }
+        LastTime = time;
+        window.requestAnimationFrame(update);
+      }
+
+      async function change() {
         if (timeout) {
           await sleep(1500).then(() => {
             timeout = false;
+            keepUpdating = true;
+            window.requestAnimationFrame(update);
           });
-        }
-        LastTime = time;
-        window.requestAnimationFrame(update);
+        } else window.requestAnimationFrame(update);
       }
 
       function handleLose() {
@@ -90,9 +94,9 @@ export default function Pong() {
       document.addEventListener("mousemove", (e) => {
         playerPaddle.position = (e.y / window.innerHeight) * 100;
       });
-      window.requestAnimationFrame(update);
+      // window.requestAnimationFrame(update);
+      change();
     }
-
     runGame = true;
   }, []);
 
@@ -114,7 +118,7 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
-      <div className="middle_line" ></div>
+      <div className="middle_line"></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

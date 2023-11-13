@@ -2,7 +2,7 @@ const INITIAL_VELOCITY = 0.025;
 const VELOCITY_INCREASE = 0.000001;
 
 export default class Ball {
-  constructor(ballElem) {
+  constructor(ballElem: HTMLElement) {
     this.ballElem = ballElem;
     this.reset();
   }
@@ -10,10 +10,10 @@ export default class Ball {
   get x() {
     return parseFloat(getComputedStyle(this.ballElem).getPropertyValue("--x"));
   }
-  set x(value) {
+  set x(value: number) {
     this.ballElem.style.setProperty("--x", value);
   }
-  set y(value) {
+  set y(value: number) {
     this.ballElem.style.setProperty("--y", value);
   }
   get y() {
@@ -38,7 +38,7 @@ export default class Ball {
     return this.ballElem.getBoundingClientRect();
   }
 
-  update(delta, paddleRects) {
+  update(delta: number, paddleRects: object) {
     this.x += this.direction.x * this.velocity * delta;
     this.y += this.direction.y * this.velocity * delta;
     this.velocity += VELOCITY_INCREASE * delta;
@@ -54,15 +54,15 @@ export default class Ball {
   }
 }
 
-function isCollision(rect1, rect2) {
+function isCollision(rect: object, ballRect: object) {
   return (
-    rect1.left < rect2.right + 4 &&
-    rect1.right > rect2.left + 4 &&
-    rect1.top < rect2.bottom + 4 &&
-    rect1.bottom > rect2.top + 4
+    rect.left < ballRect.right + 4 &&
+    rect.right > ballRect.left + 4 &&
+    rect.top < ballRect.bottom + 4 &&
+    rect.bottom > ballRect.top + 4
   );
 }
 
-function randomNumberBetween(min, max) {
+function randomNumberBetween(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }

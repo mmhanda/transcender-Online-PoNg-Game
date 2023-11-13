@@ -1,10 +1,5 @@
-const SPEED = 0.1;
-
-let resist = 0;
-let decide = 1;
-
 export default class Paddle {
-  constructor(paddleElem) {
+  constructor(paddleElem:HTMLElement) {
     this.paddleElem = paddleElem;
     this.reset();
   }
@@ -14,24 +9,12 @@ export default class Paddle {
       getComputedStyle(this.paddleElem).getPropertyValue("--position")
     );
   }
-  set position(value) {
+  set position(value: number) {
     this.paddleElem.style.setProperty("--position", value);
-  }
-
-  update(delta, ballHeight) {
-    this.position += SPEED * delta * (ballHeight - this.position + resist);
-
-    if (decide >= 0) {
-      resist += 0.001;
-    } else {
-      resist -= 0.001;
-    }
   }
 
   reset() {
     this.position = 50;
-    resist = 0;
-    decide = decide * -1;
   }
 
   rect() {
