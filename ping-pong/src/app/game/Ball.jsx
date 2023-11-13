@@ -21,7 +21,7 @@ export default class Ball {
   }
 
   reset() {
-    this.x = 22;
+    this.x = 22.5;
     this.y = 50;
 
     const direction_ = Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2;

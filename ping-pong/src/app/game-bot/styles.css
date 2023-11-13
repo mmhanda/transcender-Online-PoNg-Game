@@ -7,7 +7,7 @@
 
 body {
   margin: 0;
-  /* background-color: var(--background-color); */
+  background-color: black;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@ body {
   top: calc(var(--position) * 1vh);
   position: absolute;
   background-color: var(--paddle-color);
-  width: 1vh;
+  width: 2vh;
   height: 15vh;
   border-radius: 2vh;
 }
@@ -66,7 +66,6 @@ body {
 
 .score > :first-child {
   text-align: right;
-  border-right: 0.8vh solid;
 }
 
 .score > :last-child {
@@ -77,5 +76,14 @@ body {
   position: relative;
   width: 45vw;
   background-color: var(--background-color);
-  /* background-color: rgb(44, 36, 36); */
+}
+
+.middle_line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  opacity: 0.2;
+  border-left: 1vh dotted white;
 }

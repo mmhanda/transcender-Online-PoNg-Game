@@ -115,6 +115,7 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
+      <div className="middle_line" ></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

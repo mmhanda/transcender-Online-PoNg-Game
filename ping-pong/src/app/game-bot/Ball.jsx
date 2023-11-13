@@ -21,10 +21,10 @@ export default class Ball {
   }
 
   reset() {
-    this.x = 22;
+    this.x = 22.5;
     this.y = 50;
 
-    const direction_ = Math.random() * Math.PI * 1 - (Math.PI * 1) / 2;
+    const direction_ = Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2;
     this.direction = {
       x: Math.random() < 0.5 ? -1 : 1 * Math.cos(direction_),
       y: Math.sin(direction_),

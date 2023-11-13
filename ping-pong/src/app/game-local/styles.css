@@ -1,4 +1,6 @@
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
@@ -16,15 +18,15 @@ body {
 }
 
 .paddle {
-
   --position: 50;
 
   transform: translateY(-50%);
   top: calc(var(--position) * 1vh);
   position: absolute;
   background-color: var(--paddle-color);
-  width: 1vh;
-  height: 12vh;
+  width: 2vh;
+  height: 18vh;
+  border-radius: 4vh;
 }
 
 .paddle.left {
@@ -41,7 +43,7 @@ body {
 
   transform: translate(-50%, -50%);
   top: calc(var(--y) * 1vh);
-  left: calc(var(--x) *1vw);
+  left: calc(var(--x) * 1vw);
   position: absolute;
   border-radius: 100%;
   background-color: var(--paddle-color);
@@ -67,9 +69,18 @@ body {
 
 .score > :first-child {
   text-align: right;
-  border-right: 0.8vh solid;
 }
 
 .score > :last-child {
   text-align: left;
+}
+
+.middle_line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  opacity: 0.2;
+  border-left: 1vh dotted white;
 }

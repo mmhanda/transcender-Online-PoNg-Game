@@ -16,7 +16,7 @@ export default function Pong() {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useSearchParams();
-  const color: string = router.get("color");
+  const color: any = router.get("color");
   // console.log(data);
 
   function sleep(ms: any) {
@@ -40,6 +40,8 @@ export default function Pong() {
         setIsOpen(true);
       }
 
+      document.documentElement.style.setProperty("--hue", hueColorChangeSet);
+
       async function update(time: any) {
         if (!keepUpdating) return;
         if (playerScoreElem?.textContent === "3") EndGame("You Won!");
@@ -52,10 +54,6 @@ export default function Pong() {
           if (isLose()) {
             handleLose();
           }
-          document.documentElement.style.setProperty(
-            "--hue",
-            hueColorChangeSet
-          );
         }
         if (timeout) {
           await sleep(1500).then(() => {
@@ -100,7 +98,9 @@ export default function Pong() {
 
   return (
     <div
-      className="gameContainer"
+      className="gameContainer gameContainer h-[250px] min-h-[1em] w-px self-stretch
+      bg-gradient-to-tr from-transparent via-neutral-500
+        to-transparent opacity-20 dark:opacity-100"
       style={{ height: `${window?.innerHeight}px` }}
     >
       <div className="score">
@@ -114,6 +114,7 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
+      <div className="middle_line" ></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

@@ -6,7 +6,7 @@ import Ball from "./Ball";
 import Paddle from "./Paddle";
 import { customStyles } from "./Paddle";
 import "./styles.css";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function Pong() {
   let runGame: boolean = false,
@@ -17,8 +17,8 @@ export default function Pong() {
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const router = useRouter();
-  const data = router.query;
+  const router = useSearchParams();
+  const color: any = router.get("color");
 
   function sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -39,7 +39,7 @@ export default function Pong() {
         ballX: number = 22;
       let adminScore: number = 0,
         player2Score: number = 0;
-      const hueColorChangeSet: string = "400";
+      const hueColorChangeSet: string = color;
       let ISadmin: boolean = false;
 
       socket.connect();
@@ -125,6 +125,8 @@ export default function Pong() {
       socket.emit("coordinates_Meet", {
         rect: playerPaddle.rect(),
       });
+
+      document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
       function update(time: any) {
         if (!isMeet || keepUpdating) return;
@@ -226,6 +228,7 @@ export default function Pong() {
       <div className="ball" id="ball"></div>
       <div className="paddle left" id="player-paddle"></div>
       <div className="paddle right" id="bot-paddle"></div>
+      <div className="middle_line" ></div>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
