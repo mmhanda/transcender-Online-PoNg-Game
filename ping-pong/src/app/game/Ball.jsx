@@ -23,15 +23,13 @@ export default class Ball {
   reset() {
     this.x = 22;
     this.y = 50;
-    this.direction = { x: 0 };
-    while (
-      Math.abs(this.direction.x) <= 0.2 ||
-      Math.abs(this.direction.x) >= 0.9
-    ) {
-      const heading = randomNumberBetween(0, 2 * Math.PI) - 1;
-      this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
-      this.velocity = INITIAL_VELOCITY;
-    }
+
+    const direction_ = Math.random() * Math.PI * 0.2 - (Math.PI * 0.2) / 2;
+    this.direction = {
+      x: Math.random() < 0.5 ? -1 : 1 * Math.cos(direction_),
+      y: Math.sin(direction_),
+    };
+    this.velocity = INITIAL_VELOCITY;
   }
 
   rect() {
@@ -60,13 +58,9 @@ export default class Ball {
 
 function isCollision(rect, BallRect) {
   return (
-    rect?.left + 1 < BallRect.right + 1 &&
-    rect?.right + 1 > BallRect.left + 1 &&
+    rect?.left < BallRect.right &&
+    rect?.right > BallRect.left &&
     rect?.top < BallRect.bottom &&
     rect?.bottom > BallRect.top
   );
-}
-
-function randomNumberBetween(min, max) {
-  return Math.random() * (max - min) + min;
 }

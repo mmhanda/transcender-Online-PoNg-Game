@@ -24,6 +24,7 @@ class room {
 @WebSocketGateway({
   cors: {
     origin: '*', // table for the allowed domain names to connect
+    // origin: ['http://localhost:3000'], // table for the allowed domain names to connect
   },
 })
 export class MyGateWay {

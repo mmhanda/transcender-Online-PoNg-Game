@@ -23,6 +23,7 @@ export default function Pong() {
   useEffect(() => {
     if (runGame) {
       const socket = io("http://10.30.177.35:3001");
+      // const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
@@ -117,6 +118,10 @@ export default function Pong() {
 
       let LastTime: any = null;
 
+      socket.emit("coordinates_Meet", {
+        rect: playerPaddle.rect(),
+      });
+
       function update(time: any) {
         if (!isMeet || keepUpdating) return;
 
@@ -160,7 +165,7 @@ export default function Pong() {
 
       function handleLose() {
         const rect = ball.rect();
-        if (rect.right >= window.innerWidth - window.innerWidth / 3.8) {
+        if (rect.right >= window.innerWidth - window.innerWidth / 3.5) {
           adminScore = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = adminScore.toString();
         } else {
@@ -171,15 +176,14 @@ export default function Pong() {
           adminScore: adminScore,
           player2Score: player2Score,
         });
-        Player2Paddle.reset();
         ball.reset();
       }
 
       function isLose() {
         const rect = ball.rect();
         return (
-          rect.left <= window.innerWidth / 3.8 ||
-          rect.right >= window.innerWidth - window.innerWidth / 3.8
+          rect.left <= window.innerWidth / 3.5 ||
+          rect.right >= window.innerWidth - window.innerWidth / 3.5
         );
       }
 
