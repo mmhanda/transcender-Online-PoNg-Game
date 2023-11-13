@@ -23,15 +23,13 @@ export default class Ball {
   reset() {
     this.x = 22;
     this.y = 50;
-    this.direction = { x: 0 };
-    while (
-      Math.abs(this.direction.x) <= 0.2 ||
-      Math.abs(this.direction.x) >= 0.9
-    ) {
-      const heading = randomNumberBetween(0, 2 * Math.PI);
-      this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
-      this.velocity = INITIAL_VELOCITY;
-    }
+
+    const direction_ = Math.random() * Math.PI * 1 - (Math.PI * 1) / 2;
+    this.direction = {
+      x: Math.random() < 0.5 ? -1 : 1 * Math.cos(direction_),
+      y: Math.sin(direction_),
+    };
+    this.velocity = INITIAL_VELOCITY;
   }
 
   rect() {

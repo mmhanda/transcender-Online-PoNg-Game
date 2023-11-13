@@ -8,14 +8,13 @@ import { customStyles } from "../game/Paddle";
 
 export default function Pong() {
   let runGame: boolean = false,
-    keepUpdating: boolean = true;
+    keepUpdating: boolean = true,
+    timeout: boolean = true;
 
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   function sleep(ms: any) {
-    runGame = false;
-    console.log("sleep");
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -53,6 +52,11 @@ export default function Pong() {
             hueColorChangeSet
           );
         }
+        if (timeout) {
+          await sleep(1500).then(() => {
+            timeout = false;
+          });
+        }
         LastTime = time;
         window.requestAnimationFrame(update);
       }
@@ -61,7 +65,7 @@ export default function Pong() {
         const rect = ball.rect();
 
         if (!playerScoreElem || !botScoreElem) return;
-        if (rect.right >= window.innerWidth - window.innerWidth / 3.6) {
+        if (rect.right >= window.innerWidth - window.innerWidth / 3.5) {
           const typeChanger: number = parseInt(playerScoreElem.textContent) + 1;
           playerScoreElem.textContent = typeChanger.toString();
         } else {
@@ -75,22 +79,15 @@ export default function Pong() {
       function isLose() {
         const rect = ball.rect();
         return (
-          rect.left <= window.innerWidth / 3.6 ||
-          rect.right >= window.innerWidth - window.innerWidth / 3.6
+          rect.left <= window.innerWidth / 3.5 ||
+          rect.right >= window.innerWidth - window.innerWidth / 3.5
         );
       }
 
       document.addEventListener("mousemove", (e) => {
         playerPaddle.position = (e.y / window.innerHeight) * 100;
       });
-      if (runGame) {
-        setTimeout(()=>{}, 1000)
-        // async function slep() {
-          // await sleep(5000);
-        // }
-        // slep();
-        window.requestAnimationFrame(update);
-      }
+      window.requestAnimationFrame(update);
     }
 
     runGame = true;
@@ -98,7 +95,9 @@ export default function Pong() {
 
   return (
     <div
-      className="gameContainer"
+      className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
+                    bg-gradient-to-tr from-transparent via-neutral-500
+                      to-transparent opacity-20 dark:opacity-100"
       style={{ height: `${window?.innerHeight}px` }}
     >
       <div className="score">

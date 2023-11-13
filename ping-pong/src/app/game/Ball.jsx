@@ -24,7 +24,7 @@ export default class Ball {
     this.x = 22;
     this.y = 50;
 
-    const direction_ = Math.random() * Math.PI * 0.2 - (Math.PI * 0.2) / 2;
+    const direction_ = Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2;
     this.direction = {
       x: Math.random() < 0.5 ? -1 : 1 * Math.cos(direction_),
       y: Math.sin(direction_),

@@ -23,8 +23,8 @@ class room {
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // table for the allowed domain names to connect
-    // origin: ['http://localhost:3000'], // table for the allowed domain names to connect
+    origin: '*',
+    // origin: ['http://localhost:3000'],
   },
 })
 export class MyGateWay {
