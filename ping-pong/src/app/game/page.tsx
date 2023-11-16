@@ -62,8 +62,8 @@ function checkIfDebuggerEnabled() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.13.5.6:3001/");
-      // const socket = io("http://localhost:3001");
+      // const socket = io("http://10.13.5.6:3001/");
+      const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));

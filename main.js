@@ -43,7 +43,6 @@ const ball = new elem({
     width: 15,
     height: 15,
     color: '#fff',
-    gravity: 2,
     speed: 1,
     gravity: 1
 });
