@@ -12,8 +12,8 @@ export default function Pong() {
   let runGame: boolean = false,
     keepUpdating: boolean = false,
     isMeet: boolean = false,
-    Score: boolean = false,
-    isConsole: boolean = false;
+    Score: boolean = false;
+    // isConsole: boolean = false;
 
   let innerHeight: number = window.innerHeight;
   const [message, setMessage] = useState("");
@@ -62,7 +62,7 @@ function checkIfDebuggerEnabled() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.12.6.1:3001/");
+      const socket = io("http://10.13.5.6:3001/");
       // const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
@@ -243,8 +243,7 @@ function checkIfDebuggerEnabled() {
   return (
     <div
       className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
-                    bg-gradient-to-tr from-transparent via-neutral-500
-                      to-transparent opacity-20 dark:opacity-100"
+                    bg-gradient-to-tr from-transparent via-neutral-500"
       style={{ height: `${innerHeight}px` }}
     >
       <div className="score">

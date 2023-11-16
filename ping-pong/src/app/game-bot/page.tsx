@@ -102,8 +102,7 @@ export default function Pong() {
   return (
     <div
       className="gameContainer gameContainer h-[250px] min-h-[1em] w-px self-stretch
-      bg-gradient-to-tr from-transparent via-neutral-500
-        to-transparent opacity-20 dark:opacity-100"
+      bg-gradient-to-tr from-transparent via-neutral-500"
       // style={{ height: `${window?.innerHeight}px` }}
       style={{ height: `100%` }}
     >
