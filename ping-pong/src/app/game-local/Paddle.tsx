@@ -1,5 +1,5 @@
 export default class Paddle {
-  constructor(paddleElem:HTMLElement) {
+  constructor(paddleElem:HTMLElement | null) {
     this.paddleElem = paddleElem;
     this.reset();
   }

@@ -94,7 +94,6 @@ export default function Pong() {
       document.addEventListener("mousemove", (e) => {
         playerPaddle.position = (e.y / window.innerHeight) * 100;
       });
-      // window.requestAnimationFrame(update);
       change();
     }
     runGame = true;
@@ -105,7 +104,8 @@ export default function Pong() {
       className="gameContainer gameContainer h-[250px] min-h-[1em] w-px self-stretch
       bg-gradient-to-tr from-transparent via-neutral-500
         to-transparent opacity-20 dark:opacity-100"
-      style={{ height: `${window?.innerHeight}px` }}
+      // style={{ height: `${window?.innerHeight}px` }}
+      style={{ height: `100%` }}
     >
       <div className="score">
         <div className="player-score" id="player-score">

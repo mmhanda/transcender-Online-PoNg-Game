@@ -90,7 +90,6 @@ export class MyGateWay {
     if (room) {
       this.server.to(room.AdminId).emit('Player-2-Admin', {
         playerY: body.playerY,
-        rect: body.rect,
       });
     }
   }

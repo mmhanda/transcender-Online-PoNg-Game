@@ -84,6 +84,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   height: 100%;
+  overflow: hidden;
   opacity: 0.2;
   border-left: 1vh dotted white;
 }

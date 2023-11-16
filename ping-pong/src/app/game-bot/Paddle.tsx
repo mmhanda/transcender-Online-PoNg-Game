@@ -4,7 +4,7 @@ let resist = 0;
 let decide = 1;
 
 export default class Paddle {
-  constructor(paddleElem: HTMLElement) {
+  constructor(paddleElem: HTMLElement | null) {
     this.paddleElem = paddleElem;
     this.reset();
   }

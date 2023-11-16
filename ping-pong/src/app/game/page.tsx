@@ -12,8 +12,10 @@ export default function Pong() {
   let runGame: boolean = false,
     keepUpdating: boolean = false,
     isMeet: boolean = false,
-    Score: boolean = false;
+    Score: boolean = false,
+    isConsole: boolean = false;
 
+  let innerHeight: number = window.innerHeight;
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,9 +26,43 @@ export default function Pong() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+
+
+  let workerUrl = 'data:application/javascript;base64,' + btoa(`
+self.addEventListener('message', (e) => {
+  if(e.data==='hello'){
+    self.postMessage('hello');
+  }
+  debugger;
+  self.postMessage('');
+});
+`);
+function checkIfDebuggerEnabled() {
+  return new Promise((resolve) => {
+    let fulfilled = false;
+    let worker = new Worker(workerUrl);
+    worker.onmessage = (e) => {
+      let data = e.data;
+      if (data === 'hello') {
+        setTimeout(() => {
+          if (!fulfilled) {
+            resolve(true);
+            worker.terminate();
+          }
+        }, 1);
+      } else {
+        fulfilled = true;
+        resolve(false);
+        worker.terminate();
+      }
+    };
+    worker.postMessage('hello');
+  });
+}
+
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.12.10.11:3001");
+      const socket = io("http://10.12.6.1:3001/");
       // const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
@@ -34,7 +70,6 @@ export default function Pong() {
       const playerScoreElem: any = document.getElementById("player-score");
       const player2ScoreElem: any = document.getElementById("bot-score");
       let Player2Height: number = 50,
-        Player2Rect: any,
         ballY: number = 50,
         ballX: number = 22;
       let adminScore: number = 0,
@@ -75,9 +110,6 @@ export default function Pong() {
           if (Player2.playerY) {
             Player2Height = Player2.playerY;
           }
-          if (Player2.rect) {
-            Player2Rect = Player2.rect;
-          }
         }
       });
 
@@ -108,6 +140,13 @@ export default function Pong() {
         socket.disconnect();
       }
 
+      setInterval(()=>{
+        checkIfDebuggerEnabled().then((result) => {
+          if (result)
+          EndGame('To Prevent Cheating You Can Not open the console while you playing YOU MUST RESTART THE GAME WITH CLOSED CONSOLE');
+        });
+      }, 10)
+
       socket.on("admin-disconnect", () => {
         if (ISadmin) {
           EndGame("End Game!");
@@ -122,15 +161,12 @@ export default function Pong() {
 
       let LastTime: any = null;
 
-      socket.emit("coordinates_Meet", {
-        rect: playerPaddle.rect(),
-      });
-
       document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
       function update(time: any) {
         if (!isMeet || keepUpdating) return;
 
+        innerHeight = window.innerHeight;
         if (
           playerScoreElem.textContent === "8" ||
           player2ScoreElem.textContent === "8"
@@ -141,14 +177,9 @@ export default function Pong() {
 
           Player2Paddle.update(Player2Height);
 
-          if (Player2Rect?.right) {
-            const paddleLeft = window.innerWidth - window.innerWidth / 3.4;
-            Player2Rect.right = Player2Rect.left = paddleLeft;
-          }
-
           ball.update(
             delta,
-            [playerPaddle.rect(), Player2Rect],
+            [playerPaddle.rect(), Player2Paddle.rect()],
             ISadmin,
             ballX,
             ballY
@@ -201,7 +232,6 @@ export default function Pong() {
           });
         } else {
           socket.emit("coordinates_Meet", {
-            rect: playerPaddle.rect(),
             playerY: playerPaddle.position,
           });
         }
@@ -215,7 +245,7 @@ export default function Pong() {
       className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
                     bg-gradient-to-tr from-transparent via-neutral-500
                       to-transparent opacity-20 dark:opacity-100"
-      style={{ height: `${window?.innerHeight}px` }}
+      style={{ height: `${innerHeight}px` }}
     >
       <div className="score">
         <div className="player-score" id="player-score">
