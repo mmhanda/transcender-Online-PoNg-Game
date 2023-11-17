@@ -13,13 +13,13 @@ const width:number = 650, height:number = 400;
 let scoreLeft:number, scoreRigth:number = 0;
 
 class elem {
-  x: any
-  y: any
-  width: any
-  height: any
-  color: any
-  speed: any
-  gravity: any
+  x: number
+  y: number
+  width: number
+  height: number
+  color: string
+  speed: number
+  gravity: number
     constructor(options) {
         this.x = options.x;
         this.y = options.y;
@@ -65,6 +65,10 @@ function drawelem(elem) {
     // context.fillRect(elem.x, elem.y, elem.width, elem.height);
 }
 
+function drawBall(elem) {
+  
+}
+
 function displayscore1() {
     // context.font = "10px Arial";
     // context.fillStyle = "#fff";
@@ -78,11 +82,11 @@ function displayscore2() {
 }
 
 function drawAll() {
-    drawelem(player1);
-    drawelem(player2);
-    drawelem(ball);
-    displayscore1();
-    displayscore2();
+    // drawelem(player1);
+    // drawelem(player2);
+    drawBall(ball);
+    // displayscore1();
+    // displayscore2();
 }
 
 function ballWallCollision() {
@@ -131,23 +135,24 @@ function keys(e) {
 }
 
 function while_loop() {
-  while(1) {
+  setInterval(() => {
     ballBounce();
-  }
+  }, 10);
 }
 
-// while_loop();
 
 
 const Rooms = [];
 
 class room {
-  name: string;
+  roomId: string;
   Player2: boolean;
   AdminId: string;
   MeetId: string;
-  constructor(name: string, Player2: boolean, admin: string) {
-    this.name = name;
+  ball_x: number;
+  ball_y: number;
+  constructor(roomId: string, Player2: boolean, admin: string) {
+    this.roomId = roomId;
     this.Player2 = Player2;
     this.AdminId = admin;
   }
@@ -162,7 +167,7 @@ class room {
 export class MyGateWay {
   @WebSocketServer()
   server: Server;
-
+  
   handleConnection(client: Socket) {
     // console.log(`Client connected with ID: ${client.id}`);
   }
@@ -171,10 +176,10 @@ export class MyGateWay {
     if (Rooms) {
       const room = Rooms.find(
         (room) => room.AdminId === client.id || room.MeetId === client.id,
-      );
+        );
 
       if (room) {
-        index = Rooms.map((index) => index.name).indexOf(room.name);
+        index = Rooms.map((index) => index.roomId).indexOf(room.roomId);
         this.server.to(room.AdminId).emit('admin-disconnect');
         this.server.to(room.MeetId).emit('meet-disconnect');
       }
@@ -187,16 +192,18 @@ export class MyGateWay {
   @SubscribeMessage('join-room')
   onMessage(@MessageBody() body: any, @ConnectedSocket() socket) {
     const availableRoom = Rooms.find((room) => room.Player2 === true);
-
+    
     if (Rooms.length === 0 || !availableRoom) {
       const initRoom = new room(Date.now().toString(), true, socket.id);
-      socket.join(initRoom.name);
+      // socket.join(initRoom.roomId);
       Rooms.push(initRoom);
       this.server.emit('isAdmin', { isAdmin: 'true' });
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
-      socket.join(availableRoom.name);
+      availableRoom.start();
+      // socket.join(availableRoom.roomId);
+      // while_loop();
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
     }
@@ -204,7 +211,7 @@ export class MyGateWay {
   @SubscribeMessage('coordinates_Admin')
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.AdminId === client.id);
-
+    
     if (room) {
       this.server.to(room.MeetId).emit('Player-2-Meet', {
         ballX: body.ballX,
