@@ -7,167 +7,10 @@ import {
 } from '@nestjs/websockets';
 // import { Body, OnModuleInit } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-
-const width:number = 100, height:number = 100;
-
-let scoreLeft:number, scoreRigth:number = 0;
-
-class elem {
-  x: number
-  y: number
-  width: number
-  height: number
-  color: string
-  speed: number
-  gravity: number
-    constructor(options) {
-      this.x = options.x * (width / 650);
-      this.y = options.y * (height / 400);
-      this.width = options.width * (width / 650);
-      this.height = options.height * (height / 400);
-      this.color = options.color;
-      this.speed = options.speed || 2 * (width / 650);
-      this.gravity = options.gravity * (height / 400);
-    }
-}
+import room from './game';
 
 const Rooms = [];
-
-class room {
-  roomId: string;
-  Player2: boolean;
-  AdminId: string;
-  MeetId: string;
-  // ball_x: number;
-  // ball_y: number;
-  player1: elem;
-  player2: elem;
-  ball: elem;
-  constructor(roomId: string, Player2: boolean, admin: string) {
-    this.roomId = roomId;
-    this.Player2 = Player2;
-    this.AdminId = admin;
-    this.player1 = new elem({
-        x: 2,
-        y: 160,
-        width: 15,
-        height: 80,
-        color: "#fff",
-        gravity: 2,
-    })
-  
-    this.player2 = new elem({
-        x: 648,
-        y: 160,
-        width: 15,
-        height: 80,
-        color: '#fff',
-        gravity: 2,
-    });
-  
-    this.ball = new elem({
-        x: width / 2,
-        y: height / 2,
-        width: 15,
-        height: 15,
-        color: '#fff',
-        speed: 1,
-        gravity: 1
-    });
-  }
-
-  drawelem(elem) {
-      // console.log(elem);
-      // context.fillStyle = elem.color;
-      // context.fillRect(elem.x, elem.y, elem.width, elem.height);
-  }
-  
-  drawBall(elem) {
-    
-  }
-  
-  displayscore1() {
-      // context.font = "10px Arial";
-      // context.fillStyle = "#fff";
-      // context.fillText(scoreLeft, width / 2 - 60, 30);
-  }
-  
-  displayscore2() {
-      // context.font = "10px Arial";
-      // context.fillStyle = "#fff";
-      // context.fillText(scoreRigth, width / 2 + 60, 30);
-  }
-  
-  drawAll() {
-      // drawelem(player1);
-      // drawelem(player2);
-      this.drawBall(this.ball);
-      // displayscore1();
-      // displayscore2();
-  }
-
-  ballWallCollision() {
-    if (
-        (this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
-            this.ball.x + this.ball.width + this.ball.speed >= this.player2.x &&
-            this.ball.y + this.ball.gravity > this.player2.y) ||
-        (this.ball.y + this.ball.gravity > this.player1.y &&
-            this.ball.x + this.ball.speed <= this.player1.x + this.player1.width &&
-            this.ball.y < this.player1.y + this.player1.height)
-    ) {
-        this.ball.speed *= -1;
-    } else if (this.ball.x + this.ball.speed < this.player1.x) {
-        scoreLeft += 1;
-        this.ball.speed = this.ball.speed * -1;
-        this.ball.x = width / 2;
-        this.ball.y = height / 2;
-    } else if (this.ball.x + this.ball.speed > this.player2.x + this.player2.width) {
-        scoreRigth += 1;
-        this.ball.speed = this.ball.speed * -1;
-        this.ball.x = width / 2;
-        this.ball.y = height / 2;
-    }
-    this.drawAll();
-  }
-  
-  ballBounce() {
-      if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
-          this.ball.gravity *= -1;
-          this.ball.y += this.ball.gravity;
-          this.ball.x += this.ball.speed;
-      } else {
-          this.ball.y += this.ball.gravity;
-          this.ball.x += this.ball.speed;
-      }
-      this.ballWallCollision();
-  }
-
-  while_loop() {
-    setInterval(() => {
-      this.ballBounce();
-    }, 40);
-  }
-
-  start() {
-    this.while_loop();
-  }
-
-  set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
-  set paddleTwo(paddleTwo) { this.player2.y = paddleTwo - 10; }
-
-  get paddleOne() { return this.player1.y + 10; }
-  get paddleTwo() { return this.player2.y + 10; }
-
-  get ballX() { return this.ball.x; }
-  get ballY() { return this.ball.y; }
-
-  // positions(paddleOne: number, paddleTwo: number) {
-  //       this.player1.y = paddleOne - 10;
-  //       this.player2.y = paddleTwo - 10;
-  // }
-}
-
-let playerYAdmin: number, playerYMeet:number;
+let room_index: number = 0;
 
 @WebSocketGateway({
   cors: {
@@ -181,6 +24,8 @@ export class MyGateWay {
   server: Server;
   
   handleConnection(client: Socket) {
+    if (room_index === -1)
+      room_index = 0;
     // console.log(`Client connected with ID: ${client.id}`);
   }
   handleDisconnect(client: any) {
@@ -192,12 +37,11 @@ export class MyGateWay {
 
       if (room) {
         index = Rooms.map((index) => index.roomId).indexOf(room.roomId);
-        this.server.to(room.AdminId).emit('admin-disconnect');
-        this.server.to(room.MeetId).emit('meet-disconnect');
+        if (index >= 0) Rooms.splice(index, 1);
+        console.error("index: " + index);
+        if (room_index === 0)
+        room_index = -1;
       }
-      // console.error('Rooms.length before  ' + Rooms.length);
-      if (index >= 0) Rooms.splice(index, 1);
-      // console.error('Rooms.length after ' + Rooms.length);
     }
   }
 
@@ -216,26 +60,19 @@ export class MyGateWay {
       socket.join(availableRoom.roomId);
       availableRoom.start();
       if (Rooms.length <= 1) {
-        let index = 0;
         setInterval(()=> {
-          console.log("NEW JOINED");
-        // const room = Rooms.find((room) => room.MeetId === client.id);
-          // availableRoom.positions(playerYAdmin, playerYMeet);
-          this.server.sockets.in(Rooms[index].roomId).emit('Drawx', {
-            ballX: Rooms[index].ballX,
-            ballY: Rooms[index].ballY,
-            playerYAdmin: Rooms[index].paddleOne,
-            playerYMeet: Rooms[index].paddleTwo,
+          if (Rooms[room_index]) {
+          // console.log(room_index);
+          this.server.sockets.in(Rooms[room_index].roomId).emit('Drawx', {
+            ballX: Rooms[room_index].ballX,
+            ballY: Rooms[room_index].ballY,
+            playerYAdmin: Rooms[room_index].paddleOne,
+            playerYMeet: Rooms[room_index].paddleTwo,
           })
-          if (index >= Rooms.length)
-            index = 0;
-          else index ++;
-
-          console.error("index: " + index + "\nRooms.length: " + Rooms.length);
-        // this.server.to(availableRoom.AdminId).emit('Player-2-Admin', {
-          //   ballX: availableRoom.ball.x,
-          //   ballY: availableRoom.ball.y,
-          // })
+          if (room_index === Rooms.length - 1)
+            room_index = 0;
+          else room_index ++;
+      }
         }, 0)
       }
       this.server.emit('meet-joined');
@@ -245,24 +82,11 @@ export class MyGateWay {
   @SubscribeMessage('coordinates_Admin')
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.AdminId === client.id);
-    
-    // playerYAdmin = body.playerY;
-    if (room) {
-      // this.server.to(room.MeetId).emit('Player-2-Meet', {
-      // });
-      
-      room.paddleOne = body.playerY;
-    }
+    if (room) room.paddleOne = body.playerY;
   }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
-    
-    // playerYMeet = body.playerY;
-    if (room) {
-      // this.server.to(room.AdminId).emit('Player-2-Admin', {
-      // });
-      room.paddleTwo = body.playerY;
-    }
+    if (room) room.paddleTwo = body.playerY;
   }
 }

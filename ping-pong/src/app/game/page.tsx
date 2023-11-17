@@ -91,7 +91,7 @@ export default function Pong() {
 
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100;
-        if (pos >= 92 || pos <= 9 ) return;
+        if (pos >= 92 || pos <= 8.5 ) return;
         playerPaddle.position = pos;
         if (ISadmin && isMeet) {
           socket.emit("coordinates_Admin", {

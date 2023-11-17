@@ -1,129 +1,151 @@
-// const canvas = document.getElementById('pong');
-// const context = canvas.getContext('2d');
+const width:number = 100, height:number = 100;
 
-// const width = 650
+let scoreLeft:number, scoreRigth:number = 0;
 
-// const height = 400;
+class elem {
+  x: number
+  y: number
+  width: number
+  height: number
+  color: string
+  speed: number
+  gravity: number
+    constructor(options) {
+      this.x = options.x * (width / 650);
+      this.y = options.y * (height / 400);
+      this.width = options.width * (width / 650);
+      this.height = options.height * (height / 400);
+      this.color = options.color;
+      this.speed = options.speed || 2 * (width / 650);
+      this.gravity = options.gravity * (height / 400);
+    }
+}
 
-// let scoreLeft = scoreRigth = 0;
+export default class room {
+  roomId: string;
+  Player2: boolean;
+  AdminId: string;
+  MeetId: string;
+  // ball_x: number;
+  // ball_y: number;
+  player1: elem;
+  player2: elem;
+  ball: elem;
+  constructor(roomId: string, Player2: boolean, admin: string) {
+    this.roomId = roomId;
+    this.Player2 = Player2;
+    this.AdminId = admin;
+    this.player1 = new elem({
+        x: 2,
+        y: 160,
+        width: 15,
+        height: 80,
+        color: "#fff",
+        gravity: 2,
+    })
+  
+    this.player2 = new elem({
+        x: 648,
+        y: 160,
+        width: 15,
+        height: 80,
+        color: '#fff',
+        gravity: 2,
+    });
+  
+    this.ball = new elem({
+        x: width / 2,
+        y: height / 2,
+        width: 15,
+        height: 15,
+        color: '#fff',
+        speed: 0.1,
+        gravity: 1
+    });
+  }
 
-// class elem {
-//     constructor(options) {
-//         this.x = options.x;
-//         this.y = options.y;
-//         this.width = options.width;
-//         this.height = options.height;
-//         this.color = options.color;
-//         this.speed = options.speed || 2;
-//         this.gravity = options.gravity;
-//     }
-// }
+  drawelem(elem) {
+      // console.log(elem);
+      // context.fillStyle = elem.color;
+      // context.fillRect(elem.x, elem.y, elem.width, elem.height);
+  }
+  
+  drawBall(elem) {
+    
+  }
+  
+  displayscore1() {
+      // context.font = "10px Arial";
+      // context.fillStyle = "#fff";
+      // context.fillText(scoreLeft, width / 2 - 60, 30);
+  }
+  
+  displayscore2() {
+      // context.font = "10px Arial";
+      // context.fillStyle = "#fff";
+      // context.fillText(scoreRigth, width / 2 + 60, 30);
+  }
+  
+  drawAll() {
+      // drawelem(player1);
+      // drawelem(player2);
+      this.drawBall(this.ball);
+      // displayscore1();
+      // displayscore2();
+  }
 
-// const player1 = new elem({
-//     x: 10,
-//     y: 160,
-//     width: 15,
-//     height: 80,
-//     color: "#fff",
-//     gravity: 2,
-// })
+  ballWallCollision() {
+    if (
+        (this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
+            this.ball.x + this.ball.width + this.ball.speed >= this.player2.x &&
+            this.ball.y + this.ball.gravity > this.player2.y) ||
+        (this.ball.y + this.ball.gravity > this.player1.y &&
+            this.ball.x + this.ball.speed <= this.player1.x + this.player1.width &&
+            this.ball.y < this.player1.y + this.player1.height)
+    ) {
+        this.ball.speed *= -1;
+    } else if (this.ball.x + this.ball.speed < this.player1.x) {
+        scoreLeft += 1;
+        this.ball.speed = this.ball.speed * -1;
+        this.ball.x = width / 2;
+        this.ball.y = height / 2;
+    } else if (this.ball.x + this.ball.speed > this.player2.x + this.player2.width) {
+        scoreRigth += 1;
+        this.ball.speed = this.ball.speed * -1;
+        this.ball.x = width / 2;
+        this.ball.y = height / 2;
+    }
+    this.drawAll();
+  }
+  
+  ballBounce() {
+      if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
+          this.ball.gravity *= -1;
+          this.ball.y += this.ball.gravity;
+          this.ball.x += this.ball.speed;
+      } else {
+          this.ball.y += this.ball.gravity;
+          this.ball.x += this.ball.speed;
+      }
+      this.ballWallCollision();
+  }
 
-// const player2 = new elem({
-//     x: 625,
-//     y: 160,
-//     width: 15,
-//     height: 80,
-//     color: '#fff',
-//     gravity: 2,
-// });
+  while_loop() {
+    setInterval(() => {
+      this.ballBounce();
+    }, 8);
+  }
 
-// const ball = new elem({
-//     x: width / 2,
-//     y: height / 2,
-//     width: 15,
-//     height: 15,
-//     color: '#fff',
-//     speed: 1,
-//     gravity: 1
-// });
+  start() {
+    this.while_loop();
+  }
 
-// function drawelem(elem) {
-//     console.log(elem);
-//     context.fillStyle = elem.color;
-//     context.fillRect(elem.x, elem.y, elem.width, elem.height);
-// }
+  set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
+  set paddleTwo(paddleTwo) { this.player2.y = paddleTwo - 10; }
 
-// function displayscore1() {
-//     context.font = "10px Arial";
-//     context.fillStyle = "#fff";
-//     context.fillText(scoreLeft, width / 2 - 60, 30);
-// }
+  get paddleOne() { return this.player1.y + 10; }
+  get paddleTwo() { return this.player2.y + 10; }
 
-// function displayscore2() {
-//     context.font = "10px Arial";
-//     context.fillStyle = "#fff";
-//     context.fillText(scoreRigth, width / 2 + 60, 30);
-// }
-
-// function drawAll() {
-//     context.clearRect(0,0,width, height);
-//     drawelem(player1);
-//     drawelem(player2);
-//     drawelem(ball);
-//     displayscore1();
-//     displayscore2();
-// }
-
-// function ballWallCollision() {
-//     if ((ball.y + ball.gravity <= player2.y + player2.height &&
-//          ball.x + ball.width + ball.speed >= player2.x && 
-//          ball.y + ball.gravity > player2.y) || (ball.y + ball.gravity > player1.y && ball.x + ball.speed <= player1.x + player1.width)) {
-//         ball.speed *= -1;
-//     } else if (ball.x + ball.speed < player1.x) {
-//         scoreLeft += 1;
-//         ball.speed = ball.speed * -1;
-//         ball.x = 100 + ball.speed;
-//         ball.y += ball.gravity;
-//     } else if (ball.x + ball.speed > player2.x + player2.width) {
-//         scoreRigth += 1;
-//         ball.speed = ball.speed * -1;
-//         ball.x = 100 + ball.speed;
-//         ball.y += ball.gravity;
-//     }
-//     drawAll();
-// }
-
-// function ballBounce() {
-//     if (ball.y + ball.gravity <= 0 || ball.y + ball.gravity >= height) {
-//         ball.gravity *= -1;
-//         ball.y += ball.gravity;
-//         ball.x += ball.speed;
-//     } else {
-//         ball.y += ball.gravity;
-//         ball.x += ball.speed;
-//     }
-//     ballWallCollision();
-// }
-
-// function keys(e) {
-//     const key = e.key;
-//     if (key == 'w' && player1.y - player1.gravity > 0) {
-//         player1.y -= player1.gravity * 4;
-//     } else if (key == 's' && player1.height + player1.y + player1.gravity < height) {
-//         player1.y += player1.gravity * 4;
-//     }
-//     if (key == 'i' && player2.y - player2.gravity > 0) {
-//         player2.y -= player2.gravity * 4;
-//     } else if (key == 'k' && player2.height + player2.y + player2.gravity < height) {
-//         player2.y += player2.gravity * 4;
-//     }
-// }
-
-// window.addEventListener('keypress', keys, false);
-
-// function while_loop() {
-//     ballBounce();
-//     window.requestAnimationFrame(while_loop);
-// }
-
-// while_loop();
+  get ballX() { return this.ball.x; }
+  get ballY() { return this.ball.y; }
+}
