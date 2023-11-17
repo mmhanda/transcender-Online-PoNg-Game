@@ -59,7 +59,7 @@ export default class room {
         width: 15,
         height: 15,
         color: '#fff',
-        speed: 0.1,
+        speed: 0.4, // for performen 0.1 here
         gravity: 1
     });
   }
@@ -96,12 +96,12 @@ export default class room {
 
   ballWallCollision() {
     if (
-        (this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
+        (this.ball.y + this.ball.gravity <= (this.player2.y + 1.5) + this.player2.height &&
             this.ball.x + this.ball.width + this.ball.speed >= this.player2.x &&
-            this.ball.y + this.ball.gravity > this.player2.y) ||
-        (this.ball.y + this.ball.gravity > this.player1.y &&
+            this.ball.y + this.ball.gravity > (this.player2.y - 1.5)) ||
+        (this.ball.y + this.ball.gravity > (this.player1.y - 1.5) &&
             this.ball.x + this.ball.speed <= this.player1.x + this.player1.width &&
-            this.ball.y < this.player1.y + this.player1.height)
+            this.ball.y < (this.player1.y + 1.5) + this.player1.height)
     ) {
         this.ball.speed *= -1;
     } else if (this.ball.x + this.ball.speed < this.player1.x) {
@@ -133,7 +133,7 @@ export default class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 8);
+    }, 18); // for performen 8 here
   }
 
   start() {

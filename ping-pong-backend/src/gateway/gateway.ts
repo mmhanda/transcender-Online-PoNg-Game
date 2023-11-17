@@ -24,8 +24,6 @@ export class MyGateWay {
   server: Server;
   
   handleConnection(client: Socket) {
-    if (room_index === -1)
-      room_index = 0;
     // console.log(`Client connected with ID: ${client.id}`);
   }
   handleDisconnect(client: any) {
@@ -38,9 +36,6 @@ export class MyGateWay {
       if (room) {
         index = Rooms.map((index) => index.roomId).indexOf(room.roomId);
         if (index >= 0) Rooms.splice(index, 1);
-        console.error("index: " + index);
-        if (room_index === 0)
-        room_index = -1;
       }
     }
   }
@@ -59,24 +54,26 @@ export class MyGateWay {
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.roomId);
       availableRoom.start();
+      
       if (Rooms.length <= 1) {
         setInterval(()=> {
           if (Rooms[room_index]) {
-          // console.log(room_index);
-          this.server.sockets.in(Rooms[room_index].roomId).emit('Drawx', {
-            ballX: Rooms[room_index].ballX,
-            ballY: Rooms[room_index].ballY,
-            playerYAdmin: Rooms[room_index].paddleOne,
-            playerYMeet: Rooms[room_index].paddleTwo,
-          })
-          if (room_index === Rooms.length - 1)
-            room_index = 0;
-          else room_index ++;
+            this.server.sockets.in(Rooms[room_index].roomId).emit('Drawx', {
+              ballX: Rooms[room_index].ballX,
+              ballY: Rooms[room_index].ballY,
+              playerYAdmin: Rooms[room_index].paddleOne,
+              playerYMeet: Rooms[room_index].paddleTwo,
+            })
+            if (room_index === Rooms.length - 1)
+              room_index = 0;
+            else room_index ++;
+          }
+        }, 0);
       }
-        }, 0)
-      }
-      this.server.emit('meet-joined');
-      this.server.emit('isAdmin', { isAdmin: 'false' });
+      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('meet-joined');
+      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('isAdmin', { isAdmin: 'false' });
+      // this.server.emit('meet-joined');
+      // this.server.emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')
