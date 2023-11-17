@@ -145,17 +145,26 @@ class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 25);
+    }, 40);
   }
 
   start() {
     this.while_loop();
   }
 
-  positions(paddleOne: number, paddleTwo: number) {
-        this.player1.y = paddleOne - 10;
-        this.player2.y = paddleTwo - 10;
-  }
+  set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
+  set paddleTwo(paddleTwo) { this.player2.y = paddleTwo - 10; }
+
+  get paddleOne() { return this.player1.y + 10; }
+  get paddleTwo() { return this.player2.y + 10; }
+
+  get ballX() { return this.ball.x; }
+  get ballY() { return this.ball.y; }
+
+  // positions(paddleOne: number, paddleTwo: number) {
+  //       this.player1.y = paddleOne - 10;
+  //       this.player2.y = paddleTwo - 10;
+  // }
 }
 
 let playerYAdmin: number, playerYMeet:number;
@@ -206,19 +215,29 @@ export class MyGateWay {
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.roomId);
       availableRoom.start();
-      setInterval(()=> {
-        availableRoom.positions(playerYAdmin, playerYMeet);
-        this.server.sockets.in(availableRoom.roomId).emit('Drawx', {
-          ballX: availableRoom.ball.x,
-          ballY: availableRoom.ball.y,
-          playerYAdmin: availableRoom.player1.y + 10,
-          playerYMeet: availableRoom.player2.y + 10,
-        })
+      if (Rooms.length <= 1) {
+        let index = 0;
+        setInterval(()=> {
+          console.log("NEW JOINED");
+        // const room = Rooms.find((room) => room.MeetId === client.id);
+          // availableRoom.positions(playerYAdmin, playerYMeet);
+          this.server.sockets.in(Rooms[index].roomId).emit('Drawx', {
+            ballX: Rooms[index].ballX,
+            ballY: Rooms[index].ballY,
+            playerYAdmin: Rooms[index].paddleOne,
+            playerYMeet: Rooms[index].paddleTwo,
+          })
+          if (index >= Rooms.length)
+            index = 0;
+          else index ++;
+
+          console.error("index: " + index + "\nRooms.length: " + Rooms.length);
         // this.server.to(availableRoom.AdminId).emit('Player-2-Admin', {
           //   ballX: availableRoom.ball.x,
           //   ballY: availableRoom.ball.y,
           // })
         }, 0)
+      }
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
     }
@@ -227,20 +246,23 @@ export class MyGateWay {
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.AdminId === client.id);
     
-    // if (room) {
-      playerYAdmin = body.playerY;
+    // playerYAdmin = body.playerY;
+    if (room) {
       // this.server.to(room.MeetId).emit('Player-2-Meet', {
       // });
-    // }
+      
+      room.paddleOne = body.playerY;
+    }
   }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
     
-    // if (room) {
-      playerYMeet = body.playerY;
+    // playerYMeet = body.playerY;
+    if (room) {
       // this.server.to(room.AdminId).emit('Player-2-Admin', {
       // });
-    // }
+      room.paddleTwo = body.playerY;
+    }
   }
 }
