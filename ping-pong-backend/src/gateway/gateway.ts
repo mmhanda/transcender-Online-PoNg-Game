@@ -155,21 +155,13 @@ class room {
   }
   
 
-  positions(paddleOne: string, paddleTwo: string) {
-    if (paddleOne == 'w' && this.player1.y - this.player1.gravity > 0) {
-        this.player1.y -= this.player1.gravity * 4;
-    } else if (paddleOne == 's' && this.player1.height + this.player1.y + this.player1.gravity < height) {
-        this.player1.y += this.player1.gravity * 4;
+  positions(paddleOne: number, paddleTwo: number) {
+        this.player1.y = paddleOne;
+        this.player2.y = paddleTwo;
     }
-    if (paddleTwo == 'i' && this.player2.y - this.player2.gravity > 0) {
-        this.player2.y -= this.player2.gravity * 4;
-    } else if (paddleTwo == 'k' && this.player2.height + this.player2.y + this.player2.gravity < height) {
-        this.player2.y += this.player2.gravity * 4;
-    }
-  }
 }
 
-let playerYAdmin: string, playerYMeet:string;
+let playerYAdmin: number, playerYMeet:number;
 
 @WebSocketGateway({
   cors: {
@@ -222,8 +214,6 @@ export class MyGateWay {
         this.server.sockets.in(availableRoom.roomId).emit('Drawx', {
           ballX: availableRoom.ball.x,
           ballY: availableRoom.ball.y,
-          AdminY: availableRoom.player2.y,
-          MeetY: availableRoom.player1.y,
         })
         // this.server.to(availableRoom.AdminId).emit('Player-2-Admin', {
           //   ballX: availableRoom.ball.x,
@@ -241,28 +231,26 @@ export class MyGateWay {
     const room = Rooms.find((room) => room.AdminId === client.id);
     
     playerYAdmin = body.playerY;
-    console.error(playerYAdmin);
-    // if (room) {
-    //     this.server.to(room.MeetId).emit('Player-2-Meet', {
-    //     //     ballX: body.ballX,
-    //     //     ballY: body.ballY,
-    //         playerY: body.playerY,
-    //     //     adminScore: body.adminScore,
-    //     //     player2Score: body.player2Score,
-    //       });
-    //     }
+    if (room) {
+        this.server.to(room.MeetId).emit('Player-2-Meet', {
+        //     ballX: body.ballX,
+        //     ballY: body.ballY,
+            playerY: body.playerY,
+        //     adminScore: body.adminScore,
+        //     player2Score: body.player2Score,
+          });
+        }
       }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
     playerYMeet = body.playerY;
-    console.error(playerYMeet);
     
-  //   if (room) {
-  //     this.server.to(room.AdminId).emit('Player-2-Admin', {
-  //       playerY: body.playerY,
-  //   });
-  // }
+    if (room) {
+      this.server.to(room.AdminId).emit('Player-2-Admin', {
+        playerY: body.playerY,
+    });
+  }
   }
   @SubscribeMessage('room-score')
   onDisconnect(@MessageBody() body: any) {

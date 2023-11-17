@@ -105,52 +105,43 @@ function checkIfDebuggerEnabled() {
       //   setIsOpen(true);
       // });
 
-      // socket.on("Player-2-Admin", (Player2) => {
-      //   if (ISadmin) {
-      //     if (Player2.playerY) {
-      //       Player2Height = Player2.playerY;
-      //     }
-      //     // if (Player2.ballX && Player2.ballY) {
-      //     //   ballX = Player2.ballX;
-      //     //   ballY = Player2.ballY;
-      //     //   // console.log("ballX " + ballX);
-      //     //   // console.log("ballY " + ballY);
-      //     // }
-      //   }
-      // });
+      socket.on("Player-2-Admin", (Player2) => {
+        if (ISadmin) {
+          if (Player2.playerY) {
+            Player2Height = Player2.playerY + 10;
+          }
+          // if (Player2.ballX && Player2.ballY) {
+          //   ballX = Player2.ballX;
+          //   ballY = Player2.ballY;
+          //   // console.log("ballX " + ballX);
+          //   // console.log("ballY " + ballY);
+          // }
+        }
+      });
 
       socket.on('Drawx', (draw) => {
         if (draw.ballX && draw.ballY) {
           ballX = draw.ballX;
           ballY = draw.ballY;
-          if (ISadmin) {
-            Player2Height = draw.AdminY;
-            console.log("Player2HeightA " + Player2Height);
-          } else {
-            Player2Height = draw.MeetY;
-            console.log("Player2HeightM " + Player2Height);
-          }
-          // console.log("ballX " + ballX);
-          // console.log("ballY " + ballY);
         }
       })
-      // socket.on("Player-2-Meet", (Player2) => {
-      //   if (!ISadmin) {
-      //     if (Player2.playerY) {
-      //       Player2Height = Player2.playerY;
-      //     }
-      //     // if (Player2.ballX && Player2.ballY) {
-      //     //   ballX = Player2.ballX;
-      //     //   ballY = Player2.ballY;
-      //     //   // console.log("ballX " + ballX);
-      //     //   // console.log("ballY " + ballY);
-      //     // }
-      //     if (Player2.adminScore || Player2.player2Score) {
-      //       adminScore = Player2.adminScore;
-      //       player2Score = Player2.player2Score;
-      //     }
-      //   }
-      // });
+      socket.on("Player-2-Meet", (Player2) => {
+        if (!ISadmin) {
+          if (Player2.playerY) {
+            Player2Height = Player2.playerY + 10;
+          }
+          // if (Player2.ballX && Player2.ballY) {
+          //   ballX = Player2.ballX;
+          //   ballY = Player2.ballY;
+          //   // console.log("ballX " + ballX);
+          //   // console.log("ballY " + ballY);
+          // }
+          if (Player2.adminScore || Player2.player2Score) {
+            adminScore = Player2.adminScore;
+            player2Score = Player2.player2Score;
+          }
+        }
+      });
 
       function EndGame(msg: string) {
         keepUpdating = true;
@@ -246,52 +237,20 @@ function checkIfDebuggerEnabled() {
           rect.right >= window.innerWidth - window.innerWidth / 3.5
         );
       }
-
-      window.addEventListener('keypress', (e) => {
-        const key = e.key;
-
+      document.addEventListener("mousemove", (e) => {
+        const pos = (e.y / window.innerHeight) * 100;
+        playerPaddle.position = pos + 10
+        // console.log(playerPaddle.position)
         if (ISadmin && Score) {
-          if (key === 'w') {
-            playerPaddle.position -= 4;
-            // console.log("HERE " + key);
-            socket.emit("coordinates_Admin", {
-              playerY: 'w',
-            });
-          } else if (key === 's') {
-          playerPaddle.position += 4;
-            socket.emit("coordinates_Admin", {
-              playerY: 's',
-            });
-          }
+          socket.emit("coordinates_Admin", {
+            playerY: pos,
+          });
         } else {
-          if (key === 'i') {
-            playerPaddle.position -= 4;
-            socket.emit("coordinates_Meet", {
-              playerY: 'i',
-            });
-          } else if (key === 'k') {
-            playerPaddle.position += 4;
-            socket.emit("coordinates_Meet", {
-              playerY: 'k',
-            });
-          }
+          socket.emit("coordinates_Meet", {
+            playerY: pos,
+          });
         }
       });
-        
-
-    //   document.addEventListener("mousemove", (e) => {
-    //     const pos =  playerPaddle.position = (e.y / window.innerHeight) * 100;
-    //     // console.log(playerPaddle.position)
-        // if (ISadmin && Score) {
-        //   socket.emit("coordinates_Admin", {
-        //     playerY: pos,
-        //   });
-        // } else {
-        //   socket.emit("coordinates_Meet", {
-        //     playerY: pos,
-        //   });
-        // }
-    //   });
     }
     runGame = true;
   }, []);
