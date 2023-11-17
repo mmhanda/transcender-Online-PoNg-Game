@@ -55,6 +55,8 @@ body {
   font-weight: bold;
   font-size: 7vh;
   color: var(--paddle-color);
+  top: 10%;
+  width: 100%;
 }
 
 .score > * {
@@ -73,13 +75,13 @@ body {
   text-align: left;
 }
 
-.gameContainer {
+/* .gameContainer {
   position: relative;
   width: 45vw;
   background-color: var(--background-color);
-}
+} */
 
-/* .middle_line {
+.middle_line {
   position: absolute;
   top: 0;
   left: 50%;
@@ -87,4 +89,4 @@ body {
   height: 100%;
   opacity: 0.2;
   border-left: 1vh dotted white;
-} */
+}

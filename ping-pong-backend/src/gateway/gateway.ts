@@ -76,8 +76,6 @@ class room {
     });
   }
 
-
-  // start() {
   drawelem(elem) {
       // console.log(elem);
       // context.fillStyle = elem.color;
@@ -107,7 +105,7 @@ class room {
       // displayscore1();
       // displayscore2();
   }
-  
+
   ballWallCollision() {
     if (
         (this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
@@ -130,7 +128,7 @@ class room {
         this.ball.y = height / 2;
     }
     this.drawAll();
-}
+  }
   
   ballBounce() {
       if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
@@ -147,18 +145,17 @@ class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 40);
+    }, 25);
   }
 
   start() {
     this.while_loop();
   }
-  
 
   positions(paddleOne: number, paddleTwo: number) {
         this.player1.y = paddleOne - 10;
         this.player2.y = paddleTwo - 10;
-    }
+  }
 }
 
 let playerYAdmin: number, playerYMeet:number;
@@ -214,14 +211,14 @@ export class MyGateWay {
         this.server.sockets.in(availableRoom.roomId).emit('Drawx', {
           ballX: availableRoom.ball.x,
           ballY: availableRoom.ball.y,
+          playerYAdmin: availableRoom.player1.y + 10,
+          playerYMeet: availableRoom.player2.y + 10,
         })
         // this.server.to(availableRoom.AdminId).emit('Player-2-Admin', {
           //   ballX: availableRoom.ball.x,
           //   ballY: availableRoom.ball.y,
           // })
         }, 0)
-      console.error(availableRoom.player2.y + "\n" + availableRoom.player1.y,);
-      // while_loop();
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
     }
@@ -230,30 +227,20 @@ export class MyGateWay {
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.AdminId === client.id);
     
-    playerYAdmin = body.playerY;
-    if (room) {
-        this.server.to(room.MeetId).emit('Player-2-Meet', {
-        //     ballX: body.ballX,
-        //     ballY: body.ballY,
-            playerY: body.playerY,
-        //     adminScore: body.adminScore,
-        //     player2Score: body.player2Score,
-          });
-        }
-      }
+    // if (room) {
+      playerYAdmin = body.playerY;
+      // this.server.to(room.MeetId).emit('Player-2-Meet', {
+      // });
+    // }
+  }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
-    playerYMeet = body.playerY;
     
-    if (room) {
-      this.server.to(room.AdminId).emit('Player-2-Admin', {
-        playerY: body.playerY,
-    });
-  }
-  }
-  @SubscribeMessage('room-score')
-  onDisconnect(@MessageBody() body: any) {
-    console.error(body);
+    // if (room) {
+      playerYMeet = body.playerY;
+      // this.server.to(room.AdminId).emit('Player-2-Admin', {
+      // });
+    // }
   }
 }

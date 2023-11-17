@@ -11,11 +11,8 @@ import { useSearchParams } from "next/navigation";
 export default function Pong() {
   let runGame: boolean = false,
     keepUpdating: boolean = false,
-    isMeet: boolean = false,
-    Score: boolean = false;
-    // isConsole: boolean = false;
+    isMeet: boolean = false;
 
-  let innerHeight: number = window.innerHeight;
   const [message, setMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,40 +22,6 @@ export default function Pong() {
   function sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
-
-
-  let workerUrl = 'data:application/javascript;base64,' + btoa(`
-self.addEventListener('message', (e) => {
-  if(e.data==='hello'){
-    self.postMessage('hello');
-  }
-  debugger;
-  self.postMessage('');
-});
-`);
-function checkIfDebuggerEnabled() {
-  return new Promise((resolve) => {
-    let fulfilled = false;
-    let worker = new Worker(workerUrl);
-    worker.onmessage = (e) => {
-      let data = e.data;
-      if (data === 'hello') {
-        setTimeout(() => {
-          if (!fulfilled) {
-            resolve(true);
-            worker.terminate();
-          }
-        }, 1);
-      } else {
-        fulfilled = true;
-        resolve(false);
-        worker.terminate();
-      }
-    };
-    worker.postMessage('hello');
-  });
-}
 
   useEffect(() => {
     if (runGame) {
@@ -72,8 +35,6 @@ function checkIfDebuggerEnabled() {
       let Player2Height: number = 50,
         ballY: number = 50,
         ballX: number = 22;
-      let adminScore: number = 0,
-        player2Score: number = 0;
       const hueColorChangeSet: string = color;
       let ISadmin: boolean = false;
 
@@ -88,34 +49,12 @@ function checkIfDebuggerEnabled() {
       socket.once("meet-joined", async () => {
         if (ISadmin) {
           await sleep(1000);
-          Score = true;
           keepUpdating = false;
           isMeet = true;
           window.requestAnimationFrame(update);
         } else {
           isMeet = true;
-          update("");
-        }
-      });
-
-      // document.addEventListener("visibilitychange", function () {
-      //   EndGame("End Game!");
-      //   socket.disconnect();
-      //   keepUpdating = true;
-      //   setIsOpen(true);
-      // });
-
-      socket.on("Player-2-Admin", (Player2) => {
-        if (ISadmin) {
-          if (Player2.playerY) {
-            Player2Height = Player2.playerY + 10;
-          }
-          // if (Player2.ballX && Player2.ballY) {
-          //   ballX = Player2.ballX;
-          //   ballY = Player2.ballY;
-          //   // console.log("ballX " + ballX);
-          //   // console.log("ballY " + ballY);
-          // }
+          update();
         }
       });
 
@@ -124,169 +63,37 @@ function checkIfDebuggerEnabled() {
           ballX = draw.ballX;
           ballY = draw.ballY;
         }
-      })
-      socket.on("Player-2-Meet", (Player2) => {
-        if (!ISadmin) {
-          if (Player2.playerY) {
-            Player2Height = Player2.playerY + 10;
+        if (ISadmin) {
+          if (draw.playerYMeet) {
+            Player2Height = draw.playerYMeet;
           }
-          // if (Player2.ballX && Player2.ballY) {
-          //   ballX = Player2.ballX;
-          //   ballY = Player2.ballY;
-          //   // console.log("ballX " + ballX);
-          //   // console.log("ballY " + ballY);
-          // }
-          if (Player2.adminScore || Player2.player2Score) {
-            adminScore = Player2.adminScore;
-            player2Score = Player2.player2Score;
+        } else {
+          if (draw.playerYAdmin) {
+            Player2Height = draw.playerYAdmin;
           }
         }
-      });
-
-      function EndGame(msg: string) {
-        keepUpdating = true;
-        setMessage(msg);
-        setIsOpen(true);
-        socket.emit("room-score", {
-          admin: playerScoreElem.textContent,
-          meet: player2ScoreElem.textContent,
-        });
-        socket.disconnect();
-      }
-
-      // setInterval(()=>{
-      //   checkIfDebuggerEnabled().then((result) => {
-      //     if (result)
-      //     EndGame('To Prevent Cheating You Can Not open the console while you playing YOU MUST RESTART THE GAME WITH CLOSED CONSOLE');
-      //   });
-      // }, 10)
-
-      // socket.on("admin-disconnect", () => {
-      //   if (ISadmin) {
-      //     EndGame("End Game!");
-      //   }
-      // });
-
-      // socket.on("meet-disconnect", () => {
-      //   if (!ISadmin) {
-      //     EndGame("End Game!");
-      //   }
-      // });
-
-      let LastTime: any = null;
+      })
 
       document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
-      function update(time: any) {
+      function update() {
         if (!isMeet || keepUpdating) return;
-
-        innerHeight = window.innerHeight;
-        // if (
-        //   playerScoreElem.textContent === "8" ||
-        //   player2ScoreElem.textContent === "8"
-        // )
-        //   EndGame("End Game!");
-        if (LastTime != null) {
-          const delta: number = time - LastTime;
 
           Player2Paddle.update(Player2Height);
 
           ball.update(
-            delta,
-            [playerPaddle.rect(), Player2Paddle.rect()],
             ISadmin,
             ballX,
             ballY
           );
-
-          // if (ISadmin) {
-          //   socket.emit("coordinates_Admin", {
-          //     ballX: ball.x,
-          //     ballY: ball.y,
-          //   });
-          //   if (isLose()) handleLose();
-          // } else {
-          //   player2ScoreElem.textContent = adminScore.toString();
-          //   playerScoreElem.textContent = player2Score.toString();
-          // }
-        }
-        LastTime = time;
         window.requestAnimationFrame(update);
       }
 
-      function handleLose() {
-        const rect = ball.rect();
-        if (rect.right >= window.innerWidth - window.innerWidth / 3.5) {
-          adminScore = parseInt(playerScoreElem.textContent) + 1;
-          playerScoreElem.textContent = adminScore.toString();
-        } else {
-          player2Score = parseInt(player2ScoreElem.textContent) + 1;
-          player2ScoreElem.textContent = player2Score.toString();
-        }
-        socket.emit("coordinates_Admin", {
-          adminScore: adminScore,
-          player2Score: player2Score,
-        });
-        ball.reset();
-      }
-
-      function isLose() {
-        const rect = ball.rect();
-        return (
-          rect.left <= window.innerWidth / 3.5 ||
-          rect.right >= window.innerWidth - window.innerWidth / 3.5
-        );
-      }
-
-
-      // window.addEventListener('keypress', (e) => {
-      //   const key = e.key;
-
-      //   if (ISadmin && Score) {
-      //     if (key === 'w') {
-      //       const hold = playerPaddle.position;
-      //       const pos = hold;
-      //       playerPaddle.position = pos - 2;
-      //       console.log(playerPaddle.position);
-      //       socket.emit("coordinates_Admin", {
-      //         playerY: pos,
-      //       });
-      //     } else if (key === 's') {
-      //       const hold = playerPaddle.position;
-      //       const pos = hold;
-      //       playerPaddle.position = pos + 2;
-      //       console.log(playerPaddle.position);
-      //       socket.emit("coordinates_Admin", {
-      //         playerY: pos,
-      //       });
-      //     }
-      //   } else {
-      //     if (key === 'w') {
-      //       const hold = playerPaddle.position;
-      //       const pos = hold;
-      //       playerPaddle.position = pos - 2;
-      //       console.log(playerPaddle.position);
-
-      //       socket.emit("coordinates_Meet", {
-      //         playerY: pos,
-      //       });
-      //     } else if (key === 's') {
-      //       const hold = playerPaddle.position;
-      //       const pos = hold ;
-      //       playerPaddle.position = pos + 2;
-      //       console.log(playerPaddle.position);
-      //       socket.emit("coordinates_Meet", {
-      //         playerY: pos,
-      //       });
-      //     }
-      //   }
-      // });
-
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100;
+        if (pos >= 92 || pos <= 9 ) return;
         playerPaddle.position = pos;
-        console.log(playerPaddle.position)
-        if (ISadmin && Score) {
+        if (ISadmin && isMeet) {
           socket.emit("coordinates_Admin", {
             playerY: pos,
           });

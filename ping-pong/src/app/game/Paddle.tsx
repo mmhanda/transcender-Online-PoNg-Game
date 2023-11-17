@@ -1,7 +1,6 @@
 export default class Paddle {
   constructor(paddleElem: HTMLElement | null) {
     this.paddleElem = paddleElem;
-    this.reset();
   }
 
   get position() {
@@ -14,15 +13,7 @@ export default class Paddle {
   }
 
   update(Player2Height: number) {
-    this.position = Player2Height - 10;
-  }
-
-  reset() {
-    this.position = 40;
-  }
-
-  rect() {
-    return this.paddleElem.getBoundingClientRect();
+    this.position = Player2Height;
   }
 }
 
