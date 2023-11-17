@@ -37,22 +37,22 @@ export default class Ball {
   }
 
   update(delta: number, paddleRects: object, isAdmin: boolean, AdminX: number, AdminY: number) {
-    if (isAdmin) {
-      this.x += this.direction.x * this.velocity * delta;
-      this.y += this.direction.y * this.velocity * delta;
-      this.velocity += VELOCITY_INCREASE * delta;
+    // if (isAdmin) {
+    //   this.x += this.direction.x * this.velocity * delta;
+    //   this.y += this.direction.y * this.velocity * delta;
+    //   this.velocity += VELOCITY_INCREASE * delta;
 
-      const rect = this.rect();
+    //   const rect = this.rect();
 
-      if (rect.bottom >= window.innerHeight || rect.top <= 0) {
-        this.direction.y *= -1;
-      } else if (paddleRects.some((r: any) => isCollision(r, rect))) {
-        this.direction.x *= -1;
-      }
-    } else {
-      this.x = 45 - AdminX;
+    //   if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+    //     this.direction.y *= -1;
+    //   } else if (paddleRects.some((r: any) => isCollision(r, rect))) {
+    //     this.direction.x *= -1;
+    //   }
+    // } else {
+      this.x = AdminX;
       this.y = AdminY;
-    }
+    // }
   }
 }
 

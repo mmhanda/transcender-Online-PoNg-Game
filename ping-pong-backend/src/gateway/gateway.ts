@@ -8,7 +8,7 @@ import {
 // import { Body, OnModuleInit } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 
-const width:number = 650, height:number = 400;
+const width:number = 100, height:number = 100;
 
 let scoreLeft:number, scoreRigth:number = 0;
 
@@ -21,13 +21,13 @@ class elem {
   speed: number
   gravity: number
     constructor(options) {
-        this.x = options.x;
-        this.y = options.y;
-        this.width = options.width;
-        this.height = options.height;
-        this.color = options.color;
-        this.speed = options.speed || 2;
-        this.gravity = options.gravity;
+      this.x = options.x * (width / 650);
+      this.y = options.y * (height / 400);
+      this.width = options.width * (width / 650);
+      this.height = options.height * (height / 400);
+      this.color = options.color;
+      this.speed = options.speed || 2 * (width / 650);
+      this.gravity = options.gravity * (height / 400);
     }
 }
 
@@ -222,27 +222,28 @@ class room {
   }
   
   ballWallCollision() {
-      if ((this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
-           this.ball.x + this.ball.width + this.ball.speed >= this.player2.x && 
-           this.ball.y + this.ball.gravity > this.player2.y) ||
-           (this.ball.y + this.ball.gravity > this.player1.y &&
-            this.ball.x + this.ball.speed <= this.player1.x + this.player1.width)) {
-          this.ball.speed *= -1;
-      } else if (this.ball.x + this.ball.speed < this.player1.x) {
-          scoreLeft += 1;
-          this.ball.speed = this.ball.speed * -1;
-          this.ball.x = 100 + this.ball.speed;
-          this.ball.y += this.ball.gravity;
-      } else if (this.ball.x + this.ball.speed > this.player2.x + this.player2.width) {
-          scoreRigth += 1;
-          this.ball.speed = this.ball.speed * -1;
-          this.ball.x = 100 + this.ball.speed;
-          this.ball.y += this.ball.gravity;
-      }
-      console.error(this.ball.x);
-      console.error(this.ball.y);
-      this.drawAll();
-  }
+    if (
+        (this.ball.y + this.ball.gravity <= this.player2.y + this.player2.height &&
+            this.ball.x + this.ball.width + this.ball.speed >= this.player2.x &&
+            this.ball.y + this.ball.gravity > this.player2.y) ||
+        (this.ball.y + this.ball.gravity > this.player1.y &&
+            this.ball.x + this.ball.speed <= this.player1.x + this.player1.width &&
+            this.ball.y < this.player1.y + this.player1.height)
+    ) {
+        this.ball.speed *= -1;
+    } else if (this.ball.x + this.ball.speed < this.player1.x) {
+        scoreLeft += 1;
+        this.ball.speed = this.ball.speed * -1;
+        this.ball.x = width / 2;
+        this.ball.y = height / 2;
+    } else if (this.ball.x + this.ball.speed > this.player2.x + this.player2.width) {
+        scoreRigth += 1;
+        this.ball.speed = this.ball.speed * -1;
+        this.ball.x = width / 2;
+        this.ball.y = height / 2;
+    }
+    this.drawAll();
+}
   
   ballBounce() {
       if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
@@ -259,26 +260,28 @@ class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 10);
+    }, 20);
   }
 
   start() {
     this.while_loop();
   }
   
-  // function keys(e) {
-  //     const key = e.key;
-  //     if (key == 'w' && player1.y - player1.gravity > 0) {
-  //         player1.y -= player1.gravity * 4;
-  //     } else if (key == 's' && player1.height + player1.y + player1.gravity < height) {
-  //         player1.y += player1.gravity * 4;
-  //     }
-  //     if (key == 'i' && this.player2.y - player2.gravity > 0) {
-  //         this.player2.y -= player2.gravity * 4;
-  //     } else if (key == 'k' && player2.height + this.player2.y + player2.gravity < height) {
-  //         this.player2.y += player2.gravity * 4;
-  //     }
-  // }
+  positions(paddleOne: number, paddleTwo: number) {
+      // const key = e.key;
+      // if (key == 'w' && this.player1.y - this.player1.gravity > 0) {
+      //     this.player1.y -= this.player1.gravity * 4;
+      // } else if (key == 's' && this.player1.height + this.player1.y + this.player1.gravity < height) {
+      //     this.player1.y += this.player1.gravity * 4;
+      // }
+      this.player1.y = paddleOne;
+      // if (key == 'i' && this.player2.y - this.player2.gravity > 0) {
+      //     this.player2.y -= this.player2.gravity * 4;
+      // } else if (key == 'k' && this.player2.height + this.player2.y + this.player2.gravity < height) {
+      //     this.player2.y += this.player2.gravity * 4;
+      // }
+      this.player2.y = paddleTwo;
+  }
   // }
 }
 
@@ -328,10 +331,8 @@ export class MyGateWay {
       availableRoom.start();
       setInterval(()=> {
         this.server.to(availableRoom.MeetId).emit('Player-2-Meet', {
-          ballX: 10,
-          ballY: 10,
-          // ballX: availableRoom.ball.x,
-          // ballY: availableRoom.ball.y,
+          ballX: availableRoom.ball.x,
+          ballY: availableRoom.ball.y,
           // playerY: body.playerY,
           // adminScore: body.adminScore,
           // player2Score: body.player2Score,

@@ -98,12 +98,12 @@ function checkIfDebuggerEnabled() {
         }
       });
 
-      document.addEventListener("visibilitychange", function () {
-        EndGame("End Game!");
-        socket.disconnect();
-        keepUpdating = true;
-        setIsOpen(true);
-      });
+      // document.addEventListener("visibilitychange", function () {
+      //   EndGame("End Game!");
+      //   socket.disconnect();
+      //   keepUpdating = true;
+      //   setIsOpen(true);
+      // });
 
       socket.on("Player-2-Admin", (Player2) => {
         if (ISadmin) {
@@ -121,6 +121,8 @@ function checkIfDebuggerEnabled() {
           if (Player2.ballX && Player2.ballY) {
             ballX = Player2.ballX;
             ballY = Player2.ballY;
+            // console.log("ballX " + ballX);
+            // console.log("ballY " + ballY);
           }
           if (Player2.adminScore || Player2.player2Score) {
             adminScore = Player2.adminScore;
@@ -140,24 +142,24 @@ function checkIfDebuggerEnabled() {
         socket.disconnect();
       }
 
-      setInterval(()=>{
-        checkIfDebuggerEnabled().then((result) => {
-          if (result)
-          EndGame('To Prevent Cheating You Can Not open the console while you playing YOU MUST RESTART THE GAME WITH CLOSED CONSOLE');
-        });
-      }, 10)
+      // setInterval(()=>{
+      //   checkIfDebuggerEnabled().then((result) => {
+      //     if (result)
+      //     EndGame('To Prevent Cheating You Can Not open the console while you playing YOU MUST RESTART THE GAME WITH CLOSED CONSOLE');
+      //   });
+      // }, 10)
 
-      socket.on("admin-disconnect", () => {
-        if (ISadmin) {
-          EndGame("End Game!");
-        }
-      });
+      // socket.on("admin-disconnect", () => {
+      //   if (ISadmin) {
+      //     EndGame("End Game!");
+      //   }
+      // });
 
-      socket.on("meet-disconnect", () => {
-        if (!ISadmin) {
-          EndGame("End Game!");
-        }
-      });
+      // socket.on("meet-disconnect", () => {
+      //   if (!ISadmin) {
+      //     EndGame("End Game!");
+      //   }
+      // });
 
       let LastTime: any = null;
 
@@ -167,15 +169,15 @@ function checkIfDebuggerEnabled() {
         if (!isMeet || keepUpdating) return;
 
         innerHeight = window.innerHeight;
-        if (
-          playerScoreElem.textContent === "8" ||
-          player2ScoreElem.textContent === "8"
-        )
-          EndGame("End Game!");
+        // if (
+        //   playerScoreElem.textContent === "8" ||
+        //   player2ScoreElem.textContent === "8"
+        // )
+        //   EndGame("End Game!");
         if (LastTime != null) {
           const delta: number = time - LastTime;
 
-          Player2Paddle.update(Player2Height);
+          // Player2Paddle.update(Player2Height);
 
           ball.update(
             delta,
@@ -185,16 +187,16 @@ function checkIfDebuggerEnabled() {
             ballY
           );
 
-          if (ISadmin) {
-            socket.emit("coordinates_Admin", {
-              ballX: ball.x,
-              ballY: ball.y,
-            });
-            if (isLose()) handleLose();
-          } else {
-            player2ScoreElem.textContent = adminScore.toString();
-            playerScoreElem.textContent = player2Score.toString();
-          }
+          // if (ISadmin) {
+          //   socket.emit("coordinates_Admin", {
+          //     ballX: ball.x,
+          //     ballY: ball.y,
+          //   });
+          //   if (isLose()) handleLose();
+          // } else {
+          //   player2ScoreElem.textContent = adminScore.toString();
+          //   playerScoreElem.textContent = player2Score.toString();
+          // }
         }
         LastTime = time;
         window.requestAnimationFrame(update);
@@ -226,6 +228,7 @@ function checkIfDebuggerEnabled() {
 
       document.addEventListener("mousemove", (e) => {
         playerPaddle.position = (e.y / window.innerHeight) * 100;
+        // console.log(playerPaddle.position)
         if (ISadmin && Score) {
           socket.emit("coordinates_Admin", {
             playerY: playerPaddle.position,
@@ -241,11 +244,7 @@ function checkIfDebuggerEnabled() {
   }, []);
 
   return (
-    <div
-      className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
-                    bg-gradient-to-tr from-transparent via-neutral-500"
-      style={{ height: `${innerHeight}px` }}
-    >
+    <>
       <div className="score">
         <div className="player-score" id="player-score">
           0
@@ -265,6 +264,6 @@ function checkIfDebuggerEnabled() {
       >
         {`${message}`}
       </Modal>
-    </div>
+    </>
   );
 }
