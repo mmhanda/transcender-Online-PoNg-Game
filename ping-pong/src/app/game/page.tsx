@@ -237,10 +237,55 @@ function checkIfDebuggerEnabled() {
           rect.right >= window.innerWidth - window.innerWidth / 3.5
         );
       }
+
+
+      // window.addEventListener('keypress', (e) => {
+      //   const key = e.key;
+
+      //   if (ISadmin && Score) {
+      //     if (key === 'w') {
+      //       const hold = playerPaddle.position;
+      //       const pos = hold;
+      //       playerPaddle.position = pos - 2;
+      //       console.log(playerPaddle.position);
+      //       socket.emit("coordinates_Admin", {
+      //         playerY: pos,
+      //       });
+      //     } else if (key === 's') {
+      //       const hold = playerPaddle.position;
+      //       const pos = hold;
+      //       playerPaddle.position = pos + 2;
+      //       console.log(playerPaddle.position);
+      //       socket.emit("coordinates_Admin", {
+      //         playerY: pos,
+      //       });
+      //     }
+      //   } else {
+      //     if (key === 'w') {
+      //       const hold = playerPaddle.position;
+      //       const pos = hold;
+      //       playerPaddle.position = pos - 2;
+      //       console.log(playerPaddle.position);
+
+      //       socket.emit("coordinates_Meet", {
+      //         playerY: pos,
+      //       });
+      //     } else if (key === 's') {
+      //       const hold = playerPaddle.position;
+      //       const pos = hold ;
+      //       playerPaddle.position = pos + 2;
+      //       console.log(playerPaddle.position);
+      //       socket.emit("coordinates_Meet", {
+      //         playerY: pos,
+      //       });
+      //     }
+      //   }
+      // });
+
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100;
-        playerPaddle.position = pos + 10
-        // console.log(playerPaddle.position)
+        playerPaddle.position = pos;
+        console.log(playerPaddle.position)
         if (ISadmin && Score) {
           socket.emit("coordinates_Admin", {
             playerY: pos,

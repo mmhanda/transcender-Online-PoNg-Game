@@ -14,11 +14,11 @@ export default class Paddle {
   }
 
   update(Player2Height: number) {
-    this.position = Player2Height;
+    this.position = Player2Height - 10;
   }
 
   reset() {
-    this.position = 50;
+    this.position = 40;
   }
 
   rect() {

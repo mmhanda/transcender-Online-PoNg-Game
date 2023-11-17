@@ -48,7 +48,7 @@ class room {
     this.Player2 = Player2;
     this.AdminId = admin;
     this.player1 = new elem({
-        x: 10,
+        x: 2,
         y: 160,
         width: 15,
         height: 80,
@@ -57,7 +57,7 @@ class room {
     })
   
     this.player2 = new elem({
-        x: 625,
+        x: 648,
         y: 160,
         width: 15,
         height: 80,
@@ -156,8 +156,8 @@ class room {
   
 
   positions(paddleOne: number, paddleTwo: number) {
-        this.player1.y = paddleOne;
-        this.player2.y = paddleTwo;
+        this.player1.y = paddleOne - 10;
+        this.player2.y = paddleTwo - 10;
     }
 }
 
