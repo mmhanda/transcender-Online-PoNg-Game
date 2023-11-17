@@ -8,39 +8,39 @@ let scoreLeft = scoreRigth = 0;
 
 class elem {
     constructor(options) {
-        this.x = options.x * (canvas.width / 650);
-        this.y = options.y * (canvas.height / 400);
-        this.width = options.width * (canvas.width / 650);
-        this.height = options.height * (canvas.height / 400);
+        this.x = options.x;
+        this.y = options.y;
+        this.width = options.width;
+        this.height = options.height;
         this.color = options.color;
-        this.speed = options.speed || 2 * (canvas.width / 650);
-        this.gravity = options.gravity * (canvas.height / 400);
+        this.speed = options.speed || 2;
+        this.gravity = options.gravity;
     }
 }
 
 const player1 = new elem({
     x: 10,
-    y: 160,
-    width: 15,
-    height: 80,
+    y: 40,
+    width: 2,
+    height: 15,
     color: "#fff",
     gravity: 2,
 });
 
 const player2 = new elem({
-    x: 625,
-    y: 160,
-    width: 15,
-    height: 80,
+    x: 85,
+    y: 40,
+    width: 2,
+    height: 15,
     color: '#fff',
     gravity: 2,
 });
 
 const ball = new elem({
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    width: 15,
-    height: 15,
+    x: 50,
+    y: 50,
+    width: 2,
+    height: 2,
     color: '#fff',
     speed: 1,
     gravity: 1,

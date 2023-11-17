@@ -50,8 +50,13 @@ export default class Ball {
     //     this.direction.x *= -1;
     //   }
     // } else {
-      this.x = AdminX;
-      this.y = AdminY;
+      if (isAdmin) {
+        this.x = AdminX;
+        this.y = AdminY;
+      } else {
+        this.x = 100 - AdminX;
+        this.y = AdminY;
+      }
     // }
   }
 }

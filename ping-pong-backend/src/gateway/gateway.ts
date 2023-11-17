@@ -31,119 +31,6 @@ class elem {
     }
 }
 
-// const player1 = new elem({
-//     x: 10,
-//     y: 160,
-//     width: 15,
-//     height: 80,
-//     color: "#fff",
-//     gravity: 2,
-// })
-
-// const player2 = new elem({
-//     x: 625,
-//     y: 160,
-//     width: 15,
-//     height: 80,
-//     color: '#fff',
-//     gravity: 2,
-// });
-
-// const ball = new elem({
-//     x: width / 2,
-//     y: height / 2,
-//     width: 15,
-//     height: 15,
-//     color: '#fff',
-//     speed: 1,
-//     gravity: 1
-// });
-
-// function drawelem(elem) {
-//     // console.log(elem);
-//     // context.fillStyle = elem.color;
-//     // context.fillRect(elem.x, elem.y, elem.width, elem.height);
-// }
-
-// function drawBall(elem) {
-  
-// }
-
-// function displayscore1() {
-//     // context.font = "10px Arial";
-//     // context.fillStyle = "#fff";
-//     // context.fillText(scoreLeft, width / 2 - 60, 30);
-// }
-
-// function displayscore2() {
-//     // context.font = "10px Arial";
-//     // context.fillStyle = "#fff";
-//     // context.fillText(scoreRigth, width / 2 + 60, 30);
-// }
-
-// function drawAll() {
-//     // drawelem(player1);
-//     // drawelem(player2);
-//     drawBall(ball);
-//     // displayscore1();
-//     // displayscore2();
-// }
-
-// function ballWallCollision() {
-//     if ((ball.y + ball.gravity <= player2.y + player2.height &&
-//          ball.x + ball.width + ball.speed >= player2.x && 
-//          ball.y + ball.gravity > player2.y) || (ball.y + ball.gravity > player1.y && ball.x + ball.speed <= player1.x + player1.width)) {
-//         ball.speed *= -1;
-//     } else if (ball.x + ball.speed < player1.x) {
-//         scoreLeft += 1;
-//         ball.speed = ball.speed * -1;
-//         ball.x = 100 + ball.speed;
-//         ball.y += ball.gravity;
-//     } else if (ball.x + ball.speed > player2.x + player2.width) {
-//         scoreRigth += 1;
-//         ball.speed = ball.speed * -1;
-//         ball.x = 100 + ball.speed;
-//         ball.y += ball.gravity;
-//     }
-//     console.error(ball.x);
-//     console.error(ball.y);
-//     drawAll();
-// }
-
-// function ballBounce() {
-//     if (ball.y + ball.gravity <= 0 || ball.y + ball.gravity >= height) {
-//         ball.gravity *= -1;
-//         ball.y += ball.gravity;
-//         ball.x += ball.speed;
-//     } else {
-//         ball.y += ball.gravity;
-//         ball.x += ball.speed;
-//     }
-//     ballWallCollision();
-// }
-
-// function keys(e) {
-//     const key = e.key;
-//     if (key == 'w' && player1.y - player1.gravity > 0) {
-//         player1.y -= player1.gravity * 4;
-//     } else if (key == 's' && player1.height + player1.y + player1.gravity < height) {
-//         player1.y += player1.gravity * 4;
-//     }
-//     if (key == 'i' && player2.y - player2.gravity > 0) {
-//         player2.y -= player2.gravity * 4;
-//     } else if (key == 'k' && player2.height + player2.y + player2.gravity < height) {
-//         player2.y += player2.gravity * 4;
-//     }
-// }
-
-// function while_loop() {
-//   setInterval(() => {
-//     ballBounce();
-//   }, 0);
-// }
-
-
-
 const Rooms = [];
 
 class room {
@@ -260,30 +147,29 @@ class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 20);
+    }, 40);
   }
 
   start() {
     this.while_loop();
   }
   
-  positions(paddleOne: number, paddleTwo: number) {
-      // const key = e.key;
-      // if (key == 'w' && this.player1.y - this.player1.gravity > 0) {
-      //     this.player1.y -= this.player1.gravity * 4;
-      // } else if (key == 's' && this.player1.height + this.player1.y + this.player1.gravity < height) {
-      //     this.player1.y += this.player1.gravity * 4;
-      // }
-      this.player1.y = paddleOne;
-      // if (key == 'i' && this.player2.y - this.player2.gravity > 0) {
-      //     this.player2.y -= this.player2.gravity * 4;
-      // } else if (key == 'k' && this.player2.height + this.player2.y + this.player2.gravity < height) {
-      //     this.player2.y += this.player2.gravity * 4;
-      // }
-      this.player2.y = paddleTwo;
+
+  positions(paddleOne: string, paddleTwo: string) {
+    if (paddleOne == 'w' && this.player1.y - this.player1.gravity > 0) {
+        this.player1.y -= this.player1.gravity * 4;
+    } else if (paddleOne == 's' && this.player1.height + this.player1.y + this.player1.gravity < height) {
+        this.player1.y += this.player1.gravity * 4;
+    }
+    if (paddleTwo == 'i' && this.player2.y - this.player2.gravity > 0) {
+        this.player2.y -= this.player2.gravity * 4;
+    } else if (paddleTwo == 'k' && this.player2.height + this.player2.y + this.player2.gravity < height) {
+        this.player2.y += this.player2.gravity * 4;
+    }
   }
-  // }
 }
+
+let playerYAdmin: string, playerYMeet:string;
 
 @WebSocketGateway({
   cors: {
@@ -291,6 +177,7 @@ class room {
     // origin: ['http://localhost:3000'],
   },
 })
+
 export class MyGateWay {
   @WebSocketServer()
   server: Server;
@@ -322,25 +209,29 @@ export class MyGateWay {
     
     if (Rooms.length === 0 || !availableRoom) {
       const initRoom = new room(Date.now().toString(), true, socket.id);
-      // socket.join(initRoom.roomId);
+      socket.join(initRoom.roomId);
       Rooms.push(initRoom);
       this.server.emit('isAdmin', { isAdmin: 'true' });
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
+      socket.join(availableRoom.roomId);
       availableRoom.start();
       setInterval(()=> {
-        this.server.to(availableRoom.MeetId).emit('Player-2-Meet', {
+        availableRoom.positions(playerYAdmin, playerYMeet);
+        this.server.sockets.in(availableRoom.roomId).emit('Drawx', {
           ballX: availableRoom.ball.x,
           ballY: availableRoom.ball.y,
-          // playerY: body.playerY,
-          // adminScore: body.adminScore,
-          // player2Score: body.player2Score,
-        });
-      }, 10)
-      // socket.join(availableRoom.roomId);
+          AdminY: availableRoom.player2.y,
+          MeetY: availableRoom.player1.y,
+        })
+        // this.server.to(availableRoom.AdminId).emit('Player-2-Admin', {
+          //   ballX: availableRoom.ball.x,
+          //   ballY: availableRoom.ball.y,
+          // })
+        }, 0)
+      console.error(availableRoom.player2.y + "\n" + availableRoom.player1.y,);
       // while_loop();
-      
       this.server.emit('meet-joined');
       this.server.emit('isAdmin', { isAdmin: 'false' });
     }
@@ -349,25 +240,29 @@ export class MyGateWay {
   onReceivingAdmin(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.AdminId === client.id);
     
-    if (room) {
-      this.server.to(room.MeetId).emit('Player-2-Meet', {
-        ballX: body.ballX,
-        ballY: body.ballY,
-        playerY: body.playerY,
-        adminScore: body.adminScore,
-        player2Score: body.player2Score,
-      });
-    }
-  }
+    playerYAdmin = body.playerY;
+    console.error(playerYAdmin);
+    // if (room) {
+    //     this.server.to(room.MeetId).emit('Player-2-Meet', {
+    //     //     ballX: body.ballX,
+    //     //     ballY: body.ballY,
+    //         playerY: body.playerY,
+    //     //     adminScore: body.adminScore,
+    //     //     player2Score: body.player2Score,
+    //       });
+    //     }
+      }
   @SubscribeMessage('coordinates_Meet')
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
-
-    if (room) {
-      this.server.to(room.AdminId).emit('Player-2-Admin', {
-        playerY: body.playerY,
-      });
-    }
+    playerYMeet = body.playerY;
+    console.error(playerYMeet);
+    
+  //   if (room) {
+  //     this.server.to(room.AdminId).emit('Player-2-Admin', {
+  //       playerY: body.playerY,
+  //   });
+  // }
   }
   @SubscribeMessage('room-score')
   onDisconnect(@MessageBody() body: any) {
