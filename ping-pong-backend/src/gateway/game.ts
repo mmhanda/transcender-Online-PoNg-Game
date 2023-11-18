@@ -88,14 +88,12 @@ export default class room {
         this.ball.x = width / 2;
         this.ball.y = height / 2;
         this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-        // this.ball.direction_x *= -1;
         this.ball.velocity = INITIAL_VELOCITY;
     } else if (this.ball.x + 0.01 > this.player2.x + this.player2.width) {
         this.scoreRigth += 1;
         this.ball.x = width / 2;
         this.ball.y = height / 2;
         this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-        // this.ball.direction_x *= -1;
         this.ball.velocity = INITIAL_VELOCITY;
     } else if (this.scoreRigth === 8 || this.scoreLeft === 8)
         clearInterval(this.IntervalId);
