@@ -59,18 +59,24 @@ export default function Pong() {
       });
 
       socket.on('Drawx', (draw) => {
-        if (draw.ballX && draw.ballY) {
+        // if (draw.ballX && draw.ballY) {
           ballX = draw.ballX;
           ballY = draw.ballY;
-        }
+        // }
         if (ISadmin) {
-          if (draw.playerYMeet) {
+          // if (draw.playerYMeet) {
             Player2Height = draw.playerYMeet;
-          }
+            playerScoreElem.textContent = draw.AdminScore;
+            player2ScoreElem.textContent = draw.MeetScore;
+            console.log(draw.AdminScore);
+          // }
         } else {
-          if (draw.playerYAdmin) {
+          // if (draw.playerYAdmin) {
             Player2Height = draw.playerYAdmin;
-          }
+            playerScoreElem.textContent = draw.AdminScore;
+            player2ScoreElem.textContent = draw.MeetScore;
+            console.log(draw.MeetScore);
+          // }
         }
       })
 
