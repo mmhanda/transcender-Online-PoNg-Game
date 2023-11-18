@@ -69,13 +69,14 @@ export class MyGateWay {
             if (room_index === Rooms.length - 1)
               room_index = 0;
             else room_index ++;
+            if (Rooms[room_index].AdminScore === 8 || Rooms[room_index].MeetScore === 8) {
+              this.server.in(Rooms[room_index].roomId).disconnectSockets(true);
+            }
           }
         }, 0);
       }
       this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('meet-joined');
       this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('isAdmin', { isAdmin: 'false' });
-      // this.server.emit('meet-joined');
-      // this.server.emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')

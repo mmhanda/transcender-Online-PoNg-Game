@@ -59,31 +59,31 @@ export default function Pong() {
       });
 
       socket.on('Drawx', (draw) => {
-        // if (draw.ballX && draw.ballY) {
           ballX = draw.ballX;
           ballY = draw.ballY;
-        // }
         if (ISadmin) {
-          // if (draw.playerYMeet) {
             Player2Height = draw.playerYMeet;
             playerScoreElem.textContent = draw.AdminScore;
             player2ScoreElem.textContent = draw.MeetScore;
-            console.log(draw.AdminScore);
-          // }
         } else {
-          // if (draw.playerYAdmin) {
             Player2Height = draw.playerYAdmin;
             playerScoreElem.textContent = draw.AdminScore;
             player2ScoreElem.textContent = draw.MeetScore;
-            console.log(draw.MeetScore);
-          // }
         }
       })
 
       document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
       function update() {
-        if (!isMeet || keepUpdating) return;
+        if (!isMeet || keepUpdating ||  playerScoreElem.textContent === '8' || player2ScoreElem.textContent === '8') {
+          ball.x = 50;  
+          ball.y = 50;
+          if (playerScoreElem.textContent === '8' || player2ScoreElem.textContent === '8') {
+            setMessage("End game");
+            // setIsOpen(true);
+          }
+          return;
+        }
 
           Player2Paddle.update(Player2Height);
 
@@ -97,7 +97,7 @@ export default function Pong() {
 
       document.addEventListener("mousemove", (e) => {
         const pos = (e.y / window.innerHeight) * 100;
-        if (pos >= 92 || pos <= 8.5 ) return;
+        if (pos >= 92 || pos <= 8.5) return;
         playerPaddle.position = pos;
         if (ISadmin && isMeet) {
           socket.emit("coordinates_Admin", {
