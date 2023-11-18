@@ -63,6 +63,8 @@ export class MyGateWay {
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
               playerYMeet: Rooms[room_index].paddleTwo,
+              AdminScore: Rooms[room_index].AdminScore,
+              MeetScore: Rooms[room_index].MeetScore,
             })
             if (room_index === Rooms.length - 1)
               room_index = 0;

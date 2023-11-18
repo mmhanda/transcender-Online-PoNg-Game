@@ -1,6 +1,6 @@
-const width:number = 100, height:number = 100;
+const width:number = 100, height:number = 100, INITIAL_VELOCITY: number = 0.025, VELOCITY_INCREASE:number = 0.000005;
 
-let scoreLeft:number, scoreRigth:number = 0;
+let scoreLeft:number, scoreRigth:number = 0 ;
 
 class elem {
   x: number
@@ -8,16 +8,18 @@ class elem {
   width: number
   height: number
   color: string
-  speed: number
   gravity: number
+  velocity: number
+  direction_x: number
     constructor(options) {
       this.x = options.x * (width / 650);
       this.y = options.y * (height / 400);
       this.width = options.width * (width / 650);
       this.height = options.height * (height / 400);
       this.color = options.color;
-      this.speed = options.speed || 2 * (width / 650);
       this.gravity = options.gravity * (height / 400);
+      this.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2);
+      this.velocity = INITIAL_VELOCITY;
     }
 }
 
@@ -40,8 +42,6 @@ export default class room {
         y: 160,
         width: 15,
         height: 80,
-        color: "#fff",
-        gravity: 2,
     })
   
     this.player2 = new elem({
@@ -49,8 +49,6 @@ export default class room {
         y: 160,
         width: 15,
         height: 80,
-        color: '#fff',
-        gravity: 2,
     });
   
     this.ball = new elem({
@@ -58,8 +56,6 @@ export default class room {
         y: height / 2,
         width: 15,
         height: 15,
-        color: '#fff',
-        speed: 0.01, // for performen 0.1 here / 0.4
         gravity: 1
     });
   }
@@ -97,35 +93,38 @@ export default class room {
   ballWallCollision() {
     if (
         (this.ball.y + this.ball.gravity + this.ball.width <= (this.player2.y + 2) + this.player2.height &&
-            this.ball.x + this.ball.width + this.ball.speed >= this.player2.x - (this.player2.width / 2.8) &&
+            this.ball.x + this.ball.width + 0.01 >= this.player2.x - (this.player2.width / 2.8) &&
             this.ball.y + this.ball.gravity > (this.player2.y - 2)) ||
         (this.ball.y + this.ball.gravity > (this.player1.y - 2) &&
-            this.ball.x + this.ball.speed <= this.player1.x + this.player1.width + 0.2 &&
+            this.ball.x + 0.01 <= this.player1.x + this.player1.width + 0.2 &&
             this.ball.y < (this.player1.y + 2) + this.player1.height)
     ) {
-        this.ball.speed *= -1;
-    } else if (this.ball.x + this.ball.speed < this.player1.x) {
+        this.ball.direction_x *= -1;
+    } else if (this.ball.x + 0.01 < this.player1.x) {
         scoreLeft += 1;
-        this.ball.speed = this.ball.speed * -1;
         this.ball.x = width / 2;
         this.ball.y = height / 2;
-    } else if (this.ball.x + this.ball.speed > this.player2.x + this.player2.width) {
+        this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2);
+        this.ball.velocity = INITIAL_VELOCITY;
+    } else if (this.ball.x + 0.01 > this.player2.x + this.player2.width) {
         scoreRigth += 1;
-        this.ball.speed = this.ball.speed * -1;
         this.ball.x = width / 2;
         this.ball.y = height / 2;
-    }
-    this.drawAll();
+        this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2);
+        this.ball.velocity = INITIAL_VELOCITY;
+      }
   }
   
   ballBounce() {
       if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
           this.ball.gravity *= -1;
-          this.ball.y += this.ball.gravity;
-          this.ball.x += this.ball.speed;
+          this.ball.y += this.ball.gravity * this.ball.velocity;
+          this.ball.x += this.ball.direction_x * this.ball.velocity;
+          this.ball.velocity += VELOCITY_INCREASE;
       } else {
-          this.ball.y += this.ball.gravity;
-          this.ball.x += this.ball.speed;
+        this.ball.y += this.ball.gravity * this.ball.velocity;
+        this.ball.x += this.ball.direction_x * this.ball.velocity;
+        this.ball.velocity += VELOCITY_INCREASE;
       }
       this.ballWallCollision();
   }
@@ -133,7 +132,7 @@ export default class room {
   while_loop() {
     setInterval(() => {
       this.ballBounce();
-    }, 0); // for performen 8 here / 18
+    }, 0);
   }
 
   start() {
@@ -148,4 +147,7 @@ export default class room {
 
   get ballX() { return this.ball.x; }
   get ballY() { return this.ball.y; }
+
+  get AdminScore() { return scoreLeft };
+  get MeetScore() { return scoreRigth };
 }

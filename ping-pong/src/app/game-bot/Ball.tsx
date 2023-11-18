@@ -30,10 +30,10 @@ export default class Ball {
       y: Math.sin(direction_),
     };
     this.velocity = INITIAL_VELOCITY;
+    return this.ballElem.getBoundingClientRect();
   }
 
   rect() {
-    return this.ballElem.getBoundingClientRect();
   }
 
   update(delta: number, paddleRects: object) {
