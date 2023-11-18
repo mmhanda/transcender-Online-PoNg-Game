@@ -22,23 +22,23 @@ class elem {
 }
 
 export default class room {
-  roomId: string;
-  Player2: boolean;
-  AdminId: string;
-  MeetId: string;
-  // ball_x: number;
-  // ball_y: number;
   player1: elem;
   player2: elem;
   ball: elem;
+  Player2: boolean;
+  roomId: string;
+  AdminId: string;
+  MeetId: string;
   scoreLeft: number;
   scoreRigth: number;
+  IntervalId: any;
   constructor(roomId: string, Player2: boolean, admin: string) {
     this.roomId = roomId;
     this.Player2 = Player2;
     this.AdminId = admin;
     this.scoreLeft = 0;
     this.scoreRigth = 0;
+    this.IntervalId = -1;
     this.player1 = new elem({
         x: 2,
         y: 160,
@@ -67,7 +67,7 @@ export default class room {
         (this.ball.y + this.ball.gravity + this.ball.width <= (this.player2.y + 2) + this.player2.height &&
             this.ball.x + this.ball.width + 0.01 >= this.player2.x - (this.player2.width / 2.8) &&
             this.ball.y + this.ball.gravity > (this.player2.y - 1.3)) ||
-        (this.ball.y + this.ball.gravity > (this.player1.y - 2) &&
+        (this.ball.y + this.ball.gravity > (this.player1.y - 1.3) &&
             this.ball.x + 0.01 <= this.player1.x + this.player1.width + 0.2 &&
             this.ball.y < (this.player1.y + 2) + this.player1.height)
     ) {
@@ -84,9 +84,10 @@ export default class room {
         this.ball.y = height / 2;
         this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2);
         this.ball.velocity = INITIAL_VELOCITY;
-      }
+    } else if (this.scoreRigth === 8 || this.scoreLeft === 8)
+        clearInterval(this.IntervalId);
   }
-  
+
   ballBounce() {
       if (this.ball.y + this.ball.gravity <= 0 || this.ball.y + this.ball.gravity >= height) {
           this.ball.gravity *= -1;
@@ -102,7 +103,7 @@ export default class room {
   }
 
   while_loop() {
-    setInterval(() => {
+    this.IntervalId =  setInterval(() => {
       this.ballBounce();
     }, 0);
   }
@@ -110,7 +111,9 @@ export default class room {
   start() {
     this.ball.x = 50;
     this.ball.y = 50;
-    this.while_loop();
+    setTimeout(() => {
+      this.while_loop();
+    }, 2000);
   }
 
   set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
