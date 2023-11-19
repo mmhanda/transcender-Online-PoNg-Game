@@ -17,11 +17,7 @@ export default function Pong() {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useSearchParams();
-  const color: any = router.get("color");
-
-  function sleep(ms: any) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  const color: string | null = router.get("color");
 
   useEffect(() => {
     if (runGame) {
@@ -30,12 +26,12 @@ export default function Pong() {
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
-      const playerScoreElem: any = document.getElementById("player-score");
-      const player2ScoreElem: any = document.getElementById("bot-score");
+      const playerScoreElem: HTMLElement | null = document.getElementById("player-score");
+      const player2ScoreElem: HTMLElement | null = document.getElementById("bot-score");
       let Player2Height: number = 50,
         ballY: number = 50,
         ballX: number = 22;
-      const hueColorChangeSet: string = color;
+      const hueColorChangeSet: string | null = color;
       let ISadmin: boolean = false;
 
       socket.connect();
@@ -48,7 +44,6 @@ export default function Pong() {
       });
       socket.once("meet-joined", async () => {
         if (ISadmin) {
-          await sleep(1000);
           keepUpdating = false;
           isMeet = true;
           window.requestAnimationFrame(update);
@@ -86,13 +81,13 @@ export default function Pong() {
           return;
         }
 
-          Player2Paddle.update(Player2Height);
+        Player2Paddle.update(Player2Height);
 
-          ball.update(
-            ISadmin,
-            ballX,
-            ballY
-          );
+        ball.update(
+          ISadmin,
+          ballX,
+          ballY
+        );
         window.requestAnimationFrame(update);
       }
 
@@ -115,7 +110,9 @@ export default function Pong() {
   }, []);
 
   return (
-    <>
+    <div className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
+    bg-gradient-to-tr from-transparent via-neutral-500
+      to-transparent">
       <div className="score">
         <div className="player-score" id="player-score">
           0
@@ -135,6 +132,6 @@ export default function Pong() {
       >
         {`${message}`}
       </Modal>
-    </>
+    </div>
   );
 }

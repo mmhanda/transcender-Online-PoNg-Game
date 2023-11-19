@@ -14,7 +14,7 @@ class elem {
       this.width = options.width * (width / 650);
       this.height = options.height * (height / 400);
       this.direction_y = 1;
-      this.direction_x = 1.2;
+      this.direction_x = 1.3;
       this.velocity = INITIAL_VELOCITY;
     }
 }
@@ -41,19 +41,19 @@ export default class room {
         x: 2,
         y: 160,
         width: 15,
-        height: 80,
+        height: 80
     })
   
     this.player2 = new elem({
         x: 648,
         y: 160,
         width: 15,
-        height: 80,
+        height: 80
     });
   
     this.ball = new elem({
-        x: width / 2,
-        y: height / 2,
+        x: 50,
+        y: 50,
         width: 15,
         height: 10,
         direction_y: 1
@@ -70,10 +70,10 @@ export default class room {
           this.ball.y <= this.player1.y + this.player1.height &&
             this.ball.x <= this.player1.x + this.player1.width)
     ) {
-      if ((this.ball.y - 5 <= this.player2.y || this.ball.y >= this.player2.y + 15) && this.ball.x > 50)
+      if ((this.ball.y - 4.2 <= this.player2.y || this.ball.y >= this.player2.y + 14) && this.ball.x > 50)
         this.ball.direction_y *= -1;
 
-      if (this.ball.y - 5 <= this.player1.y || this.ball.y >= this.player1.y + 15 && this.ball.x < 50)
+      if (this.ball.y - 4.2 <= this.player1.y || this.ball.y >= this.player1.y + 14 && this.ball.x < 50)
         this.ball.direction_y *= -1;
 
         this.ball.direction_x *= -1;
@@ -92,23 +92,17 @@ export default class room {
   }
 
   ballBounce() {
-      if (this.ball.y - this.ball.height + 1 <= 0 || this.ball.y + this.ball.height - 1 >= height) {
-          this.ball.direction_y *= -1;
-          this.ball.y += this.ball.direction_y * this.ball.velocity;
-          this.ball.x += this.ball.direction_x * this.ball.velocity;
-          this.ball.velocity += VELOCITY_INCREASE;
-      } else {
+    if (this.ball.y - this.ball.height + 1 <= 0 || this.ball.y + this.ball.height - 1 >= height) {
+        this.ball.direction_y *= -1;
         this.ball.y += this.ball.direction_y * this.ball.velocity;
         this.ball.x += this.ball.direction_x * this.ball.velocity;
         this.ball.velocity += VELOCITY_INCREASE;
-      }
-      this.ballWallCollision();
-  }
-
-  while_loop() {
-    this.IntervalId =  setInterval(() => {
-      this.ballBounce();
-    }, 0);
+    } else {
+      this.ball.y += this.ball.direction_y * this.ball.velocity;
+      this.ball.x += this.ball.direction_x * this.ball.velocity;
+      this.ball.velocity += VELOCITY_INCREASE;
+    }
+    this.ballWallCollision();
   }
 
   start() {
@@ -116,7 +110,9 @@ export default class room {
     this.ball.x = 50;
     this.ball.y = 50;
     setTimeout(() => {
-      this.while_loop();
+      this.IntervalId =  setInterval(() => {
+        this.ballBounce();
+      }, 0);
     }, 1600);
   }
 
