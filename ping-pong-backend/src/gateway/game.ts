@@ -1,4 +1,3 @@
-// const width:number = 100, height:number = 100, INITIAL_VELOCITY: number = 0.25, VELOCITY_INCREASE:number = 0.00001;
 const width:number = 100, height:number = 100, INITIAL_VELOCITY: number = 0.04, VELOCITY_INCREASE:number = 0.000003;
 
 class elem {
@@ -6,7 +5,7 @@ class elem {
   y: number
   width: number
   height: number
-  gravity: number
+  direction_y: number
   velocity: number
   direction_x: number
     constructor(options) {
@@ -14,7 +13,7 @@ class elem {
       this.y = options.y * (height / 400);
       this.width = options.width * (width / 650);
       this.height = options.height * (height / 400);
-      this.gravity = 1;
+      this.direction_y = 1;
       this.direction_x = 1.2;
       this.velocity = INITIAL_VELOCITY;
     }
@@ -57,45 +56,9 @@ export default class room {
         y: height / 2,
         width: 15,
         height: 10,
-        gravity: 1
+        direction_y: 1
     });
   }
-
-  // get getRandomAngle() {
-  //   return Math.random() * Math.PI * 0.8 - (Math.PI * 0.8) / 2;
-  // }
-
-  // ballWallCollision() {
-  //   if (
-  //       (this.ball.y + this.ball.gravity + this.ball.width <= this.player2.y + this.player2.height + 2.5 &&
-  //           this.ball.x + this.ball.width + 0.01 >= this.player2.x - (this.player2.width / 2.85) &&
-  //           this.ball.y + this.ball.gravity > (this.player2.y - 1.3)) ||
-  //       (this.ball.y + this.ball.gravity > (this.player1.y - 1.3) &&
-  //           this.ball.x + 0.01 <= this.player1.x + (this.player2.width / 2.85) + this.player1.width + 0.2 &&
-  //           this.ball.y < this.player1.y + this.player1.height + 2.5)
-  //   ) {
-  //     if ((this.ball.y - 5 < this.player2.y || this.ball.y > this.player2.y + 15) && this.ball.x > width / 2)
-  //       this.ball.gravity *= -1;
-
-  //     if (this.ball.y - 5 < this.player1.y || this.ball.y > this.player1.y + 15 && this.ball.x < width / 2)
-  //       this.ball.gravity *= -1;
-
-  //       this.ball.direction_x *= -1;
-  //   } else if (this.ball.x + 0.01 < this.player1.x) {
-  //       this.scoreLeft += 1;
-  //       this.ball.x = width / 2;
-  //       this.ball.y = height / 2;
-  //       this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-  //       this.ball.velocity = INITIAL_VELOCITY;
-  //   } else if (this.ball.x + 0.01 > this.player2.x + this.player2.width) {
-  //       this.scoreRigth += 1;
-  //       this.ball.x = width / 2;
-  //       this.ball.y = height / 2;
-  //       this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-  //       this.ball.velocity = INITIAL_VELOCITY;
-  //   } else if (this.scoreRigth === 8 || this.scoreLeft === 8)
-  //       clearInterval(this.IntervalId);
-  // }
 
   ballWallCollision() {
     if (
@@ -107,54 +70,35 @@ export default class room {
           this.ball.y <= this.player1.y + this.player1.height &&
             this.ball.x <= this.player1.x + this.player1.width)
     ) {
-      if ((this.ball.y - 5 <= this.player2.y || this.ball.y >= this.player2.y + 15) && this.ball.x > width / 2)
-        this.ball.gravity *= -1;
+      if ((this.ball.y - 5 <= this.player2.y || this.ball.y >= this.player2.y + 15) && this.ball.x > 50)
+        this.ball.direction_y *= -1;
 
-      if (this.ball.y - 5 <= this.player1.y || this.ball.y >= this.player1.y + 15 && this.ball.x < width / 2) {
-        this.ball.gravity *= -1;
-        // console.error("player 1");
-      }
+      if (this.ball.y - 5 <= this.player1.y || this.ball.y >= this.player1.y + 15 && this.ball.x < 50)
+        this.ball.direction_y *= -1;
+
         this.ball.direction_x *= -1;
-        // this.ball.velocity += VELOCITY_INCREASE;
     } else if (this.ball.x - this.player1.width < this.player1.x) {
         this.scoreLeft += 1;
-        this.ball.x = width / 2;
-        this.ball.y = height / 2;
-        // if (this.ballHeading) {
-          // this.ball.direction_x += -0.2;
-          // this.ballHeading = false;
-          // console.error(this.ball.direction_x);
-        // }
-        // this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-        // console.error("velocity befor 1: " + this.ball.velocity)
+        this.ball.x = 50;
+        this.ball.y = 50;
         this.ball.velocity = INITIAL_VELOCITY;
-        // console.error("velocity after 1: " + this.ball.velocity)
       } else if (this.ball.x + this.player2.width > this.player2.x) {
         this.scoreRigth += 1;
-        this.ball.x = width / 2;
-        this.ball.y = height / 2;
-        // if (!this.ballHeading) {
-          // this.ball.direction_x += 0.2;
-          // this.ball.direction_x = 0.2;
-          // console.error(this.ball.direction_x);
-          // this.ballHeading = true;
-        // }
-        // this.ball.direction_x = Math.random() < 0.5 ? -1 : 1 * Math.cos(this.getRandomAngle);
-        // console.error("velocity befor 2: " + this.ball.velocity)
+        this.ball.x = 50;
+        this.ball.y = 50;
         this.ball.velocity = INITIAL_VELOCITY;
-        // console.error("velocity after " + this.ball.velocity)
     } else if (this.scoreRigth === 8 || this.scoreLeft === 8)
         clearInterval(this.IntervalId);
   }
 
   ballBounce() {
       if (this.ball.y - this.ball.height + 1 <= 0 || this.ball.y + this.ball.height - 1 >= height) {
-          this.ball.gravity *= -1;
-          this.ball.y += this.ball.gravity * this.ball.velocity;
+          this.ball.direction_y *= -1;
+          this.ball.y += this.ball.direction_y * this.ball.velocity;
           this.ball.x += this.ball.direction_x * this.ball.velocity;
           this.ball.velocity += VELOCITY_INCREASE;
       } else {
-        this.ball.y += this.ball.gravity * this.ball.velocity;
+        this.ball.y += this.ball.direction_y * this.ball.velocity;
         this.ball.x += this.ball.direction_x * this.ball.velocity;
         this.ball.velocity += VELOCITY_INCREASE;
       }
@@ -163,19 +107,12 @@ export default class room {
 
   while_loop() {
     this.IntervalId =  setInterval(() => {
-      // console.error("velocity: " + this.ball.velocity);
       this.ballBounce();
     }, 0);
   }
 
   start() {
-    // this.ball.width = 100 * (width / 650);
-    // this.ball.height = 100 * (height / 400);
-    // this.ball.color = options.color;
-    // this.ball.gravity = 1;
-    // this.ball.direction_x = 0.8;
     this.ball.velocity = INITIAL_VELOCITY;
-    // this.ballHeading = false;
     this.ball.x = 50;
     this.ball.y = 50;
     setTimeout(() => {
