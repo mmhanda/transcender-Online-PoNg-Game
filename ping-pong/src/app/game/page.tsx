@@ -25,7 +25,7 @@ export default function Pong() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.12.6.1:3001/");
+      const socket = io("http://10.12.8.8:3001/");
       // const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
@@ -63,8 +63,8 @@ export default function Pong() {
           ballY = draw.ballY;
         if (ISadmin) {
             Player2Height = draw.playerYMeet;
-            playerScoreElem.textContent = draw.AdminScore;
-            player2ScoreElem.textContent = draw.MeetScore;
+            player2ScoreElem.textContent = draw.AdminScore;
+            playerScoreElem.textContent = draw.MeetScore;
         } else {
             Player2Height = draw.playerYAdmin;
             playerScoreElem.textContent = draw.AdminScore;
@@ -81,6 +81,7 @@ export default function Pong() {
           if (playerScoreElem.textContent === '8' || player2ScoreElem.textContent === '8') {
             setMessage("End game");
             // setIsOpen(true);
+            socket.disconnect();
           }
           return;
         }
