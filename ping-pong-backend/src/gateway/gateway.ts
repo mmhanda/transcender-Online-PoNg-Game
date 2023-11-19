@@ -5,7 +5,7 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
-// import { Body, OnModuleInit } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import room from './game';
 
@@ -19,6 +19,7 @@ let room_index: number = 0;
   },
 })
 
+@Controller('games/:roomId')
 export class MyGateWay {
   @WebSocketServer()
   server: Server;
@@ -88,5 +89,11 @@ export class MyGateWay {
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
     if (room) room.paddleTwo = body.playerY;
+  }
+
+  @Get()
+  getLiveGames(@Param('roomId') roomId) {
+    console.error(roomId);
+    return "HI";
   }
 }

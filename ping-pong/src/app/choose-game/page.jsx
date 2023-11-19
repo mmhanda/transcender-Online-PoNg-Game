@@ -212,6 +212,23 @@ const Page = () => {
           </Link>
         </div>
       </div>
+
+      <div
+        className="text-center cursor-pointer mx-4 transform transition-transform hover:scale-105"
+        onClick={() => openModal(setOfflineModalIsOpen)}
+      >
+        <div>
+          <Link href="/live-games">
+            <Image
+              src="/choose-game-assets/watch-game.jpeg"
+              alt="Offline"
+              width={400}
+              height={400}
+            />
+            <p className="mt-2 text-lg font-bold">Watch Live Games</p>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

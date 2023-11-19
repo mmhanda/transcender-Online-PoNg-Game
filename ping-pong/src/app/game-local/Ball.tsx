@@ -54,12 +54,12 @@ export default class Ball {
   }
 }
 
-function isCollision(rect: object, ballRect: object) {
+function isCollision(rect: object, BallRect: object) {
   return (
-    rect.left < ballRect.right + 4 &&
-    rect.right > ballRect.left + 4 &&
-    rect.top < ballRect.bottom + 4 &&
-    rect.bottom > ballRect.top + 4
+    rect.left < BallRect.right &&
+    rect.right > BallRect.left &&
+    rect.top - 10 < BallRect.bottom &&
+    rect.bottom + 10 > BallRect.top
   );
 }
 
