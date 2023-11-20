@@ -21,13 +21,15 @@ export default function Pong() {
 
   useEffect(() => {
     if (runGame) {
-      const socket = io("http://10.12.8.8:3001/");
-      // const socket = io("http://localhost:3001");
+      // const socket = io("http://10.12.8.8:3001/");
+      const socket = io("http://localhost:3001");
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
-      const playerScoreElem: HTMLElement | null = document.getElementById("player-score");
-      const player2ScoreElem: HTMLElement | null = document.getElementById("bot-score");
+      const playerScoreElem: HTMLElement | null =
+        document.getElementById("player-score");
+      const player2ScoreElem: HTMLElement | null =
+        document.getElementById("bot-score");
       let Player2Height: number = 50,
         ballY: number = 50,
         ballX: number = 22;
@@ -53,27 +55,35 @@ export default function Pong() {
         }
       });
 
-      socket.on('Drawx', (draw) => {
-          ballX = draw.ballX;
-          ballY = draw.ballY;
+      socket.on("Drawx", (draw) => {
+        ballX = draw.ballX;
+        ballY = draw.ballY;
         if (ISadmin) {
-            Player2Height = draw.playerYMeet;
-            player2ScoreElem.textContent = draw.AdminScore;
-            playerScoreElem.textContent = draw.MeetScore;
+          Player2Height = draw.playerYMeet;
+          player2ScoreElem.textContent = draw.AdminScore;
+          playerScoreElem.textContent = draw.MeetScore;
         } else {
-            Player2Height = draw.playerYAdmin;
-            playerScoreElem.textContent = draw.AdminScore;
-            player2ScoreElem.textContent = draw.MeetScore;
+          Player2Height = draw.playerYAdmin;
+          playerScoreElem.textContent = draw.AdminScore;
+          player2ScoreElem.textContent = draw.MeetScore;
         }
-      })
+      });
 
       document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
       function update() {
-        if (!isMeet || keepUpdating ||  playerScoreElem.textContent === '8' || player2ScoreElem.textContent === '8') {
-          ball.x = 50;  
+        if (
+          !isMeet ||
+          keepUpdating ||
+          playerScoreElem.textContent === "8" ||
+          player2ScoreElem.textContent === "8"
+        ) {
+          ball.x = 50;
           ball.y = 50;
-          if (playerScoreElem.textContent === '8' || player2ScoreElem.textContent === '8') {
+          if (
+            playerScoreElem.textContent === "8" ||
+            player2ScoreElem.textContent === "8"
+          ) {
             setMessage("End game");
             // setIsOpen(true);
             socket.disconnect();
@@ -83,11 +93,7 @@ export default function Pong() {
 
         Player2Paddle.update(Player2Height);
 
-        ball.update(
-          ISadmin,
-          ballX,
-          ballY
-        );
+        ball.update(ISadmin, ballX, ballY);
         window.requestAnimationFrame(update);
       }
 
@@ -110,28 +116,32 @@ export default function Pong() {
   }, []);
 
   return (
-    <div className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
-    bg-gradient-to-tr from-transparent via-neutral-500
-      to-transparent">
-      <div className="score">
-        <div className="player-score" id="player-score">
-          0
-        </div>
-        <div className="bot-score" id="bot-score">
-          0
-        </div>
-      </div>
-      <div className="ball" id="ball"></div>
-      <div className="paddle left" id="player-paddle"></div>
-      <div className="paddle right" id="bot-paddle"></div>
-      <div className="middle_line" ></div>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={customStyles}
+    <>
+      <div
+        className="gameContainer h-[250px] min-h-[1em] w-px self-stretch
+        bg-gradient-to-tr from-transparent via-neutral-500
+        to-transparent"
       >
-        {`${message}`}
-      </Modal>
-    </div>
+        <div className="score">
+          <div className="player-score" id="player-score">
+            0
+          </div>
+          <div className="bot-score" id="bot-score">
+            0
+          </div>
+        </div>
+        <div className="ball" id="ball"></div>
+        <div className="paddle left" id="player-paddle"></div>
+        <div className="paddle right" id="bot-paddle"></div>
+        <div className="middle_line"></div>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={() => setIsOpen(false)}
+          style={customStyles}
+        >
+          {`${message}`}
+        </Modal>
+      </div>
+    </>
   );
 }

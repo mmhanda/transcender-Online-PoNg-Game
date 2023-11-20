@@ -5,11 +5,11 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { Controller, Get, Param } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import room from './game';
 
-const Rooms = [];
+export const Rooms = [];
+
 let room_index: number = 0;
 
 @WebSocketGateway({
@@ -18,12 +18,10 @@ let room_index: number = 0;
     // origin: ['http://localhost:3000'],
   },
 })
-
-@Controller('games/:roomId')
 export class MyGateWay {
   @WebSocketServer()
   server: Server;
-  
+
   handleConnection(client: Socket) {
     // console.log(`Client connected with ID: ${client.id}`);
   }
@@ -32,7 +30,7 @@ export class MyGateWay {
     if (Rooms) {
       const room = Rooms.find(
         (room) => room.AdminId === client.id || room.MeetId === client.id,
-        );
+      );
 
       if (room) {
         index = Rooms.map((index) => index.roomId).indexOf(room.roomId);
@@ -44,7 +42,7 @@ export class MyGateWay {
   @SubscribeMessage('join-room')
   onMessage(@MessageBody() body: any, @ConnectedSocket() socket) {
     const availableRoom = Rooms.find((room) => room.Player2 === true);
-    
+
     if (Rooms.length === 0 || !availableRoom) {
       const initRoom = new room(Date.now().toString(), true, socket.id);
       socket.join(initRoom.roomId);
@@ -55,9 +53,9 @@ export class MyGateWay {
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.roomId);
       availableRoom.start();
-      
+
       if (Rooms.length <= 1) {
-        setInterval(()=> {
+        setInterval(() => {
           if (Rooms[room_index]) {
             this.server.sockets.in(Rooms[room_index].roomId).emit('Drawx', {
               ballX: Rooms[room_index].ballX,
@@ -66,18 +64,24 @@ export class MyGateWay {
               playerYMeet: Rooms[room_index].paddleTwo,
               AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
-            })
-            if (room_index === Rooms.length - 1)
-              room_index = 0;
-            else room_index ++;
-            if (Rooms[room_index].AdminScore === 8 || Rooms[room_index].MeetScore === 8) {
+            });
+            if (room_index === Rooms.length - 1) room_index = 0;
+            else room_index++;
+            if (
+              Rooms[room_index].AdminScore === 8 ||
+              Rooms[room_index].MeetScore === 8
+            ) {
               this.server.in(Rooms[room_index].roomId).disconnectSockets(true);
             }
           }
         }, 0);
       }
-      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('meet-joined');
-      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('isAdmin', { isAdmin: 'false' });
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('meet-joined');
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')
@@ -89,11 +93,5 @@ export class MyGateWay {
   onReceivingMeet(@MessageBody() body: any, @ConnectedSocket() client) {
     const room = Rooms.find((room) => room.MeetId === client.id);
     if (room) room.paddleTwo = body.playerY;
-  }
-
-  @Get()
-  getLiveGames(@Param('roomId') roomId) {
-    console.error(roomId);
-    return "HI";
   }
 }
