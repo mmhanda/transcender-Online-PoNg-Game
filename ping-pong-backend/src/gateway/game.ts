@@ -31,14 +31,14 @@ export default class room {
   AdminId: string;
   MeetId: string;
   scoreLeft: number;
-  scoreRigth: number;
+  scoreRight: number;
   IntervalId: any;
   constructor(roomId: string, Player2: boolean, admin: string) {
     this.roomId = roomId;
     this.Player2 = Player2;
     this.AdminId = admin;
     this.scoreLeft = 0;
-    this.scoreRigth = 0;
+    this.scoreRight = 0;
     this.IntervalId = -1;
     this.player1 = new elem({
       x: 2,
@@ -92,11 +92,11 @@ export default class room {
       this.ball.y = 50;
       this.ball.velocity = INITIAL_VELOCITY;
     } else if (this.ball.x + this.player2.width > this.player2.x) {
-      this.scoreRigth += 1;
+      this.scoreRight += 1;
       this.ball.x = 50;
       this.ball.y = 50;
       this.ball.velocity = INITIAL_VELOCITY;
-    } else if (this.scoreRigth === 8 || this.scoreLeft === 8)
+    } else if (this.scoreRight === 8 || this.scoreLeft === 8)
       clearInterval(this.IntervalId);
   }
 
@@ -153,6 +153,6 @@ export default class room {
     return this.scoreLeft;
   }
   get MeetScore() {
-    return this.scoreRigth;
+    return this.scoreRight;
   }
 }
