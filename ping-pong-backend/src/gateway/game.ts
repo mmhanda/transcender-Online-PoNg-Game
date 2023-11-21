@@ -139,4 +139,5 @@ export default class room {
 
   get AdminScore() { return this.scoreLeft; }
   get MeetScore() { return this.scoreRight; }
+  get RoomID() { return this.roomId; }
 }

@@ -64,6 +64,16 @@ export class MyGateWay {
               playerYMeet: Rooms[room_index].paddleTwo,
               AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
+              RoomId: Rooms[room_index].RoomID,
+            });
+            this.server.emit('watch', {
+              ballX: Rooms[room_index].ballX,
+              ballY: Rooms[room_index].ballY,
+              playerYAdmin: Rooms[room_index].paddleOne,
+              playerYMeet: Rooms[room_index].paddleTwo,
+              AdminScore: Rooms[room_index].AdminScore,
+              MeetScore: Rooms[room_index].MeetScore,
+              RoomId: Rooms[room_index].RoomID,
             });
             if (room_index === Rooms.length - 1) room_index = 0;
             else room_index++;
@@ -76,12 +86,8 @@ export class MyGateWay {
           }
         }, 0);
       }
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('meet-joined');
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('isAdmin', { isAdmin: 'false' });
+      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('meet-joined');
+      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')

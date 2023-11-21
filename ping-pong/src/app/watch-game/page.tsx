@@ -8,7 +8,11 @@ import { customStyles } from "./Paddle";
 import "./styles.css";
 import { useSearchParams } from "next/navigation";
 
-export default function Pong() {
+export default function watch() {
+
+  const route = useSearchParams();
+  const roomId = route.get('id');
+
   let runGame: boolean = false,
     keepUpdating: boolean = false,
     isMeet: boolean = false;
@@ -26,44 +30,23 @@ export default function Pong() {
       const ball = new Ball(document.getElementById("ball"));
       const playerPaddle = new Paddle(document.getElementById("player-paddle"));
       const Player2Paddle = new Paddle(document.getElementById("bot-paddle"));
-      const playerScoreElem: HTMLElement | null =
-        document.getElementById("player-score");
-      const player2ScoreElem: HTMLElement | null =
-        document.getElementById("bot-score");
-      let Player2Height: number = 50,
+      const playerScoreElem: HTMLElement | null = document.getElementById("player-score");
+      const player2ScoreElem: HTMLElement | null = document.getElementById("bot-score");
+      let Player2Height: number = 50, PlayerHeight: number = 50,
         ballY: number = 50,
         ballX: number = 50;
       const hueColorChangeSet: string | null = color;
       let ISadmin: boolean = false;
 
       socket.connect();
-      socket.emit("join-room");
-      socket.once("isAdmin", (Admin) => {
-        if (Admin.isAdmin === "true") {
-          keepUpdating = true;
-          ISadmin = true;
-        }
-      });
-      socket.once("meet-joined", async () => {
-        if (ISadmin) {
-          keepUpdating = false;
-          isMeet = true;
-          window.requestAnimationFrame(update);
-        } else {
-          isMeet = true;
-          update();
-        }
-      });
 
-      socket.on("Drawx", (draw) => {
-        ballX = draw.ballX;
-        ballY = draw.ballY;
-        if (ISadmin) {
-          Player2Height = draw.playerYMeet;
-          player2ScoreElem.textContent = draw.AdminScore;
-          playerScoreElem.textContent = draw.MeetScore;
-        } else {
+      socket.on("watch", (draw) => {
+        if (parseInt(draw.RoomId) === parseInt(roomId)) {
+          console.log(draw.ballX);
+          ballX = draw.ballX;
+          ballY = draw.ballY;
           Player2Height = draw.playerYAdmin;
+          PlayerHeight = draw.playerYMeet;
           playerScoreElem.textContent = draw.AdminScore;
           player2ScoreElem.textContent = draw.MeetScore;
         }
@@ -73,44 +56,25 @@ export default function Pong() {
 
       function update() {
         if (
-          !isMeet ||
-          keepUpdating ||
           playerScoreElem.textContent === "8" ||
           player2ScoreElem.textContent === "8"
         ) {
           ball.x = 50;
           ball.y = 50;
-          if (
-            playerScoreElem.textContent === "8" ||
-            player2ScoreElem.textContent === "8"
-          ) {
+          Player2Paddle.update(50);
+          playerPaddle.position = 50;
             setMessage("End game");
             // setIsOpen(true);
             socket.disconnect();
-          }
           return;
         }
 
         Player2Paddle.update(Player2Height);
-
+        playerPaddle.position = PlayerHeight;
         ball.update(ISadmin, ballX, ballY);
         window.requestAnimationFrame(update);
       }
-
-      document.addEventListener("mousemove", (e) => {
-        const pos = (e.y / window.innerHeight) * 100;
-        if (pos >= 92 || pos <= 8.5) return;
-        playerPaddle.position = pos;
-        if (ISadmin && isMeet) {
-          socket.emit("coordinates_Admin", {
-            playerY: pos,
-          });
-        } else {
-          socket.emit("coordinates_Meet", {
-            playerY: pos,
-          });
-        }
-      });
+      window.requestAnimationFrame(update);
     }
     runGame = true;
   }, []);
