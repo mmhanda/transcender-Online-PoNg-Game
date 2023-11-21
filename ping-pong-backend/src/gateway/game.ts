@@ -128,31 +128,15 @@ export default class room {
     }, 1600);
   }
 
-  set paddleOne(paddleOne) {
-    this.player1.y = paddleOne - 10;
-  }
-  set paddleTwo(paddleTwo) {
-    this.player2.y = paddleTwo - 10;
-  }
+  set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
+  set paddleTwo(paddleTwo) { this.player2.y = paddleTwo - 10; }
 
-  get paddleOne() {
-    return this.player1.y + 10;
-  }
-  get paddleTwo() {
-    return this.player2.y + 10;
-  }
+  get paddleOne() { return this.player1.y + 10; }
+  get paddleTwo() { return this.player2.y + 10; }
 
-  get ballX() {
-    return this.ball.x;
-  }
-  get ballY() {
-    return this.ball.y;
-  }
+  get ballX() { return this.ball.x; }
+  get ballY() { return this.ball.y; }
 
-  get AdminScore() {
-    return this.scoreLeft;
-  }
-  get MeetScore() {
-    return this.scoreRight;
-  }
+  get AdminScore() { return this.scoreLeft; }
+  get MeetScore() { return this.scoreRight; }
 }
