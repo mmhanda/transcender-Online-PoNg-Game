@@ -25,7 +25,7 @@ export default function LiveGames() {
   return (
     <main className="container mx-auto  px-8 grid lg:grid-cols-3 text-center cursor-pointer mx-4">
       {liveGames.map((gameData, index) => (
-        <Link key={index} href={`/watch-game?id=${Data[gameData?.roomId]}`}>
+        <Link key={index} href={`/watch-game?roomId=${Data[gameData?.roomId]}`}>
           <div
             key={index}
             className="border p-4 m-4 transform transition-transform hover:scale-105"

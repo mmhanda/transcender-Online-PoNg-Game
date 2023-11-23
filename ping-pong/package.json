@@ -17,13 +17,16 @@
     "react-icons": "^4.11.0",
     "react-modal": "^3.16.1",
     "socket.io": "^4.7.2",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "three": "^0.158.0",
+    "three-addons": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-modal": "^3.16.2",
+    "@types/three": "^0.158.3",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "^14.0.3",

@@ -1,24 +1,17 @@
 "use client";
 import { io } from "socket.io-client";
-import Modal from "react-modal";
 import { useEffect, useState } from "react";
 import Ball from "./Ball";
 import Paddle from "./Paddle";
-import { customStyles } from "./Paddle";
 import "./styles.css";
 import { useSearchParams } from "next/navigation";
 
 export default function watch() {
 
   const route = useSearchParams();
-  const roomId = route.get('id');
+  const roomId = route.get('roomId');
 
-  let runGame: boolean = false,
-    keepUpdating: boolean = false,
-    isMeet: boolean = false;
-
-  const [message, setMessage] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  let runGame: boolean = false;
 
   const router = useSearchParams();
   const color: string | null = router.get("color");
@@ -55,17 +48,12 @@ export default function watch() {
       document.documentElement.style.setProperty("--hue", hueColorChangeSet);
 
       function update() {
-        if (
-          playerScoreElem.textContent === "8" ||
-          player2ScoreElem.textContent === "8"
-        ) {
+        if (playerScoreElem.textContent === "8" || player2ScoreElem.textContent === "8") {
           ball.x = 50;
           ball.y = 50;
           Player2Paddle.update(50);
           playerPaddle.position = 50;
-            setMessage("End game");
-            // setIsOpen(true);
-            socket.disconnect();
+          socket.disconnect();
           return;
         }
 
@@ -98,13 +86,6 @@ export default function watch() {
         <div className="paddle left" id="player-paddle"></div>
         <div className="paddle right" id="bot-paddle"></div>
         <div className="middle_line"></div>
-        <Modal
-          isOpen={isOpen}
-          onRequestClose={() => setIsOpen(false)}
-          style={customStyles}
-        >
-          {`${message}`}
-        </Modal>
       </div>
     </>
   );
