@@ -8,7 +8,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background-color: black;
+  /* background-color: black; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +59,7 @@ body {
   width: 100%;
 }
 
-.score > * {
+.score>* {
   flex-grow: 1;
   flex-basis: 0;
   padding: 0 2vh;
@@ -67,11 +67,11 @@ body {
   opacity: 0.5;
 }
 
-.score > :first-child {
+.score> :first-child {
   text-align: right;
 }
 
-.score > :last-child {
+.score> :last-child {
   text-align: left;
 }
 

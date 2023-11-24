@@ -64,7 +64,7 @@ export class MyGateWay {
               playerYMeet: Rooms[room_index].paddleTwo,
               AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
-              RoomId: Rooms[room_index].RoomID,
+              // RoomId: Rooms[room_index].RoomID,
             });
             this.server.emit('watch', {
               ballX: Rooms[room_index].ballX,
