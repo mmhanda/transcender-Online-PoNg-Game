@@ -47,11 +47,12 @@ export class MyGateWay {
       const initRoom = new room(Date.now().toString(), true, socket.id);
       socket.join(initRoom.roomId);
       Rooms.push(initRoom);
-      this.server.emit('isAdmin', { isAdmin: 'true' });
+      this.server.to(socket.id).emit('isAdmin', { isAdmin: 'true' });
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.roomId);
+      availableRoom.time_start = performance.now();
       availableRoom.start();
 
       if (Rooms.length <= 1) {
@@ -81,6 +82,7 @@ export class MyGateWay {
               Rooms[room_index].AdminScore === 8 ||
               Rooms[room_index].MeetScore === 8
             ) {
+              Rooms[room_index].time_end = performance.now();
               this.server.in(Rooms[room_index].roomId).disconnectSockets(true);
             }
           }

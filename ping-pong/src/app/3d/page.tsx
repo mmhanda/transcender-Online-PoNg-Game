@@ -10,7 +10,7 @@ export default function ThreeD() {
 
     const scene = new THREE.Scene();
     //create a new camera with positions and angles
-    const camera = new THREE.PerspectiveCamera(50, 1.8, 0.1);
+    const camera = new THREE.PerspectiveCamera(40, 1.8, 0.1);
 
     //Keep track of the mouse position, so we can make the eye move
     // let mouseX = window.innerWidth / 2;
@@ -28,8 +28,8 @@ export default function ThreeD() {
     //Load the file]
     console.log("HERE");
     loader.load(
-      // `models/${objToRender}/scene.gltf`,
-      "Render Image/arcade.gltf",
+      "Render Image/arcade.glb",
+      // "Render Image/arcade.gltf",
       function (gltf) {
         //If the file is loaded, add it to the scene
         object = gltf.scene;
@@ -73,7 +73,7 @@ export default function ThreeD() {
     // topLight.castShadow = true;
     // object.receiveShadow = true;
 
-    const ambientLight = new THREE.AmbientLight(0x333333, 12);
+    const ambientLight = new THREE.AmbientLight(0x333333, 10);
     scene.add(ambientLight);
 
     // const ambientLight = new THREE.AmbientLight(0x333333, objToRender === "dino" ? 5 : 1);
@@ -92,8 +92,9 @@ export default function ThreeD() {
         // object.rotation.x = -1.2 + mouseY * 2.5 / window.innerHeight;
         // object.rotation.y = 30
         // object.rotation.x = 19
+        // object.rotation.y = 36.2
         object.rotation.y = 36.2
-        object.rotation.x = 20
+        object.rotation.x = 19.7
         object.rotation.z = 0.3
       }
       renderer.setClearColor(0x444444); // Set a light gray background color

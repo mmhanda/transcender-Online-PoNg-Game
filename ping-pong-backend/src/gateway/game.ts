@@ -33,6 +33,8 @@ export default class room {
   scoreLeft: number;
   scoreRight: number;
   IntervalId: any;
+  time_start: number;
+  time_end: number;
   constructor(roomId: string, Player2: boolean, admin: string) {
     this.roomId = roomId;
     this.Player2 = Player2;
@@ -130,6 +132,8 @@ export default class room {
 
   set paddleOne(paddleOne) { this.player1.y = paddleOne - 10; }
   set paddleTwo(paddleTwo) { this.player2.y = paddleTwo - 10; }
+  set timeStart(timeStart) { this.time_start = timeStart; }
+  set timeEnd(timeEnd) { this.time_end = timeEnd; }
 
   get paddleOne() { return this.player1.y + 10; }
   get paddleTwo() { return this.player2.y + 10; }
@@ -140,4 +144,6 @@ export default class room {
   get AdminScore() { return this.scoreLeft; }
   get MeetScore() { return this.scoreRight; }
   get RoomID() { return this.roomId; }
+  get TimeStart() { return this.time_start; }
+  get TimeEnd() { return this.time_end; }
 }
