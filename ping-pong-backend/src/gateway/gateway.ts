@@ -13,11 +13,9 @@ export const Rooms = [];
 let room_index: number = 0;
 
 @WebSocketGateway({
-  cors: {
-    origin: '*',
-    // origin: ['http://localhost:3000'],
-  },
+  cors: '*',
 })
+
 export class MyGateWay {
   @WebSocketServer()
   server: Server;
@@ -33,7 +31,7 @@ export class MyGateWay {
       );
 
       if (room) {
-        index = Rooms.map((index) => index.roomId).indexOf(room.roomId);
+        index = Rooms.map((index) => index.RoomID).indexOf(room.RoomID);
         if (index >= 0) Rooms.splice(index, 1);
       }
     }
@@ -45,27 +43,26 @@ export class MyGateWay {
 
     if (Rooms.length === 0 || !availableRoom) {
       const initRoom = new room(Date.now().toString(), true, socket.id);
-      socket.join(initRoom.roomId);
+      socket.join(initRoom.RoomID);
       Rooms.push(initRoom);
       this.server.to(socket.id).emit('isAdmin', { isAdmin: 'true' });
     } else {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
-      socket.join(availableRoom.roomId);
-      availableRoom.time_start = performance.now();
+      socket.join(availableRoom.RoomID);
+      availableRoom.timeStart = performance.now();
       availableRoom.start();
 
       if (Rooms.length <= 1) {
         setInterval(() => {
           if (Rooms[room_index]) {
-            this.server.sockets.in(Rooms[room_index].roomId).emit('Drawx', {
+            this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx', {
               ballX: Rooms[room_index].ballX,
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
               playerYMeet: Rooms[room_index].paddleTwo,
               AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
-              // RoomId: Rooms[room_index].RoomID,
             });
             this.server.emit('watch', {
               ballX: Rooms[room_index].ballX,
@@ -82,14 +79,23 @@ export class MyGateWay {
               Rooms[room_index].AdminScore === 8 ||
               Rooms[room_index].MeetScore === 8
             ) {
-              Rooms[room_index].time_end = performance.now();
-              this.server.in(Rooms[room_index].roomId).disconnectSockets(true);
+              Rooms[room_index].timeEnd = performance.now();
+              this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx', {
+                AdminScore: Rooms[room_index].AdminScore,
+                MeetScore: Rooms[room_index].MeetScore,
+              });
+              Rooms.splice(room_index, 1);
+              room_index = 0;
             }
           }
         }, 0);
       }
-      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('meet-joined');
-      this.server.to([availableRoom.AdminId, availableRoom.MeetId]).emit('isAdmin', { isAdmin: 'false' });
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('meet-joined');
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')
