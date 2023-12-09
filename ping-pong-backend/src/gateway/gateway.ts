@@ -50,6 +50,14 @@ export class MyGateWay {
       availableRoom.Player2 = false;
       availableRoom.MeetId = socket.id;
       socket.join(availableRoom.RoomID);
+
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('meet-joined');
+      this.server
+        .to([availableRoom.AdminId, availableRoom.MeetId])
+        .emit('isAdmin', { isAdmin: 'false' });
+
       availableRoom.timeStart = performance.now();
       availableRoom.start();
 
@@ -90,12 +98,6 @@ export class MyGateWay {
           }
         }, 0);
       }
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('meet-joined');
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('isAdmin', { isAdmin: 'false' });
     }
   }
   @SubscribeMessage('coordinates_Admin')
