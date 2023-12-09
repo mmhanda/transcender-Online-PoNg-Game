@@ -42,7 +42,7 @@ export class MyGateWay {
     const availableRoom = Rooms.find((room) => room.Player2 === true);
 
     if (Rooms.length === 0 || !availableRoom) {
-      const initRoom = new room(Date.now().toString(), true, socket.id);
+      const initRoom = new room(performance.now().toString(), true, socket.id);
       socket.join(initRoom.RoomID);
       Rooms.push(initRoom);
       this.server.to(socket.id).emit('isAdmin', { isAdmin: 'true' });
@@ -53,17 +53,14 @@ export class MyGateWay {
 
       this.server
         .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('meet-joined-custom');
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('isAdmin', { isAdmin: 'false' });
+        .emit('meet-joined');
 
       availableRoom.timeStart = performance.now();
       availableRoom.start();
       if (Rooms.length <= 1) {
         setInterval(() => {
           if (Rooms[room_index]) {
-            this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx-custom', {
+            this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx', {
               ballX: Rooms[room_index].ballX,
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
@@ -71,7 +68,7 @@ export class MyGateWay {
               AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
             });
-            this.server.emit('watch-custom', {
+            this.server.emit('watch', {
               ballX: Rooms[room_index].ballX,
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
@@ -87,7 +84,7 @@ export class MyGateWay {
               Rooms[room_index].MeetScore === 8
             ) {
               Rooms[room_index].timeEnd = performance.now();
-              this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx-custom', {
+              this.server.sockets.in(Rooms[room_index].RoomID).emit('Drawx', {
                 AdminScore: Rooms[room_index].AdminScore,
                 MeetScore: Rooms[room_index].MeetScore,
               });

@@ -39,7 +39,7 @@ export default function Pong() {
       socket.connect();
       socket.emit("join-room");
       socket.once("isAdmin", (Admin) => {
-        if (Admin.isAdmin === "true") {
+        if (Admin?.isAdmin === "true") {
           keepUpdating = true;
           ISadmin = true;
         }

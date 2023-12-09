@@ -42,7 +42,7 @@ export class MyGateWay {
     const availableRoom = Rooms.find((room) => room.Player2 === true);
 
     if (Rooms.length === 0 || !availableRoom) {
-      const initRoom = new room(Date.now().toString(), true, socket.id);
+      const initRoom = new room(performance.now().toString(), true, socket.id);
       socket.join(initRoom.RoomID);
       Rooms.push(initRoom);
       this.server.to(socket.id).emit('isAdmin', { isAdmin: 'true' });
@@ -54,9 +54,6 @@ export class MyGateWay {
       this.server
         .to([availableRoom.AdminId, availableRoom.MeetId])
         .emit('meet-joined');
-      this.server
-        .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('isAdmin', { isAdmin: 'false' });
 
       availableRoom.timeStart = performance.now();
       availableRoom.start();

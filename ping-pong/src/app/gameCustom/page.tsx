@@ -39,7 +39,7 @@ export default function Pong() {
       socket.connect();
       socket.emit("join-room-custom");
       socket.once("isAdmin", (Admin) => {
-        if (Admin.isAdmin === "true") {
+        if (Admin?.isAdmin === "true") {
           keepUpdating = true;
           ISadmin = true;
         }
@@ -102,11 +102,11 @@ export default function Pong() {
         if (pos >= 92 || pos <= 8.5) return;
         playerPaddle.position = pos;
         if (ISadmin && isMeet) {
-          socket.emit("coordinates_Admin", {
+          socket.emit("coordinates_Admin_custom", {
             playerY: pos,
           });
         } else {
-          socket.emit("coordinates_Meet", {
+          socket.emit("coordinates_Meet_custom", {
             playerY: pos,
           });
         }
