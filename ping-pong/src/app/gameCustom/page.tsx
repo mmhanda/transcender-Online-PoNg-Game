@@ -37,7 +37,7 @@ export default function Pong() {
       let ISadmin: boolean = false;
 
       socket.connect();
-      socket.emit("join-room-custom");
+      socket.emit("join-room-custom", { Role: "Host" });
       socket.once("isAdmin", (Admin) => {
         if (Admin?.isAdmin === "true") {
           keepUpdating = true;

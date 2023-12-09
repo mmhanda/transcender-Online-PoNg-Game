@@ -74,7 +74,7 @@ export class MyGateWay {
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
               playerYMeet: Rooms[room_index].paddleTwo,
-              AdminScore: Rooms[room_index].AdminScore, z
+              AdminScore: Rooms[room_index].AdminScore,
               MeetScore: Rooms[room_index].MeetScore,
               RoomId: Rooms[room_index].RoomID,
             });

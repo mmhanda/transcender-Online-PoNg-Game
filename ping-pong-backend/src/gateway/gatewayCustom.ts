@@ -16,7 +16,7 @@ let room_index: number = 0;
   cors: '*',
 })
 
-export class MyGateWay {
+export class MyGateWayCustom {
   @WebSocketServer()
   server: Server;
 

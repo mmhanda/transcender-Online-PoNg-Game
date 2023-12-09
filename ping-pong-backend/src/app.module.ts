@@ -8,4 +8,4 @@ import { gateWayModule } from './gateway/gateWayModule';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
