@@ -53,7 +53,7 @@ export class MyGateWay {
 
       this.server
         .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('meet-joined');
+        .emit('launch-game');
 
       availableRoom.timeStart = performance.now();
       availableRoom.start();

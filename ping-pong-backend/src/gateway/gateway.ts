@@ -53,7 +53,7 @@ export class MyGateWay {
 
       this.server
         .to([availableRoom.AdminId, availableRoom.MeetId])
-        .emit('meet-joined');
+        .emit('launch-game');
 
       availableRoom.timeStart = performance.now();
       availableRoom.start();
@@ -74,7 +74,7 @@ export class MyGateWay {
               ballY: Rooms[room_index].ballY,
               playerYAdmin: Rooms[room_index].paddleOne,
               playerYMeet: Rooms[room_index].paddleTwo,
-              AdminScore: Rooms[room_index].AdminScore,
+              AdminScore: Rooms[room_index].AdminScore, z
               MeetScore: Rooms[room_index].MeetScore,
               RoomId: Rooms[room_index].RoomID,
             });

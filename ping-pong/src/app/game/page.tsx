@@ -44,7 +44,7 @@ export default function Pong() {
           ISadmin = true;
         }
       });
-      socket.once("meet-joined", async () => {
+      socket.once("launch-game", async () => {
         if (ISadmin) {
           keepUpdating = false;
           isMeet = true;
