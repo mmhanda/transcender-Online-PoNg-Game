@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+enum ChannelStatus {
+  public
+  private
+  protected
+}
+
+enum ProviderType {
+  google
+  intra
+}
+
+enum ChannelType {
+  direct
+  group
+}
+
+enum MessageStatus {
+  sent
+  delivered
+  read
+}
+
+enum Membershiptype {
+  owner
+  admin
+  member
+  baned
+  muted
+  invited
+}
+
+enum FriendsStatus {
+  pending
+  accepted
+}
+
+enum ChallengeStatus {
+  pending
+  accepted
+  rejected
+}
+
+enum NotificationType {
+  friends
+  challenge
+  accepted
+}
+
+enum NotificationStatus {
+  read
+  unread
+}
+
+model User {
+  id                  Int            @id @default(autoincrement())
+  fullname            String         @unique
+  email               String         @unique
+  password            String?
+  avatar              String?        
+  status              String         @default("offline")
+  lastSeen            DateTime       @default(now())
+  twoFactorSecret     String?
+  twoFactorEnabled    Boolean        @default(false)
+  twoFactorOtpauthUrl String?
+  unreadNotification  Int            @default(0)
+  table_style         String         @default("0")
+  membership          membership[]
+  blocked             Block[]        @relation("BlockedUser")
+  blocker             Block[]        @relation("BlockerUser")
+  messages            Message[]
+  UsersId             UserProvider[]
+  playerStats         playerStats?   // Do not specify relation here
+  sender              friends[]      @relation("sender")
+  receiver            friends[]      @relation("receiver")
+  senderChallenge     challenge[]    @relation("senderChallenge")
+  receiverChallenge   challenge[]    @relation("receiverChallenge")
+  updatedAt           DateTime?
+  createdAt           DateTime       @default(now())
+}
+
+model playerStats {
+  id         Int       @id @default(autoincrement())
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int       @unique
+  wins       Int       @default(0)
+  losses     Int       @default(0)
+  xp         Int       @default(0)
+  draws      Int       @default(0)
+  winRate    Float     @default(0)
+  rank       Int       @default(800)
+  rankTier   tiers     @relation(fields: [rankTierId], references: [id])
+  rankTierId Int       @default(1)
+  playeTime  Int       @default(0)
+  host       Match[]   @relation("host")
+  guest      Match[]   @relation("guest")
+  win        Match[]    @relation("winner")
+  createdAt  DateTime  @default(now())
+}
+
+model Match {
+  id              Int      @id @default(autoincrement())
+  watchId         String?
+  hostId          Int
+  guestId         Int
+  hostRankBefore  Int
+  guestRankBefore Int
+  result          String?
+  winnerId        Int?
+  status          String   @default("ingame") // ingame, finished
+  rankPointsEarned Int[]
+  createdAt       DateTime @default(now())
+  host            playerStats @relation("host", fields: [hostId], references: [id])
+  guest           playerStats @relation("guest", fields: [guestId], references: [id])
+  winner          playerStats? @relation("winner", fields: [winnerId], references: [id])
+}
+
+model tiers {
+  id          Int           @id @default(autoincrement())
+  name        String
+  image       String
+  minRank     Int
+  maxRank     Int
+  color       String
+  degree      Int
+  playerStats playerStats[]
+  createdAt   DateTime      @default(now())
+}
+
+model Provider {
+  id           Int            @id @default(autoincrement())
+  type         ProviderType
+  UserProvider UserProvider[]
+  createdAt    DateTime       @default(now())
+}
+
+model UserProvider {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerId Int
+  loginId    String
+  createdAt  DateTime @default(now())
+}
+
+model membership {
+  id             Int            @id @default(autoincrement())
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int
+  unread         Int            @default(0)
+  status         Membershiptype @default(member) // owner, admin, member
+  conversation   Conversation   @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId Int
+  mutedEndTime     DateTime?
+  createdAt      DateTime       @default(now())
+}
+
+model Conversation {
+  id          Int           @id @default(autoincrement())
+  cid         String        @unique @default(uuid())
+  avatar      String?
+  name        String?
+  description String?
+  password    String?
+  status      ChannelStatus @default(public)
+  type        ChannelType
+  members     membership[]
+  messages    Message[]
+  createdAt   DateTime      @default(now())
+}
+
+model Block {
+  id        Int      @id @default(autoincrement())
+  blocked   User     @relation("BlockedUser", fields: [blockedId], references: [id])
+  blockedId Int
+  blocker   User     @relation("BlockerUser", fields: [blockerId], references: [id])
+  blockerId Int
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id             Int           @id @default(autoincrement())
+  content        String
+  status         MessageStatus @default(sent)
+  sender         User          @relation(fields: [senderId], references: [id])
+  senderId       Int
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId Int
+  createdAt      DateTime      @default(now())
+}
+
+model friends {
+  id             Int           @id @default(autoincrement())
+  sender         User          @relation("sender", fields: [senderId], references: [id])
+  senderId       Int
+  receiver       User          @relation("receiver", fields: [receiverId], references: [id])
+  receiverId     Int
+  status         FriendsStatus @default(pending)
+  notificationId notification[]
+  createdAt      DateTime      @default(now())
+}
+
+model challenge {
+  id             Int           @id @default(autoincrement())
+  sender         User          @relation("senderChallenge", fields: [senderId], references: [id])
+  senderId       Int
+  receiver       User          @relation("receiverChallenge", fields: [receiverId], references: [id])
+  receiverId     Int
+  status         ChallengeStatus @default(pending)
+  notificationId notification[]
+  createdAt      DateTime      @default(now())
+}
+
+model notification {
+  id          Int                @id @default(autoincrement())
+  challenge   challenge?         @relation(fields: [challengeId], references: [id])
+  challengeId Int?
+  friend      friends?           @relation(fields: [friendId], references: [id])
+  friendId    Int?
+  type        NotificationType
+  status      NotificationStatus @default(unread)
+  content     String
+  createdAt   DateTime           @default(now())
+}

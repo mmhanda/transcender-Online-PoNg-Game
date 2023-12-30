@@ -1,0 +1,18 @@
+.max-width2 {
+  max-width: 300px;
+}
+.checkbox:checked {
+  border: none;
+}
+.checkbox:checked + .check-icon {
+  display: flex;
+}
+
+/* .checkbox:checked + .check-icon::after {
+  content: "";
+  display: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 30px;
+} */
