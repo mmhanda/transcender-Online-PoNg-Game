@@ -1,0 +1,12 @@
+@keyframes hueRotation {
+    from {
+      filter: hue-rotate(0deg);
+    }
+    to {
+      filter: hue-rotate(360deg);
+    }
+  }
+
+.animated-color-hue {
+    animation: hueRotation 10s linear infinite;
+}

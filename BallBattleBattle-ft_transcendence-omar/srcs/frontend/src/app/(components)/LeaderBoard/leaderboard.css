@@ -1,0 +1,25 @@
+.user-score::after{
+    content: "";
+    background-color: #423D51;
+    position: absolute;
+    bottom: -15px;
+    width: 60%;
+    left: 20%;
+    height: 50%;
+    z-index: -1;
+    border-radius: 20px;
+    display: flex;
+}
+
+.horizontal-scroll-container {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch; 
+    scroll-behavior: smooth;
+}
+
+.contentsss {
+  display: inline-block;
+}

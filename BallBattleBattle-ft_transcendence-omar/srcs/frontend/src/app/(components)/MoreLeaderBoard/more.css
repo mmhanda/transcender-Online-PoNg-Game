@@ -1,0 +1,7 @@
+div.our-table-fixed{
+    max-height: calc(100%)!important;
+}
+
+div.our-body-fixed{
+    height: calc(100%)!important;
+}

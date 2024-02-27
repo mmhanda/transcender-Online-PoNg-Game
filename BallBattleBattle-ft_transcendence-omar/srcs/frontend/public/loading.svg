@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 300 300" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="150"
+    height="150">
+    <style>
+        <![CDATA[
+            #table {
+                animation: table_rotate 5000ms linear infinite normal forwards
+            }
+
+            @keyframes table_rotate {
+                0% {
+                    transform: translate(150px, 152px) rotate(0deg);
+                    animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1)
+                }
+
+                100% {
+                    transform: translate(150px, 152px) rotate(360deg)
+                }
+            }
+
+            #hand_00 {
+                animation: hand_00_position 5000ms linear infinite normal forwards
+            }
+
+            @keyframes hand_00_position {
+                0% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                8.333333% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                16.666667% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                25% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                33.333333% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                41.666667% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                50% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                58.333333% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                66.666667% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                75% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                83.333333% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                91.666667% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                100% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+            }
+
+            #hand_01 {
+                animation: hand_01_position 5000ms linear infinite normal forwards
+            }
+
+            @keyframes hand_01_position {
+                0% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                8.333333% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                16.666667% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                25% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                33.333333% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                41.666667% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                50% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                58.333333% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                66.666667% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                75% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                83.333333% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+
+                91.666667% {
+                    transform: translate(266.798326px, 82.918209px)
+                }
+
+                100% {
+                    transform: translate(217.80963px, 33.929513px)
+                }
+            }
+
+            #ball {
+                animation: ball_position 5000ms linear infinite normal forwards
+            }
+
+            @keyframes ball_position {
+                0% {
+                    transform: translate(93.397237px, 261.42864px)
+                }
+
+                16.666667% {
+                    transform: translate(206.602763px, 38.53571px)
+                }
+
+                33.333333% {
+                    transform: translate(93.397237px, 261.42864px)
+                }
+
+                50% {
+                    transform: translate(206.602763px, 38.53571px)
+                }
+
+                66.666667% {
+                    transform: translate(93.397237px, 261.42864px)
+                }
+
+                83.333333% {
+                    transform: translate(206.602763px, 38.53571px)
+                }
+
+                100% {
+                    transform: translate(93.397237px, 261.42864px)
+                }
+            }
+        ]]>
+    </style>
+    <g id="table" transform="translate(150,152) rotate(0)">
+        <g transform="translate(-150,-150)">
+            <rect width="300" height="300" rx="0" ry="0" opacity="0" fill="#d2dbed" stroke-width="0" />
+            <g transform="matrix(-1 0 0-1 300 300)">
+                <g id="hand_00" transform="translate(217.80963,33.929513)">
+                    <rect width="59.232164" height="10.048314" rx="5.02" ry="5.02"
+                        transform="rotate(45) translate(-29.616082,-5.024157)" fill="#fff" stroke-width="0" />
+                </g>
+            </g>
+            <g>
+                <g id="hand_01" transform="translate(217.80963,33.929513)">
+                    <rect width="59.232164" height="10.048314" rx="5.02" ry="5.02"
+                        transform="rotate(45) translate(-29.616082,-5.024157)" fill="#fff" stroke-width="0" />
+                </g>
+            </g>
+            <g id="ball" transform="translate(93.397237,261.42864)">
+                <ellipse rx="30" ry="30" transform="scale(0.258841,0.258841) translate(0,0)" opacity="0.5" fill="#fff" stroke-width="0" />
+            </g>
+        </g>
+    </g>
+</svg>

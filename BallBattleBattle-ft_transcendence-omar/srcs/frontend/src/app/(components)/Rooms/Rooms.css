@@ -1,0 +1,14 @@
+.card-bg{
+    background: linear-gradient(90deg, #271B42 0%, #160E2B 49.48%, #312747 100%);
+}
+
+.rooms::after{
+    /* gradien background */
+    background: linear-gradient(0deg, rgba(19, 12, 38, 1) 0%, rgba(19, 12, 38, .5) 90%, rgba(19, 12, 38, 0) 100%);
+    content: "";
+    width: 100%;
+    height: 150px;
+    position: absolute;
+    bottom: 0;
+    margin: auto;
+  }

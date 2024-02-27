@@ -1,0 +1,30 @@
+.text-gradient {
+    background: linear-gradient(135deg, #A970E3 0%, #F6B3D2 40%, #D4ABF8 65%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .bgr-gradient {
+    background: linear-gradient(135deg, #A970E3 0%, #F6B3D2 40%, #D4ABF8 65%);
+    /* background-clip: text;
+     -webkit-background-clip: text; 
+    color: transparent; */
+}
+
+@keyframes ghost-animation {
+  0% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(40px, 60px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+.ghost-animation {
+  animation: ghost-animation 15s infinite;
+
+}

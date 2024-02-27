@@ -1,0 +1,30 @@
+/* .image-container {
+    position: relative;
+    overflow: hidden;
+  } */
+  
+  .image {
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .image-left {
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+    
+  }
+  .image-right {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 10% 100%);
+    position:relative;
+  }
+
+
+  .bg-match::after{
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.02) 100%);
+    filter: blur(0.5px);
+  }

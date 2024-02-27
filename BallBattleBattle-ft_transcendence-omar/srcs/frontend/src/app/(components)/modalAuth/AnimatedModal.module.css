@@ -1,0 +1,12 @@
+/* modal.module.css (or your preferred CSS file) */
+
+.modal-container {
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .modal-container.open {
+    opacity: 1; 
+    pointer-events: auto; 
+  }

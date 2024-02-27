@@ -1,0 +1,60 @@
+version: '3.1'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    env_file:
+      - ./srcs/.env
+    ports:
+      - 5433:5432
+    volumes:
+      - volume_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  backend:
+    image: backend:1337
+    container_name: backend
+    build: ./srcs/backend
+    restart: on-failure
+    ports:
+      - 3000:3000
+      - 5555:5555
+    depends_on:
+      - postgres
+    volumes:
+      - volume_backend:/backend/public
+
+  frontend:
+    image: frontend:1337
+    container_name: frontend
+    build: ./srcs/frontend
+    restart: on-failure
+    ports:
+      - 1949:1949
+    working_dir: /frontend
+    depends_on:
+      - backend
+
+
+volumes:
+  volume_backend:
+    name: volume_backend
+    driver: local
+    driver_opts:
+      device: ${PWD}/srcs/backend/public
+      o: bind
+      type: none
+  volume_postgres:
+    name: volume_postgres
+    driver: local
+    driver_opts:
+      device: ${PWD}/db
+      o: bind
+      type: none

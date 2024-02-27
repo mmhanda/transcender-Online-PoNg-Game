@@ -1,0 +1,42 @@
+.paddle {
+  --position: 50;
+
+  transform: translateY(-50%);
+  top: calc(var(--position) * 1%);
+  position: absolute;
+  width: 1vh;
+  height: 7.5vh;
+  border-radius: 2vh;
+}
+
+.paddle.left {
+  left: 1.1vw;
+}
+
+.paddle.right {
+  right: 1.1vw;
+}
+
+.ball {
+  --y: 50;
+  --x: 50;
+
+  transform: translate(-50%, -50%);
+  top: calc(var(--y) * 1%);
+  left: calc(var(--x) * 1%);
+  position: absolute;
+  border-radius: 100%;
+  width: 1vh;
+  height: 1vh;
+}
+
+.table {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.gameCol {
+  width: 70vw;
+  height: 80vh;
+}

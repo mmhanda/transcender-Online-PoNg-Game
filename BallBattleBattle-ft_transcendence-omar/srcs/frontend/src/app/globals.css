@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgba(19, 12, 38, 1);
+  overflow-x: hidden;
+}
+
+
+.gradientBackground {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(0.5px)
+}
+
+@keyframes custom-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-spin {
+  animation: custom-spin 15s linear infinite;
+  filter: blur(25px)
+}
+
+
+.carousel {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+}
+
+.our-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.our-scroll::-webkit-scrollbar-thumb {
+  background-color: #3f3850; /* Color of the thumb */
+  border-radius: 5px; /* Rounded corners for the thumb */
+  
+}
+
+.our-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #322b42; /* Color of the thumb on hover */
+}
+
+.our-scroll::-webkit-scrollbar-track {
+  background-color: #ffffff00; /* Color of the track */
+}
+
+.our-scroll::after{
+  background: linear-gradient(90deg, rgba(19, 12, 38, 0) 0%, rgba(19, 12, 38, .9) 70%, rgba(19, 12, 38, 1) 100%);
+  content: "";
+  width: 70px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  border-radius: 1200px 0 0 1200px;
+}
+
+
+
+.dashboard
+{
+  height: calc(100vh - 70px);
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: red;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: red;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: red;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #2e2642;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #493e64;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #584c77;
+}
+
+input:focus{
+  outline: none!important;
+}
+
+.map-skin-1
+{
+  background-color: red!important;
+}
